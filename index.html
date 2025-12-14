@@ -327,7 +327,7 @@ button.sub-btn{
     </div>
 </div>
 
-<footer style="text-align:center; margin:24px 0; opacity:0.6;">© 2025 Nenpi Calculator</footer>
+<footer style="text-align:center; margin:24px 0; opacity:0.6;">© 2025 Gas Dai Calculator</footer>
 
 <script>
 let lastCost = 0;
@@ -433,11 +433,35 @@ function addCarRow(data={}) {
             ${deleteBtnHtml}
         </strong>
         <div class="car-row-inner">
-            <input type="text" placeholder="車名 (任意)" value="${data.name || ''}" class="carName" aria-label="車${idx + 1} 名前">
-            <input type="number" inputmode="decimal" placeholder="" value="${data.distance || ''}" class="carDistance multi-car-input" aria-label="車${idx + 1} 走行距離">
-            <input type="number" inputmode="decimal" placeholder="" value="${data.economy || ''}" class="carEconomy multi-car-input" aria-label="車${idx + 1} 燃費">
-            <input type="number" inputmode="decimal" placeholder="" value="${data.price || ''}" class="carPrice multi-car-input" aria-label="車${idx + 1} ガソリン価格">
-            <input type="number" inputmode="decimal" placeholder="0" value="${data.extraCost || '0'}" class="carExtraCost multi-car-input" aria-label="車${idx + 1} 諸経費">
+    <input type="text"
+           placeholder="車名（任意）"
+           value="${data.name || ''}"
+           class="carName">
+
+    <input type="number"
+           inputmode="decimal"
+           placeholder="走行距離"
+           value="${data.distance || ''}"
+           class="carDistance multi-car-input">
+
+    <input type="number"
+           inputmode="decimal"
+           placeholder="燃費"
+           value="${data.economy || ''}"
+           class="carEconomy multi-car-input">
+
+    <input type="number"
+           inputmode="decimal"
+           placeholder="ガソリン価格"
+           value="${data.price || ''}"
+           class="carPrice multi-car-input">
+
+    <input type="number"
+           inputmode="decimal"
+           placeholder="諸費用（任意）"
+           value="${data.extraCost ?? ''}"
+           class="carExtraCost multi-car-input">
+
             <div class="car-round-group">
                 <input type="checkbox" id="carRound${idx}" class="carRound" ${data.round ? 'checked' : ''} aria-label="車${idx + 1} 往復">
                 <label for="carRound${idx}" class="car-round-label">往復</label>
