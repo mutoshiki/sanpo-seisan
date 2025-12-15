@@ -729,35 +729,47 @@ if(circleWrap){
 }
 
 function calcCircle(){
+    const warikanBase = lastCost; 
     const people = parseInt(document.getElementById('circlePeople').value) || 0;
     const adjust = parseInt(document.getElementById('adjustCost').value) || 0;
     const rent = parseInt(document.getElementById('rentCost').value) || 0;
     const highway = parseInt(document.getElementById('highwayCost').value) || 0;
+    const circleBase = adjust + rent + highway;
 
     if(people <= 0){
         alert('人数を正しく入力してください');
         return;
     }
 
-    const basePer = Math.ceil(lastCost / people / 100) * 100;
+    const basePer = Math.ceil(warikanBase / people / 100) * 100;
     const collectedTotal = basePer * people;
-    const excess = collectedTotal - lastCost;
+    const excess = collectedTotal - warikanBase;
 
-    let circleFund = adjust + rent + highway - excess;
+    let circleFund = circleBase - excess;
 
-    let html = `
-        1人あたり（100円単位切り上げ）：<strong>${basePer} 円</strong><br>
-        回収総額：${collectedTotal} 円<br>
-        余剰金：${excess} 円<br><br>
-        サークル費計：<strong>${circleFund} 円</strong>
-    `;
+    let html = '';
+
+    html += `<strong>【全体で割り勘する分】</strong><br>`;
+    html += `割り勘対象（ガソリン代）：${warikanBase} 円<br>`;
+    html += `1人あたり（100円単位切り上げ）：<strong>${basePer} 円</strong><br>`;
+    html += `回収総額：${collectedTotal} 円<br>`;
+    html += `切り上げ余剰金：${excess} 円<br><br>`;
+
+    html += `<strong>【サークル費から出す分】</strong><br>`;
+    html += `調整費：${adjust} 円<br>`;
+    html += `レンタカー代：${rent} 円<br>`;
+    html += `高速代：${highway} 円<br>`;
+    html += `余剰金充当：-${excess} 円<br><br>`;
+
+    html += `<strong>サークル残高：${circleFund} 円</strong>`;
 
     if(circleFund < 0){
-        html += `<br><span style="color:red;">※ サークル費が不足しています</span>`;
+        html += `<br><span style="color:red;">※ サークル費が不足しています（立替または追加回収が必要です）</span>`;
     }
 
     document.getElementById('circleResult').innerHTML = html;
 }
+
 
 
 function saveMultiCarInputs(){
