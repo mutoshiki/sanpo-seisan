@@ -85,10 +85,7 @@ body.dark .theme-toggle{
     color:#ffffff;
     background: rgba(255,255,255,0.18);
 }
-body.dark label[for="roundTrip"],
-body.dark .car-round-label {
-    color: #f0f0f0 !important;
-}
+
 body.dark .historyItem b {
     color: #cfcfff;
 }
@@ -115,9 +112,7 @@ body.dark #carList input[type="text"]{
     color: #ffffff;
     border-color:#555;
 }
-body.dark .car-round-group label{
-    color:#f0f0f0;
-}
+
 body.dark .carName{
     border-color: #555 !important;
 }
@@ -214,17 +209,34 @@ button.sub-btn{
 }
 
 .car-list-container { padding-top: 5px; }
-.car-input-labels { display: flex; gap: 6px; margin-bottom: 5px; font-size: 12px; font-weight: 500; color: #555; align-items: center; padding-right: 18px; }
-.car-input-labels > div { flex: 1; text-align: center; }
-.car-input-labels > div:first-child { flex: 0 0 100px; text-align: left; }
+
+/* 複数台入力：ラベル行・入力行を完全に同一グリッドにする */
+.car-input-labels,
+.car-row-inner{
+    display: grid;
+    grid-template-columns: 100px 1fr 1fr 1fr 1fr;
+
+        gap: 6px;
+    align-items: center;
+}
+
+/* ラベルの位置調整 */
+.car-input-labels > div{
+    text-align: center;
+}
+.car-input-labels > div:first-child{
+    text-align: left;
+}
+
+/* 車名入力 */
+.carName{
+    text-align: left !important;
+}
 
 .car-item { margin-bottom: 15px; padding: 8px 0; border-bottom: 1px solid #eee; }
 #carList input[type="number"], #carList input[type="text"]{ padding: 8px 6px; border-radius: 8px; font-size: 14px; text-align: center; }
 #carList strong { display:flex; justify-content:space-between; align-items:center; margin-top:14px; font-size:14px; color:#333; }
-.car-row-inner{ display:flex; gap:6px; margin-top:4px; align-items: center; }
-.car-round-group{ display:flex; align-items:center; gap:2px; white-space:nowrap; font-size:14px; color:#555; flex:0 0 auto; }
-.car-round-group input[type="checkbox"]{ transform: scale(0.95); margin-left:0; }
-.carName { flex: 0 0 100px; text-align: left !important; padding: 8px 12px !important; }
+  .carName { flex: 0 0 100px; text-align: left !important; padding: 8px 12px !important; }
 
 .result{
     margin-top:18px;
@@ -249,13 +261,16 @@ button.sub-btn{
 .historyItem:hover{ transform: translateY(-3px); box-shadow:0 6px 14px rgba(0,0,0,0.12); }
 
 @media (max-width:520px){
+    .car-input-labels,
+.car-row-inner{
+   grid-template-columns: 80px 1fr 1fr 1fr 1fr;
+
+}
     .container{ margin:18px; padding:18px; }
     .theme-toggle{ right:12px; top:10px; padding:6px 10px; }
     .car-row-inner{ flex-wrap: wrap; }
-    .car-round-group{ flex:1 1 100%; justify-content: flex-end; }
     .car-input-labels > div:first-child, .carName { flex: 0 0 80px; }
-    .multi-car-input { max-width: 15%; } 
-}
+     }
 </style>
 </head>
 <body>
@@ -283,25 +298,21 @@ button.sub-btn{
         <input id="gasPrice" type="number" inputmode="decimal" aria-label="ガソリン価格" placeholder="例：170">
 
         <label for="extraCost">諸経費（円）<span style="font-size:0.8em; font-weight:normal; opacity:0.8;">（駐車場代、高速代など）</span></label>
-        <input id="extraCost" type="number" inputmode="decimal" aria-label="諸経費" placeholder="例：1500">
+<input id="extraCost" type="number" inputmode="decimal" aria-label="諸経費" placeholder="例：1500">
         <label for="people">割り勘人数（任意）</label>
         <input id="people" type="number" inputmode="decimal" aria-label="割り勘人数" placeholder="例：3">
 
-        <div style="display:flex; align-items:center; gap:8px; margin-top:12px;">
-            <input id="roundTrip" type="checkbox" aria-label="往復" />
-            <label for="roundTrip" style="margin:0; font-weight:600; color:#555;">往復（チェックで往復計算）</label>
-        </div>
+       
     </div>
 
     <div id="multiCarForm" role="tabpanel" aria-labelledby="mainTitle" style="display:none;">
         <div class="car-list-container">
             <div class="car-input-labels">
                 <div>車名</div>
-                <div class="multi-car-input">走行距離(km)</div>
+                <div class="multi-car-input">距離(km)</div>
                 <div class="multi-car-input">燃費(km/L)</div>
                 <div class="multi-car-input">ガソリン価格(円/L)</div>
                 <div class="multi-car-input">諸経費(円)</div>
-                <div></div> 
             </div>
             <div id="carList"></div>
         </div>
@@ -402,7 +413,6 @@ function saveSingleCarInputs() {
         fuelEconomy: document.getElementById('fuelEconomy').value,
         gasPrice: document.getElementById('gasPrice').value,
         people: document.getElementById('people').value,
-        roundTrip: document.getElementById('roundTrip').checked,
         extraCost: document.getElementById('extraCost').value,
     };
     localStorage.setItem(SINGLE_CAR_KEY, JSON.stringify(singleCarData));
@@ -414,9 +424,7 @@ function loadSingleCarInputs() {
     document.getElementById('fuelEconomy').value = data.fuelEconomy || '';
     document.getElementById('gasPrice').value = data.gasPrice || '';
     document.getElementById('people').value = data.people || '';
-    document.getElementById('roundTrip').checked = data.roundTrip || false;
-    document.getElementById('extraCost').value = data.extraCost ?? '';
-
+        document.getElementById('extraCost').value = data.extraCost || ''; 
 }
 
 function addCarRow(data={}) {
@@ -435,39 +443,11 @@ function addCarRow(data={}) {
             ${deleteBtnHtml}
         </strong>
         <div class="car-row-inner">
-    <input type="text"
-           placeholder="車名（任意）"
-           value="${data.name || ''}"
-           class="carName">
-
-    <input type="number"
-           inputmode="decimal"
-           placeholder="走行距離"
-           value="${data.distance || ''}"
-           class="carDistance multi-car-input">
-
-    <input type="number"
-           inputmode="decimal"
-           placeholder="燃費"
-           value="${data.economy || ''}"
-           class="carEconomy multi-car-input">
-
-    <input type="number"
-           inputmode="decimal"
-           placeholder="ガソリン価格"
-           value="${data.price || ''}"
-           class="carPrice multi-car-input">
-
-    <input type="number"
-           inputmode="decimal"
-           placeholder="諸費用（任意）"
-           value="${data.extraCost ?? ''}"
-           class="carExtraCost multi-car-input">
-
-            <div class="car-round-group">
-                <input type="checkbox" id="carRound${idx}" class="carRound" ${data.round ? 'checked' : ''} aria-label="車${idx + 1} 往復">
-                <label for="carRound${idx}" class="car-round-label">往復</label>
-            </div>
+            <input type="text" placeholder="例: N-BOX" value="${data.name || ''}" class="carName" aria-label="車${idx + 1} 名前">
+            <input type="number" inputmode="decimal" placeholder="例: 120" value="${data.distance || ''}" class="carDistance multi-car-input" aria-label="車${idx + 1} 走行距離">
+            <input type="number" inputmode="decimal" placeholder="例: 15" value="${data.economy || ''}" class="carEconomy multi-car-input" aria-label="車${idx + 1} 燃費">
+            <input type="number" inputmode="decimal" placeholder="例: 170" value="${data.price || ''}" class="carPrice multi-car-input" aria-label="車${idx + 1} ガソリン価格">
+            <input type="number" inputmode="decimal" placeholder="例: 500" value="${data.extraCost || ''}" class="carExtraCost multi-car-input" aria-label="車${idx + 1} 諸経費">
         </div>
     `;
     container.appendChild(div);
@@ -487,8 +467,7 @@ function addCarRow(data={}) {
         div.querySelector('.carEconomy').setAttribute('aria-label', `${baseName} 燃費`);
         div.querySelector('.carPrice').setAttribute('aria-label', `${baseName} ガソリン価格`);
         div.querySelector('.carExtraCost').setAttribute('aria-label', `${baseName} 諸経費`);
-        div.querySelector('.carRound').setAttribute('aria-label', `${baseName} 往復`);
-    };
+            };
     
     carNameInput.addEventListener('input', (e) => {
         updateLabels(e.target.value);
@@ -533,10 +512,6 @@ function removeCarRow(carItem){
         item.querySelector('.carPrice').setAttribute('aria-label', `${baseName} ガソリン価格`);
         item.querySelector('.carExtraCost').setAttribute('aria-label', `${baseName} 諸経費`);
         
-        const roundCheckbox = item.querySelector('.carRound');
-        roundCheckbox.id = `carRound${index}`;
-        roundCheckbox.setAttribute('aria-label', `${baseName} 往復`);
-        item.querySelector('.car-round-group label').setAttribute('for', `carRound${index}`);
     });
 }
 
@@ -577,7 +552,6 @@ function calc(){
         const eInput = document.getElementById('fuelEconomy');
         const gInput = document.getElementById('gasPrice');
         const pInput = document.getElementById('people');
-        const rInput = document.getElementById('roundTrip');
         const xInput = document.getElementById('extraCost');
 
         if(!dInput || !eInput || !gInput) return;
@@ -586,7 +560,6 @@ function calc(){
         const e = parseFloat(eInput.value);
         const g = parseFloat(gInput.value);
         const pe = parseInt(pInput.value) || 0;
-        const round = rInput.checked;
         const x = parseFloat(xInput.value) || 0;
 
         if(isNaN(d) || isNaN(e) || isNaN(g) || d <= 0 || e <= 0 || g <= 0){ 
@@ -594,14 +567,15 @@ function calc(){
             return; 
         }
 
-        const dist = round ? d * 2 : d;
+    const dist = d;
+
         const fuel = dist / e;
         const gasCost = Math.round(fuel * g);
         totalGasCost = gasCost;
         totalExtraCost = x;
         totalCost = gasCost + x;
 
-        html = `走行距離：${dist} km${round ? ' (往復)' : ''}<br>
+        html = `走行距離：${dist} km<br>
                 必要ガソリン量：${fuel.toFixed(2)} L<br>
                 ガソリン代：<strong style="font-size:1.1em;">${gasCost} 円</strong><br>`;
         
@@ -619,8 +593,19 @@ function calc(){
             if(copyPerBtn) copyPerBtn.style.display = 'none';
         }
 
-        if(typeof saveHistory === 'function') saveHistory({ mode:'single', d, e, g, pe, round, gasCost, extraCost: x, totalCost, timestamp: Date.now() });
-        if(typeof saveSingleCarInputs === 'function') saveSingleCarInputs();
+        saveHistory({
+    mode: 'single',
+    d,
+    e,
+    g,
+    pe,
+    gasCost,
+    extraCost: x,
+    totalCost,
+    timestamp: Date.now()
+});
+saveSingleCarInputs();
+
 
     } else {
         const carRows = document.querySelectorAll('#carList .car-item');
@@ -639,23 +624,20 @@ function calc(){
             const dInput = row.querySelector('.carDistance');
             const eInput = row.querySelector('.carEconomy');
             const pInput = row.querySelector('.carPrice');
-            const rInput = row.querySelector('.carRound');
             const xInput = row.querySelector('.carExtraCost');
 
             const name = (nameInput && nameInput.value) ? nameInput.value : `車${i+1}`;
             const d = parseFloat(dInput ? dInput.value : 0);
             const e = parseFloat(eInput ? eInput.value : 0);
             const g = parseFloat(pInput ? pInput.value : 0);
-            const round = rInput ? rInput.checked : false;
-            const x = parseFloat(xInput ? xInput.value : 0) || 0;
+                          const x = parseFloat(xInput ? xInput.value : 0) || 0;
 
             if(isNaN(d) || isNaN(e) || isNaN(g) || d <= 0 || e <= 0 || g <= 0){
                 displayError(`${name} の入力を確認してください`);
                 return;
             }
 
-            const dist = round ? d * 2 : d;
-            const fuel = dist / e;
+            const dist = d;            const fuel = dist / e;
             const gasCost = Math.round(fuel * g);
             const carTotalCost = gasCost + x;
 
@@ -668,12 +650,12 @@ function calc(){
 
             html += `<div style="margin-bottom:12px; padding-bottom:12px; border-bottom:1px dashed ${historyBorderColor};">
                         <strong>${name}</strong><br>
-                        <span style="font-size:0.9em; opacity:0.9;">距離:${dist}km${round ? '(往)' : ''} / 燃費:${e} / 単価:${g}</span><br>
+                        <span style="font-size:0.9em; opacity:0.9;">距離:${dist}km / 燃費:${e} / 単価:${g}</span><br>
                         ガソリン代: ${gasCost} 円${extraCostHtml}<br>
                         合計費用: <strong style="font-size:1.0em;">${carTotalCost} 円</strong>
                      </div>`;
             
-            carData.push({ name, distance:d, economy:e, price:g, round, gasCost, extraCost: x, totalCost: carTotalCost });
+            carData.push({ name, distance:d, economy:e, price:g,      gasCost, extraCost: x, totalCost: carTotalCost });
         }
         
         if (carRows.length > 0) {
@@ -720,8 +702,7 @@ function saveMultiCarInputs(){
         distance: row.querySelector('.carDistance').value,
         economy: row.querySelector('.carEconomy').value,
         price: row.querySelector('.carPrice').value,
-        round: row.querySelector('.carRound').checked,
-        extraCost: row.querySelector('.carExtraCost').value,
+                   extraCost: row.querySelector('.carExtraCost').value,
     }));
     localStorage.setItem(CAR_LIST_KEY, JSON.stringify(carData));
     localStorage.setItem(MULTI_PEOPLE_KEY, document.getElementById('multiPeople').value);
@@ -742,8 +723,7 @@ function resetInputs(){
         document.getElementById('gasPrice').value = '';
         document.getElementById('extraCost').value = '';
         document.getElementById('people').value = '';
-        document.getElementById('roundTrip').checked = false;
-        saveSingleCarInputs();
+                saveSingleCarInputs();
     } else {
         document.getElementById('carList').innerHTML = '';
         addCarRow(); 
@@ -791,21 +771,19 @@ function loadHistory(){
         let content = '';
         
         if(item.mode === 'single'){
-            const isRound = item.round ? ' (往復)' : '';
-            const perPerson = item.pe > 0 ? ` (1人あたり: <strong style="color:${strongColor};">${Math.round(item.totalCost/item.pe)} 円</strong> / ${item.pe}人)` : '';
+                        const perPerson = item.pe > 0 ? ` (1人あたり: <strong style="color:${strongColor};">${Math.round(item.totalCost/item.pe)} 円</strong> / ${item.pe}人)` : '';
             const extraCostDisplay = item.extraCost > 0 ? `<br>諸経費: ${item.extraCost} 円` : '';
             
             content = `
-                走行距離: ${item.d} km${isRound} / 燃費: ${item.e} km/L<br>
+                走行距離: ${item.d} km   / 燃費: ${item.e} km/L<br>
                 ガソリン代: ${item.gasCost} 円${extraCostDisplay}<br>
                 合計費用: <strong style="color:${strongColor};">${item.totalCost} 円</strong>${perPerson}
             `;
         } else {
             const carDetails = item.cars.map(c => {
-                const isRound = c.round ? ' (往復)' : '';
-                const name = c.name || '車';
+                                 const name = c.name || '車';
                 const extraCostDisplay = c.extraCost > 0 ? ` + 諸経費${c.extraCost}` : '';
-                return `<li>${name}: 距離${c.distance}km${isRound} / 代 ${c.gasCost}円${extraCostDisplay} (計 <strong style="color:${strongColor};">${c.totalCost}円</strong>)</li>`;
+                return `<li>${name}: 距離${c.distance}km   / 代 ${c.gasCost}円${extraCostDisplay} (計 <strong style="color:${strongColor};">${c.totalCost}円</strong>)</li>`;
             }).join('');
             
             const perPerson = item.pe > 0 ? ` (1人あたり: <strong style="color:${strongColor};">${Math.round(item.totalCost/item.pe)} 円</strong> / ${item.pe}人)` : '';
@@ -838,10 +816,10 @@ function restore(data){
         document.getElementById('distance').value = data.d;
         document.getElementById('fuelEconomy').value = data.e;
         document.getElementById('gasPrice').value = data.g;
-        document.getElementById('extraCost').value = data.extraCost || '';
+        document.getElementById('extraCost').value =
+    (typeof data.extraCost === 'number') ? data.extraCost : '';
         document.getElementById('people').value = data.pe || '';
-        document.getElementById('roundTrip').checked = data.round || false;
-    } else {
+            } else {
         document.querySelector('.tab-btn[data-mode="multi"]').click();
         
         document.getElementById('carList').innerHTML = '';
@@ -857,3 +835,4 @@ function restore(data){
 </script>
 </body> 
 </html>
+
