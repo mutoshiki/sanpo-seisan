@@ -444,10 +444,10 @@ function addCarRow(data={}) {
         </strong>
         <div class="car-row-inner">
             <input type="text" placeholder="例: N-BOX" value="${data.name || ''}" class="carName" aria-label="車${idx + 1} 名前">
-            <input type="number" inputmode="decimal" placeholder="例: 120" value="${data.distance || ''}" class="carDistance multi-car-input" aria-label="車${idx + 1} 走行距離">
-            <input type="number" inputmode="decimal" placeholder="例: 15" value="${data.economy || ''}" class="carEconomy multi-car-input" aria-label="車${idx + 1} 燃費">
-            <input type="number" inputmode="decimal" placeholder="例: 170" value="${data.price || ''}" class="carPrice multi-car-input" aria-label="車${idx + 1} ガソリン価格">
-            <input type="number" inputmode="decimal" placeholder="例: 500" value="${data.extraCost || ''}" class="carExtraCost multi-car-input" aria-label="車${idx + 1} 諸経費">
+            <input type="number" inputmode="decimal" placeholder="例:120" value="${data.distance || ''}" class="carDistance multi-car-input" aria-label="車${idx + 1} 走行距離">
+            <input type="number" inputmode="decimal" placeholder="例:15" value="${data.economy || ''}" class="carEconomy multi-car-input" aria-label="車${idx + 1} 燃費">
+            <input type="number" inputmode="decimal" placeholder="例:170" value="${data.price || ''}" class="carPrice multi-car-input" aria-label="車${idx + 1} ガソリン価格">
+            <input type="number" inputmode="decimal" placeholder="例:500" value="${data.extraCost || ''}" class="carExtraCost multi-car-input" aria-label="車${idx + 1} 諸経費">
         </div>
     `;
     container.appendChild(div);
