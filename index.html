@@ -728,6 +728,38 @@ if(circleWrap){
 }
 }
 
+function calcCircle(){
+    const people = parseInt(document.getElementById('circlePeople').value) || 0;
+    const adjust = parseInt(document.getElementById('adjustCost').value) || 0;
+    const rent = parseInt(document.getElementById('rentCost').value) || 0;
+    const highway = parseInt(document.getElementById('highwayCost').value) || 0;
+
+    if(people <= 0){
+        alert('人数を正しく入力してください');
+        return;
+    }
+
+    const basePer = Math.ceil(lastCost / people / 100) * 100;
+    const collectedTotal = basePer * people;
+    const excess = collectedTotal - lastCost;
+
+    let circleFund = adjust + rent + highway - excess;
+
+    let html = `
+        1人あたり（100円単位切り上げ）：<strong>${basePer} 円</strong><br>
+        回収総額：${collectedTotal} 円<br>
+        余剰金：${excess} 円<br><br>
+        サークル費計：<strong>${circleFund} 円</strong>
+    `;
+
+    if(circleFund < 0){
+        html += `<br><span style="color:red;">※ サークル費が不足しています</span>`;
+    }
+
+    document.getElementById('circleResult').innerHTML = html;
+}
+
+
 function saveMultiCarInputs(){
     const carRows = document.querySelectorAll('#carList .car-item');
     const carData = Array.from(carRows).map(row => ({
@@ -756,24 +788,6 @@ function resetInputs(){
         document.getElementById('gasPrice').value = '';
         document.getElementById('extraCost').value = '';
         document.getElementById('people').value = '';
-                saveSingleCarInputs();
-    } else {
-        document.getElementById('carList').innerHTML = '';
-        addCarRow(); 
-        document.getElementById('multiPeople').value = '';
-        saveMultiCarInputs();
-    }
-    document.getElementById('result').style.display = 'none';
-    document.getElementById('copyRow').style.display = 'none';
-}
-
-function resetInputs(){
-    if(currentMode === 'single'){
-        document.getElementById('distance').value = '';
-        document.getElementById('fuelEconomy').value = '';
-        document.getElementById('gasPrice').value = '';
-        document.getElementById('extraCost').value = '';
-        document.getElementById('people').value = '';
         saveSingleCarInputs();
     } else {
         document.getElementById('carList').innerHTML = '';
@@ -785,7 +799,6 @@ function resetInputs(){
     document.getElementById('result').style.display = 'none';
     document.getElementById('copyRow').style.display = 'none';
 
-    /* ▼ ここに追加 ▼ */
     const circleWrap = document.getElementById('circleWrap');
     const circleResult = document.getElementById('circleResult');
     if(circleWrap){
@@ -795,6 +808,7 @@ function resetInputs(){
         circleResult.innerHTML = '';
     }
 }
+
 
 
 function copyCost(){
