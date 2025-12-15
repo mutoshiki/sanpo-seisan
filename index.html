@@ -327,6 +327,35 @@ button.sub-btn{
     <button class="sub-btn" id="resetBtn" aria-label="入力をリセット" style="margin-top:10px;">入力をリセット</button>
 
     <div id="result" class="result" style="display:none;" role="status" aria-live="polite"></div>
+<div id="circleWrap" style="display:none; margin-top:16px;">
+    <div class="result" style="background:#fff7e6; border-left-color:var(--highlight-color);">
+        <strong>サークル用 精算（任意）</strong>
+
+        <div style="margin-top:10px;">
+            人数：
+            <input type="number" id="circlePeople" value="1" style="width:80px;">
+        </div>
+
+        <div style="margin-top:6px;">
+            調整費：
+            <input type="number" id="adjustCost" value="0"> 円
+        </div>
+        <div style="margin-top:6px;">
+            レンタカー代：
+            <input type="number" id="rentCost" value="0"> 円
+        </div>
+        <div style="margin-top:6px;">
+            高速代：
+            <input type="number" id="highwayCost" value="0"> 円
+        </div>
+
+        <button class="sub-btn" style="margin-top:10px;" onclick="calcCircle()">
+            精算を計算
+        </button>
+
+        <div id="circleResult" style="margin-top:10px;"></div>
+    </div>
+</div>
 
     <div class="copy-row" id="copyRow" style="display:none;">
         <button class="copy-btn primary" id="copyCostBtn" aria-label="ガソリン代をコピー">📋 合計費用コピー</button>
@@ -693,6 +722,10 @@ saveSingleCarInputs();
     if(copyRowEl) {
         copyRowEl.style.display = 'flex';
     }
+    const circleWrap = document.getElementById('circleWrap');
+if(circleWrap){
+    circleWrap.style.display = 'block';
+}
 }
 
 function saveMultiCarInputs(){
@@ -733,6 +766,36 @@ function resetInputs(){
     document.getElementById('result').style.display = 'none';
     document.getElementById('copyRow').style.display = 'none';
 }
+
+function resetInputs(){
+    if(currentMode === 'single'){
+        document.getElementById('distance').value = '';
+        document.getElementById('fuelEconomy').value = '';
+        document.getElementById('gasPrice').value = '';
+        document.getElementById('extraCost').value = '';
+        document.getElementById('people').value = '';
+        saveSingleCarInputs();
+    } else {
+        document.getElementById('carList').innerHTML = '';
+        addCarRow();
+        document.getElementById('multiPeople').value = '';
+        saveMultiCarInputs();
+    }
+
+    document.getElementById('result').style.display = 'none';
+    document.getElementById('copyRow').style.display = 'none';
+
+    /* ▼ ここに追加 ▼ */
+    const circleWrap = document.getElementById('circleWrap');
+    const circleResult = document.getElementById('circleResult');
+    if(circleWrap){
+        circleWrap.style.display = 'none';
+    }
+    if(circleResult){
+        circleResult.innerHTML = '';
+    }
+}
+
 
 function copyCost(){
     navigator.clipboard.writeText(lastCost + ' 円');
@@ -835,4 +898,5 @@ function restore(data){
 </script>
 </body> 
 </html>
+
 
