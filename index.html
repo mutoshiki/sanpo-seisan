@@ -85,7 +85,7 @@ input[type="number"], input[type="text"]{
 <div class="container">
     <h1>🚙山歩会会計精算ツール</h1>
 
-    <label>企画の参加人数</label>
+    <label>今回の参加人数（企画者含む）</label>
     <input type="number" id="totalPeople" placeholder="例: 12">
 
     <div class="check-group">
@@ -102,13 +102,13 @@ input[type="number"], input[type="text"]{
 
     <div id="resultArea">
         <div class="res-block">
-            <div class="res-title" style="font-weight:bold;">① 参加者からの徴収額 (ガソリン代)</div>
+            <div class="res-title" style="font-weight:bold;">① 参加者で割り勘するガソリン代</div>
             <div class="price-large" id="resPerPerson">0円</div>
             <div id="resTargetDetail" style="font-size:0.9rem; color:#555;"></div>
         </div>
 
         <div class="res-block">
-            <div class="res-title" style="font-weight:bold;">② 各ドライバーへ渡す金額</div>
+            <div class="res-title" style="font-weight:bold;">② 各ドライバーへの支払金額</div>
             <div id="resDriverList"></div>
         </div>
 
@@ -116,9 +116,9 @@ input[type="number"], input[type="text"]{
             <div class="res-title" style="font-weight:bold;">③ サークル会計の精算結果</div>
             <div style="font-size:0.9rem;">
                 諸経費・調整費合計：<span id="resCircleExpense">0</span> 円<br>
-                ガソリン代の余剰：<span id="resGasSurplus" style="color:#27ae60">0</span> 円 (引当)<br>
+                ガソリン代の端数（切り上げ分）：<span id="resGasSurplus" style="color:#27ae60">0</span> 円 (サークル会計に充当)<br>
                 <div style="margin-top:8px; padding-top:8px; border-top:1px solid #ccc;">
-                    <strong>口座からの出金必要額：</strong><br>
+                    <strong>サークル会計からの支出額：</strong><br>
                     <span class="circle-cost" id="resWithdraw">0 円</span>
                 </div>
             </div>
