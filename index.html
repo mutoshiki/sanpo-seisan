@@ -68,6 +68,36 @@ input[type="number"], input[type="text"]{
 
 .check-group{ display: flex; align-items: center; gap: 10px; background: #fff3cd; padding: 10px; border-radius: 4px; margin-top: 10px; border: 1px solid #ffeeba; }
 
+/* コピペエリアのスタイル */
+.copy-area {
+    margin-top: 15px;
+    background: #fff;
+    padding: 10px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+#copyTextarea {
+    width: 100%;
+    height: 120px;
+    font-size: 0.85rem;
+    border: none;
+    resize: none;
+    background: transparent;
+    font-family: inherit;
+    color: #333;
+}
+.btn-copy {
+    background: #555;
+    color: white;
+    border: none;
+    padding: 8px;
+    width: 100%;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    margin-top: 5px;
+}
+
 /* 履歴セクションのスタイル */
 .history-section { margin-top: 40px; border-top: 2px solid #ddd; padding-top: 20px; }
 .history-item { 
@@ -123,6 +153,14 @@ input[type="number"], input[type="text"]{
                 </div>
             </div>
         </div>
+
+        <div class="res-block" style="border-bottom:none;">
+            <div class="res-title" style="font-weight:bold;">📲 LINE送信用テキスト</div>
+            <div class="copy-area">
+                <textarea id="copyTextarea" readonly></textarea>
+                <button class="btn-copy" onclick="copyToClipboard()">テキストをコピーする</button>
+            </div>
+        </div>
     </div>
 
     <div class="history-section">
@@ -135,8 +173,8 @@ input[type="number"], input[type="text"]{
 const DEFAULT_CAR = { name: "", dist: "", eco: "", price: "", extras: [] };
 
 window.onload = function() {
-    loadDraft();    // 書きかけのデータを読み込み
-    updateHistory(); // 履歴リストを更新
+    loadDraft();
+    updateHistory();
 };
 
 function addCar(data = null) {
@@ -163,7 +201,6 @@ function addCar(data = null) {
         <button class="btn-mini" onclick="addExtra(${idx})" style="margin-top:5px;">+ 経費追加</button>
     `;
     list.appendChild(div);
-
     if(c.extras) c.extras.forEach(ex => addExtra(idx, ex.name, ex.amount));
 }
 
@@ -189,9 +226,9 @@ function calculate() {
     const cards = document.querySelectorAll('.car-card');
     let totalGas = 0; let totalExtras = 0; let totalReward = 0;
     let drivers = [];
-    let carDatas = []; // 履歴保存用
+    let carDatas = [];
 
-    cards.forEach((card, i) => {
+    cards.forEach((card) => {
         const name = card.querySelector('.inp-name').value || "名無し";
         const dist = parseFloat(card.querySelector('.inp-dist').value) || 0;
         const eco = parseFloat(card.querySelector('.inp-eco').value) || 1;
@@ -206,7 +243,7 @@ function calculate() {
         });
 
         totalGas += gas; totalExtras += extras; totalReward += 1000;
-        drivers.push({ name, pay: gas + extras + 1000, desc: `(ガス${gas} + 諸費${extras} + 調整1000)` });
+        drivers.push({ name, pay: gas + extras + 1000, desc: `(ガス${gas.toLocaleString()} + 諸費${extras.toLocaleString()} + 調整1000)` });
         carDatas.push({ name, dist, eco, price, extras: exs });
     });
 
@@ -234,7 +271,15 @@ function calculate() {
     document.getElementById('resWithdraw').textContent = circleNeed.toLocaleString() + " 円";
     document.getElementById('resultArea').style.display = 'block';
 
-    // 履歴に保存
+    // LINEテキスト生成
+    let lineText = `【精算報告】\n`;
+    lineText += `■参加者徴収（ガソリン代のみ）\n1人：${perPersonGas.toLocaleString()}円\n`;
+    if(isOrgFree) lineText += `※企画者は無料です\n`;
+    lineText += `\n■各ドライバーへ支払い\n`;
+    drivers.forEach(d => { lineText += `・${d.name}さん：${d.pay.toLocaleString()}円\n`; });
+    lineText += `\n■サークル会計より支出\n合計：${circleNeed.toLocaleString()}円`;
+    document.getElementById('copyTextarea').value = lineText;
+
     saveToHistory({
         date: new Date().toLocaleString(),
         totalPeople,
@@ -244,33 +289,31 @@ function calculate() {
     });
 }
 
-// 履歴保存
+function copyToClipboard() {
+    const textarea = document.getElementById('copyTextarea');
+    textarea.select();
+    document.execCommand('copy');
+    alert("コピーしました！LINEに貼り付けてください。");
+}
+
 function saveToHistory(data) {
     let history = JSON.parse(localStorage.getItem('gas_history') || "[]");
-    history.unshift(data); // 先頭に追加
-    if(history.length > 10) history.pop(); // 最大10件
+    history.unshift(data);
+    if(history.length > 10) history.pop();
     localStorage.setItem('gas_history', JSON.stringify(history));
     updateHistory();
 }
 
-// 履歴リストの表示更新
 function updateHistory() {
     const history = JSON.parse(localStorage.getItem('gas_history') || "[]");
     const container = document.getElementById('historyList');
     container.innerHTML = history.length === 0 ? "<p style='font-size:0.8rem; color:#999;'>履歴はありません</p>" : "";
-    
     history.forEach((h, i) => {
         const div = document.createElement('div');
         div.className = 'history-item';
         div.innerHTML = `
-            <div class="history-info">
-                <strong>${h.date}</strong><br>
-                ${h.totalPeople}名 / 1人 ${h.perPersonGas}円 / 車両${h.cars.length}台
-            </div>
-            <div>
-                <button class="btn-restore" onclick="restoreHistory(${i})">復元</button>
-                <button class="btn-del-history" onclick="deleteHistory(${i})">×</button>
-            </div>
+            <div class="history-info"><strong>${h.date}</strong><br>${h.totalPeople}名 / 1人 ${h.perPersonGas}円 / 車両${h.cars.length}台</div>
+            <div><button class="btn-restore" onclick="restoreHistory(${i})">復元</button><button class="btn-del-history" onclick="deleteHistory(${i})">×</button></div>
         `;
         container.appendChild(div);
     });
@@ -280,7 +323,6 @@ function restoreHistory(index) {
     if(!confirm("現在の入力を破棄して、この履歴を復元しますか？")) return;
     const history = JSON.parse(localStorage.getItem('gas_history') || "[]");
     const data = history[index];
-    
     document.getElementById('totalPeople').value = data.totalPeople;
     document.getElementById('organizerFree').checked = data.isOrgFree;
     document.getElementById('carList').innerHTML = "";
@@ -334,8 +376,6 @@ function resetAll() {
         location.reload();
     }
 }
-
-// 入力変化時に下書き保存
 document.addEventListener('input', saveDraft);
 </script>
 
