@@ -7,9 +7,9 @@
 
 <style>
 :root {
-    --primary: #2e7d32; /* 自然を感じる深緑 */
+    --primary: #2e7d32;
     --primary-light: #e8f5e9;
-    --accent: #f57c00; /* 注意・強調のオレンジ */
+    --accent: #f57c00;
     --danger: #d32f2f;
     --history: #0288d1;
     --text-main: #2c3e50;
@@ -30,20 +30,11 @@ body {
     line-height: 1.6;
 }
 
-.container {
-    max-width: 500px;
-    margin: 0 auto;
-}
-
-/* ヘッダー */
-header {
-    text-align: center;
-    margin-bottom: 25px;
-}
+.container { max-width: 500px; margin: 0 auto; }
+header { text-align: center; margin-bottom: 25px; }
 h1 { font-size: 1.6rem; margin: 0; color: var(--primary); display: flex; align-items: center; justify-content: center; gap: 8px; }
 h1 span { font-size: 1.2rem; display: block; color: var(--text-sub); font-weight: normal; }
 
-/* カードスタイル */
 .card {
     background: var(--card);
     padding: 20px;
@@ -54,7 +45,6 @@ h1 span { font-size: 1.2rem; display: block; color: var(--text-sub); font-weight
 
 h2 { font-size: 1.1rem; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; }
 
-/* フォーム要素 */
 .input-group { margin-bottom: 15px; }
 label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; color: var(--text-sub); }
 input[type="number"], input[type="text"] {
@@ -65,14 +55,12 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px
 .flex-row { display: flex; gap: 10px; }
 .flex-row > div { flex: 1; }
 
-/* チェックボックス */
 .checkbox-card {
     display: flex; align-items: center; gap: 10px; background: var(--primary-light);
     padding: 12px; border-radius: 8px; cursor: pointer; user-select: none;
 }
 .checkbox-card input { width: 18px; height: 18px; cursor: pointer; }
 
-/* 車両カード */
 .car-card {
     border: 1.5px solid #e0e0e0; border-radius: 10px; padding: 15px; margin-bottom: 15px; position: relative;
     background: #fff; transition: transform 0.2s;
@@ -87,11 +75,9 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px
     background: #ffebee; border: none; width: 28px; height: 28px; border-radius: 50%; cursor: pointer;
 }
 
-/* 経費リスト */
 .extra-section { background: #f8f9fa; padding: 10px; border-radius: 8px; margin-top: 10px; }
 .extra-item { display: flex; gap: 5px; margin-bottom: 8px; }
 
-/* ボタン */
 .btn {
     width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: bold;
     padding: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
@@ -101,27 +87,37 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px
 .btn-outline { background: white; border: 2px dashed #b0bec5; color: var(--text-sub); margin-bottom: 15px; padding: 10px; }
 .btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 15px; text-decoration: underline; }
 
-/* 結果表示 */
 #resultArea { display: none; animation: slideUp 0.4s ease-out; }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
 .result-header { text-align: center; margin-bottom: 20px; }
 .price-tag { font-size: 2.2rem; font-weight: 900; color: var(--primary); display: block; }
-.driver-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #eee; }
-.driver-info small { color: var(--text-sub); display: block; font-size: 0.75rem; }
+
+/* 支払いリストのデザイン調整 */
+.driver-row { padding: 15px 0; border-bottom: 1px solid #eee; }
+.driver-main { display: flex; justify-content: space-between; align-items: center; }
+.driver-total-price { font-size: 1.1rem; font-weight: bold; color: var(--text-main); }
+.driver-details-list { 
+    background: #fdfdfd; 
+    margin-top: 8px; 
+    padding: 8px 12px; 
+    border-radius: 6px; 
+    border-left: 3px solid #ddd;
+    font-size: 0.8rem;
+    color: var(--text-sub);
+}
+.detail-line { display: flex; justify-content: space-between; margin-bottom: 2px; }
 
 .copy-box { background: #37474f; padding: 15px; border-radius: 8px; margin-top: 10px; }
 #copyTextarea { 
-    width: 100%; height: 100px; background: transparent; border: none; color: #eceff1; 
+    width: 100%; height: 180px; background: transparent; border: none; color: #eceff1; 
     font-size: 0.85rem; resize: none; font-family: monospace;
 }
 .btn-copy { background: var(--accent); color: white; padding: 10px; margin-top: 10px; border-radius: 6px; border: none; width: 100%; font-weight: bold; cursor: pointer; }
 
-/* 履歴 */
 .history-item { 
     background: #fff; border-left: 4px solid var(--history); padding: 12px; 
     margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
 }
 .h-date { font-size: 0.75rem; color: var(--text-sub); }
 .h-summary { font-weight: bold; font-size: 0.9rem; }
@@ -166,7 +162,7 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px
             </div>
 
             <div class="res-section">
-                <label>🚕 ドライバーへの支払い</label>
+                <label>🚕 ドライバーへの支払い内訳</label>
                 <div id="resDriverList"></div>
             </div>
 
@@ -203,7 +199,6 @@ input:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px
 </div>
 
 <script>
-// --- 基本機能のJSロジック ---
 const DEFAULT_CAR = { name: "", dist: "", eco: "", price: "", extras: [] };
 
 window.onload = function() {
@@ -221,27 +216,15 @@ function addCar(data = null) {
     div.innerHTML = `
         <span class="car-badge">車両 ${idx+1}</span>
         <button class="remove-btn" onclick="removeCar(this)">×</button>
-        
         <div class="input-group" style="margin-top:10px;">
             <label>ドライバー名</label>
             <input type="text" class="inp-name" value="${c.name}" placeholder="氏名">
         </div>
-        
         <div class="flex-row">
-            <div class="input-group">
-                <label>距離(km)</label>
-                <input type="number" class="inp-dist" value="${c.dist}" placeholder="0" inputmode="decimal">
-            </div>
-            <div class="input-group">
-                <label>燃費(L)</label>
-                <input type="number" class="inp-eco" value="${c.eco}" placeholder="15" inputmode="decimal">
-            </div>
-            <div class="input-group">
-                <label>単価(円)</label>
-                <input type="number" class="inp-price" value="${c.price}" placeholder="170" inputmode="numeric">
-            </div>
+            <div class="input-group"><label>距離(km)</label><input type="number" class="inp-dist" value="${c.dist}" inputmode="decimal"></div>
+            <div class="input-group"><label>燃費(km/L)</label><input type="number" class="inp-eco" value="${c.eco}" inputmode="decimal"></div>
+            <div class="input-group"><label>単価(円)</label><input type="number" class="inp-price" value="${c.price}" inputmode="numeric"></div>
         </div>
-
         <div class="extra-section">
             <label style="margin-bottom:8px; display:block;">➕ 諸費用（高速・駐車場等）</label>
             <div id="extras-${idx}"></div>
@@ -257,217 +240,177 @@ function addExtra(idx, name="", amount="") {
     const div = document.createElement('div');
     div.className = 'extra-item';
     div.innerHTML = `
-        <input type="text" class="ex-name" placeholder="名目" value="${name}" style="flex:2; padding:8px; font-size:14px;">
-        <input type="number" class="ex-amount" placeholder="金額" value="${amount}" style="flex:1; padding:8px; font-size:14px;" inputmode="numeric">
+        <input type="text" class="ex-name" placeholder="名目" value="${name}" style="flex:2; padding:8px;">
+        <input type="number" class="ex-amount" placeholder="金額" value="${amount}" style="flex:1; padding:8px;" inputmode="numeric">
         <button class="remove-btn" style="position:static; width:35px; height:35px;" onclick="this.parentElement.remove()">×</button>
     `;
     box.appendChild(div);
 }
 
-function removeCar(btn){ 
-    if(confirm("この車両を削除しますか？")) {
-        btn.closest('.car-card').remove(); 
-        saveDraft(); 
-    }
-}
+function removeCar(btn){ if(confirm("車両を削除しますか？")) { btn.closest('.car-card').remove(); saveDraft(); } }
 
 function calculate() {
     const totalPeople = parseInt(document.getElementById('totalPeople').value);
     const isOrgFree = document.getElementById('organizerFree').checked;
-    
-    if (!totalPeople || totalPeople <= 0) { 
-        alert("有効な参加人数を入力してください"); 
-        return; 
-    }
+    if (!totalPeople || totalPeople <= 0) { alert("人数を入力してください"); return; }
 
     const cards = document.querySelectorAll('.car-card');
-    if (cards.length === 0) {
-        alert("車両を少なくとも1台登録してください");
-        return;
-    }
-
-    let totalGas = 0; 
-    let totalExtras = 0; 
-    let totalReward = 0;
-    let drivers = [];
-    let carDatas = [];
+    let totalGas = 0; let totalExtras = 0; let totalReward = 0;
+    let driverResults = []; 
 
     cards.forEach((card) => {
         const name = card.querySelector('.inp-name').value || "ドライバー";
         const dist = parseFloat(card.querySelector('.inp-dist').value) || 0;
         const eco = parseFloat(card.querySelector('.inp-eco').value) || 1;
         const price = parseFloat(card.querySelector('.inp-price').value) || 0;
-        const gas = Math.round((dist / eco) * price);
+        const gasCost = Math.round((dist / eco) * price);
         
-        let extras = 0; 
+        let extrasTotal = 0; 
         let exs = [];
         card.querySelectorAll('.extra-item').forEach(row => {
             const val = parseInt(row.querySelector('.ex-amount').value) || 0;
             const nm = row.querySelector('.ex-name').value || "経費";
-            if(val > 0) { extras += val; exs.push({name: nm, amount: val}); }
+            if(val > 0) { extrasTotal += val; exs.push({name: nm, amount: val}); }
         });
 
-        totalGas += gas; 
-        totalExtras += extras; 
-        totalReward += 1000; // 運転調整手当
-        
-        drivers.push({ 
-            name, 
-            pay: gas + extras + 1000, 
-            desc: `ガス:${gas.toLocaleString()} / 諸費:${extras.toLocaleString()} / 調整:1,000` 
+        const reward = 1000;
+        totalGas += gasCost; 
+        totalExtras += extrasTotal; 
+        totalReward += reward;
+
+        driverResults.push({
+            name,
+            totalPay: gasCost + extrasTotal + reward,
+            gasCost,
+            reward,
+            extras: exs,
+            extrasTotal
         });
-        carDatas.push({ name, dist, eco, price, extras: exs });
     });
 
     const payers = isOrgFree ? (totalPeople - 1) : totalPeople;
-    // 100円単位切り上げ
     const perPersonGas = Math.ceil((totalGas / payers) / 100) * 100;
     const collectedGasTotal = perPersonGas * payers;
     const gasSurplus = collectedGasTotal - totalGas;
     const circleNeed = (totalExtras + totalReward) - gasSurplus;
 
-    // --- 表示反映 ---
+    // --- 画面表示の更新 ---
     document.getElementById('resPerPerson').textContent = perPersonGas.toLocaleString() + " 円";
-    document.getElementById('resTargetDetail').innerHTML = `対象者: ${payers}名 / ガソリン総額: ${totalGas.toLocaleString()}円`;
+    document.getElementById('resTargetDetail').innerHTML = `対象: ${payers}名 / 実ガス代総額: ${totalGas.toLocaleString()}円`;
     
-    const dList = document.getElementById('resDriverList');
+    // 画面上のドライバーリスト生成
+    const dList = document.getElementById('resDriverList'); 
     dList.innerHTML = "";
-    drivers.forEach(d => {
-        const row = document.createElement('div');
+    driverResults.forEach(d => {
+        const row = document.createElement('div'); 
         row.className = 'driver-row';
+        
+        let extrasHtml = "";
+        d.extras.forEach(ex => {
+            extrasHtml += `<div class="detail-line"><span>└ ${ex.name}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
+        });
+
         row.innerHTML = `
-            <div class="driver-info">
+            <div class="driver-main">
                 <strong>${d.name} 様</strong>
-                <small>${d.desc}</small>
+                <span class="driver-total-price">${d.totalPay.toLocaleString()} 円</span>
             </div>
-            <div style="font-weight:bold; color:var(--text-main);">${d.pay.toLocaleString()} 円</div>`;
+            <div class="driver-details-list">
+                <div class="detail-line"><span>ガソリン代計算分</span><span>${d.gasCost.toLocaleString()}円</span></div>
+                <div class="detail-line"><span>運転手調整金</span><span>${d.reward.toLocaleString()}円</span></div>
+                ${extrasHtml}
+            </div>`;
         dList.appendChild(row);
     });
 
     document.getElementById('resCircleExpense').textContent = (totalExtras + totalReward).toLocaleString() + " 円";
     document.getElementById('resGasSurplus').textContent = "-" + gasSurplus.toLocaleString() + " 円";
     document.getElementById('resWithdraw').textContent = circleNeed.toLocaleString() + " 円";
-    
     document.getElementById('resultArea').style.display = 'block';
-    window.scrollTo({ top: document.getElementById('resultArea').offsetTop - 20, behavior: 'smooth' });
 
-    // --- LINEテキスト生成 ---
+    // LINEテキスト生成
     let lineText = `【精算報告 🚙】\n`;
-    lineText += `■参加者徴収（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
+    lineText += `■徴収額（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除となります）\n`;
-    lineText += `\n■各ドライバーへの支払額\n`;
-    drivers.forEach(d => { lineText += `・${d.name}さん：${d.pay.toLocaleString()}円\n`; });
-    lineText += `\n■サークル会計より補填\n計：${circleNeed.toLocaleString()}円\n`;
-    lineText += `お疲れ様でした！`;
+    lineText += `\n■ドライバーへの支払額\n`;
+    driverResults.forEach(d => {
+        lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
+        lineText += `  (ガス:${d.gasCost.toLocaleString()} / 調整:${d.reward.toLocaleString()})\n`;
+        if (d.extras.length > 0) {
+            lineText += `  [諸費内訳]\n`;
+            d.extras.forEach(ex => { lineText += `   - ${ex.name}: ${ex.amount.toLocaleString()}円\n`; });
+        }
+    });
+    lineText += `\n■サークル会計より補填\n計：${circleNeed.toLocaleString()}円\n\nお疲れ様でした！`;
     document.getElementById('copyTextarea').value = lineText;
 
-    saveToHistory({
-        date: new Date().toLocaleString('ja-JP', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}),
-        totalPeople,
-        isOrgFree,
-        cars: carDatas,
-        perPersonGas
-    });
+    saveToHistory({ date: new Date().toLocaleString('ja-JP', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}), totalPeople, isOrgFree, cars: driverResults, perPersonGas });
 }
-
-// --- 以下、データ管理系 ---
 
 function copyToClipboard() {
     const textarea = document.getElementById('copyTextarea');
-    textarea.select();
-    document.execCommand('copy');
-    const btn = document.querySelector('.btn-copy');
-    btn.textContent = "✅ コピー完了！";
+    textarea.select(); document.execCommand('copy');
+    const btn = document.querySelector('.btn-copy'); btn.textContent = "✅ コピー完了！";
     setTimeout(() => { btn.textContent = "テキストをコピー"; }, 2000);
 }
 
-function saveToHistory(data) {
-    let history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
-    history.unshift(data);
-    if(history.length > 5) history.pop();
-    localStorage.setItem('gas_history_v2', JSON.stringify(history));
-    updateHistory();
+function saveDraft() {
+    const cards = document.querySelectorAll('.car-card');
+    const carDatas = Array.from(cards).map(card => ({
+        name: card.querySelector('.inp-name').value, dist: card.querySelector('.inp-dist').value,
+        eco: card.querySelector('.inp-eco').value, price: card.querySelector('.inp-price').value,
+        extras: Array.from(card.querySelectorAll('.extra-item')).map(row => ({ name: row.querySelector('.ex-name').value, amount: row.querySelector('.ex-amount').value }))
+    }));
+    localStorage.setItem('gas_draft_v2', JSON.stringify({ total: document.getElementById('totalPeople').value, org: document.getElementById('organizerFree').checked, cars: carDatas }));
+}
+
+function loadDraft() {
+    const raw = localStorage.getItem('gas_draft_v2'); if(!raw) { addCar(); return; }
+    const d = JSON.parse(raw); document.getElementById('totalPeople').value = d.total;
+    document.getElementById('organizerFree').checked = d.org;
+    if(d.cars.length) d.cars.forEach(c => addCar(c)); else addCar();
 }
 
 function updateHistory() {
     const history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
     const container = document.getElementById('historyList');
-    container.innerHTML = history.length === 0 ? "<p style='font-size:0.85rem; color:#999; text-align:center;'>履歴はありません</p>" : "";
+    container.innerHTML = history.length === 0 ? "<p style='font-size:0.85rem; color:#999; text-align:center;'>履歴なし</p>" : "";
     history.forEach((h, i) => {
-        const div = document.createElement('div');
-        div.className = 'history-item';
-        div.innerHTML = `
-            <div>
-                <div class="h-date">${h.date}</div>
-                <div class="h-summary">${h.totalPeople}名 / 1人 ${h.perPersonGas.toLocaleString()}円</div>
-            </div>
-            <div class="history-btns">
-                <button class="btn-reset" style="color:var(--history); margin:0;" onclick="restoreHistory(${i})">復元</button>
-                <button class="btn-reset" style="color:var(--danger); margin:0;" onclick="deleteHistory(${i})">削除</button>
-            </div>
-        `;
+        const div = document.createElement('div'); div.className = 'history-item';
+        div.innerHTML = `<div><div class="h-date">${h.date}</div><div class="h-summary">${h.totalPeople}名 / 1人 ${h.perPersonGas.toLocaleString()}円</div></div><div class="history-btns"><button class="btn-reset" onclick="restoreHistory(${i})">復元</button></div>`;
         container.appendChild(div);
     });
 }
 
 function restoreHistory(index) {
-    if(!confirm("現在の入力を上書きして履歴を復元しますか？")) return;
+    if(!confirm("復元しますか？")) return;
     const history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
     const data = history[index];
     document.getElementById('totalPeople').value = data.totalPeople;
     document.getElementById('organizerFree').checked = data.isOrgFree;
     document.getElementById('carList').innerHTML = "";
-    data.cars.forEach(c => addCar(c));
-    document.getElementById('resultArea').style.display = 'none';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    // 履歴からの復元用にaddCarを調整
+    data.cars.forEach(c => {
+        // 履歴データ構造が計算後データの場合は入力用に戻す
+        const inputData = {
+            name: c.name,
+            dist: c.dist || "",
+            eco: c.eco || "",
+            price: c.price || "",
+            extras: c.extras || []
+        };
+        addCar(inputData);
+    });
 }
 
-function deleteHistory(index) {
+function saveToHistory(data) {
     let history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
-    history.splice(index, 1);
+    history.unshift(data); if(history.length > 5) history.pop();
     localStorage.setItem('gas_history_v2', JSON.stringify(history));
     updateHistory();
 }
 
-function saveDraft() {
-    const cards = document.querySelectorAll('.car-card');
-    const carDatas = Array.from(cards).map(card => {
-        const exs = Array.from(card.querySelectorAll('.extra-item')).map(row => ({
-            name: row.querySelector('.ex-name').value,
-            amount: row.querySelector('.ex-amount').value
-        }));
-        return {
-            name: card.querySelector('.inp-name').value,
-            dist: card.querySelector('.inp-dist').value,
-            eco: card.querySelector('.inp-eco').value,
-            price: card.querySelector('.inp-price').value,
-            extras: exs
-        };
-    });
-    const draft = {
-        total: document.getElementById('totalPeople').value,
-        org: document.getElementById('organizerFree').checked,
-        cars: carDatas
-    };
-    localStorage.setItem('gas_draft_v2', JSON.stringify(draft));
-}
-
-function loadDraft() {
-    const raw = localStorage.getItem('gas_draft_v2');
-    if(!raw) { addCar(); return; }
-    const d = JSON.parse(raw);
-    document.getElementById('totalPeople').value = d.total;
-    document.getElementById('organizerFree').checked = d.org;
-    if(d.cars && d.cars.length) d.cars.forEach(c => addCar(c)); else addCar();
-}
-
-function resetAll() {
-    if(confirm("全ての入力を消去しますか？（履歴は残ります）")) {
-        localStorage.removeItem('gas_draft_v2');
-        location.reload();
-    }
-}
-
+function resetAll() { if(confirm("リセットしますか？")) { localStorage.removeItem('gas_draft_v2'); location.reload(); } }
 document.addEventListener('input', saveDraft);
 </script>
 
