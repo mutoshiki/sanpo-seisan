@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール Pro</title>
+<title>山歩会会計精算ツール</title>
 
 <style>
 :root {
@@ -171,17 +171,17 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
 
 <div class="container">
     <header>
-        <h1>⛰️ 山歩会 ガソリン精算（代表者用）</h1>
+        <h1>⛰️ 山歩会用 ガソリン精算ツール</h1>
     </header>
 
     <div class="usage-guide">
         <h3>⚠️ 参加者・ドライバーの皆様へ</h3>
         <p>このツールは、<strong>代表者（会計担当）1名が入力するためのツール</strong>です。各自で精算計算は行わず、以下の情報を代表者にLINE等でお知らせください。</p>
         <ul style="margin-top:10px;">
-            <li>走行距離 (km)</li>
-            <li>車の燃費 (km/L)</li>
-            <li>ガソリン単価 (円)</li>
-            <li>立替経費（高速代・駐車場代など）</li>
+            <li>走行距離</li>
+            <li>燃費</li>
+            <li>ガソリン価格</li>
+            <li>諸費用（高速代・駐車場代など）</li>
         </ul>
     </div>
 
@@ -237,7 +237,7 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
         </div>
 
         <div class="card" style="background: #263238; color: white;">
-            <h2 style="color: white; border-color: #546e7a;">📱 LINE送信用（そのまま送れます）</h2>
+            <h2 style="color: white; border-color: #546e7a;">📱 LINE送信用メッセージ</h2>
             <div class="copy-box">
                 <textarea id="copyTextarea" readonly></textarea>
                 <button class="btn-copy" onclick="copyToClipboard()">テキストをコピー</button>
@@ -293,7 +293,7 @@ function addCar(data = null) {
                 <div class="input-group"><label>単価(円)</label><input type="number" class="inp-price" value="${c.price}" inputmode="numeric"></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ ドライバー立替経費（高速・駐車場代など）</label>
+                <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ 諸費用（高速・駐車場代など）</label>
                 <div id="extras-${idx}"></div>
                 <button class="btn-reset" style="padding:0; margin:10px 0 0 0; text-align:left; font-size:0.8rem;" onclick="addExtra(${idx})">+ 経費を追加</button>
             </div>
