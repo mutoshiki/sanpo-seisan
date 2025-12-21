@@ -338,7 +338,7 @@ function removeCar(e, btn){
 function calculate() {
     const totalPeople = parseInt(document.getElementById('totalPeople').value);
     const isOrgFree = document.getElementById('organizerFree').checked;
-    if (!totalPeople || totalPeople <= 0) { alert("乗車人数を入力してください"); return; }
+    if (!totalPeople || totalPeople <= 0) { alert("参加人数を入力してください"); return; }
 
     const cards = document.querySelectorAll('.car-card');
     let totalGas = 0; let totalExtras = 0; let totalReward = 0;
