@@ -3,22 +3,53 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール</title>
+<title>山歩会会計精算ツール v3</title>
 
 <style>
+/* --- ライトモード（デフォルト） --- */
 :root {
-    --primary: #2e7d32;      /* 緑：プラス・集金 */
+    --primary: #2e7d32;      /* メイン緑 */
     --primary-light: #e8f5e9;
     --accent: #f57c00;
-    --danger: #d32f2f;      /* 赤：マイナス・支出 */
-    --line-color: #06c755;  /* LINEブランドカラー */
+    --danger: #d32f2f;
+    --danger-bg: #ffebee;
+    --line-color: #06c755;
     --history: #0288d1;
     --text-main: #333333;
     --text-sub: #666666;
     --bg: #f0f2f5;
     --card: #ffffff;
+    --input-bg: #fafafa;
+    --input-border: #cfd8dc;
+    --header-bg: #f5f5f5;
+    --guide-bg: #fff8e1;
+    --guide-border: #ffe0b2;
+    --guide-text: #5d4037;
     --radius: 12px;
     --shadow: 0 4px 15px rgba(0,0,0,0.05);
+}
+
+/* --- ダークモード（スマホ設定連動） --- */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --primary: #81c784;      /* 暗い背景に映える明るい緑 */
+        --primary-light: #1b5e20; /* 暗緑色の背景 */
+        --accent: #ffb74d;       /* 明るいオレンジ */
+        --danger: #ef5350;       /* 明るい赤 */
+        --danger-bg: #4a1515;    /* 暗い赤背景 */
+        --history: #4fc3f7;
+        --text-main: #e0e0e0;    /* 白っぽいグレー */
+        --text-sub: #b0bec5;
+        --bg: #121212;           /* ほぼ黒 */
+        --card: #1e1e1e;         /* ダークグレー */
+        --input-bg: #2c2c2c;
+        --input-border: #424242;
+        --header-bg: #2c2c2c;
+        --guide-bg: #3e2723;     /* こげ茶 */
+        --guide-border: #5d4037;
+        --guide-text: #fff8e1;
+        --shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -30,6 +61,7 @@ body {
     color: var(--text-main);
     line-height: 1.6;
     font-size: 16px;
+    transition: background 0.3s, color 0.3s;
 }
 
 .container { max-width: 500px; margin: 0 auto; }
@@ -39,24 +71,21 @@ h1 span { font-size: 0.9rem; margin-top: 5px; color: var(--text-sub); font-weigh
 
 /* 案内ボックス */
 .usage-guide {
-    background: #fff8e1;
-    border: 1px solid #ffe0b2;
+    background: var(--guide-bg);
+    border: 1px solid var(--guide-border);
     padding: 15px;
     border-radius: 8px;
     margin-bottom: 25px;
     font-size: 0.9rem;
-    color: #5d4037;
+    color: var(--guide-text);
 }
 .usage-guide h3 {
     margin: 0 0 8px 0;
-    color: #ef6c00;
+    color: var(--accent);
     font-size: 1rem;
     display: flex; align-items: center; gap: 6px;
 }
-.usage-guide ul {
-    margin: 0; padding-left: 20px;
-    font-size: 0.85rem;
-}
+.usage-guide ul { margin: 0; padding-left: 20px; font-size: 0.85rem; }
 
 .card {
     background: var(--card);
@@ -72,45 +101,48 @@ h2 { font-size: 1.1rem; margin: 0 0 15px 0; display: flex; align-items: center; 
 .input-group { margin-bottom: 15px; }
 label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; color: var(--text-sub); }
 
-/* UI調整：等幅フォントで見やすく */
-input[type="number"], input[type="text"] {
-    width: 100%; padding: 12px; border: 1px solid #cfd8dc; border-radius: 8px; 
-    font-size: 16px; transition: border 0.2s; background: #fafafa;
-    font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace; /* 数字を見やすく */
+/* 入力フォーム */
+input[type="number"], input[type="text"], select {
+    width: 100%; padding: 12px; 
+    border: 1px solid var(--input-border); 
+    border-radius: 8px; 
+    font-size: 16px; 
+    background: var(--input-bg);
+    color: var(--text-main);
+    font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
     font-feature-settings: "tnum";
+    transition: 0.2s;
 }
-input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 2px var(--primary-light); }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
 
 .flex-row { display: flex; gap: 10px; }
 .flex-row > div { flex: 1; }
 
 .checkbox-card {
     display: flex; align-items: center; gap: 10px; background: var(--primary-light);
-    padding: 12px; border-radius: 8px; cursor: pointer; user-select: none;
+    padding: 12px; border-radius: 8px; cursor: pointer; user-select: none; color: var(--text-main);
 }
 .checkbox-card input { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); }
 
-/* 車両カード（折りたたみ対応） */
+/* 車両カード */
 .car-card {
-    border: 1px solid #e0e0e0; border-radius: 10px; margin-bottom: 15px;
-    background: #fff; overflow: hidden;
+    border: 1px solid var(--input-border); border-radius: 10px; margin-bottom: 15px;
+    background: var(--card); overflow: hidden;
 }
 .car-header {
-    background: #f5f5f5; padding: 12px 15px;
+    background: var(--header-bg); padding: 12px 15px;
     display: flex; justify-content: space-between; align-items: center;
     cursor: pointer; user-select: none;
     font-weight: bold; color: var(--text-main);
     transition: background 0.2s;
 }
-.car-header:active { background: #eeeeee; }
+.car-header:active { opacity: 0.8; }
 .car-title-text { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
-.toggle-icon { font-size: 0.8rem; color: #999; transition: transform 0.3s; }
+.toggle-icon { font-size: 0.8rem; color: var(--text-sub); transition: transform 0.3s; }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
 .car-body {
-    padding: 15px;
-    display: none; 
-    animation: fadeIn 0.3s ease;
+    padding: 15px; display: none; animation: fadeIn 0.3s ease;
 }
 .car-card.open .car-body { display: block; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -120,7 +152,7 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
     font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; cursor: pointer;
 }
 
-.extra-section { background: #f9f9f9; padding: 12px; border-radius: 8px; margin-top: 15px; border: 1px dashed #ccc; }
+.extra-section { background: var(--header-bg); padding: 12px; border-radius: 8px; margin-top: 15px; border: 1px dashed var(--input-border); }
 .extra-item { display: flex; gap: 8px; margin-bottom: 8px; }
 
 .btn {
@@ -128,26 +160,23 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
     padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
     text-decoration: none;
 }
-.btn-primary { background: var(--primary); color: white; margin-top: 10px; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3); }
+.btn-primary { background: var(--primary); color: white; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .btn-primary:active { transform: scale(0.98); }
-.btn-outline { background: white; border: 2px dashed #b0bec5; color: var(--text-sub); margin-bottom: 15px; padding: 12px; }
-.btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 20px; text-decoration: underline; padding: 10px; }
+.btn-outline { background: var(--card); border: 2px dashed var(--text-sub); color: var(--text-sub); margin-bottom: 15px; padding: 12px; }
+.btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 20px; text-decoration: underline; padding: 10px; border:none; cursor:pointer;}
 
 /* LINEボタン */
-.btn-line {
-    background: var(--line-color); color: white; margin-top: 10px;
-}
+.btn-line { background: var(--line-color); color: white; margin-top: 10px; }
 .btn-line:hover { opacity: 0.9; }
 
 #resultArea { display: none; }
 
-.result-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
+.result-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--input-border); }
 .price-tag { font-size: 2.4rem; font-weight: 800; color: var(--primary); display: block; line-height: 1.2; margin: 5px 0; }
-.price-tag-sub { font-size: 2.0rem; font-weight: 800; color: var(--danger); display: block; line-height: 1.2; margin: 5px 0; }
 
-/* 支払いリストのデザイン */
+/* 支払いリスト */
 .driver-row { 
-    background: #fff; border: 1px solid #eee; border-radius: 8px; 
+    background: var(--card); border: 1px solid var(--input-border); border-radius: 8px; 
     padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
 }
 .driver-main { 
@@ -158,8 +187,15 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
 .driver-total-price { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
 
 .detail-line { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; color: var(--text-sub); }
-.detail-group { margin-top: 8px; padding-top: 8px; border-top: 1px dashed #ddd; }
-.detail-label { color: #888; font-size: 0.75rem; margin-bottom: 2px; }
+.detail-group { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--input-border); }
+.detail-label { color: var(--text-sub); font-size: 0.75rem; margin-bottom: 2px; opacity: 0.8; }
+
+/* 支出ボックス */
+.withdraw-box {
+    font-size: 1.1rem; font-weight: bold; display: flex; justify-content: space-between; margin-top: 10px;
+    color: var(--danger); border: 2px solid var(--danger); padding: 10px; border-radius: 8px;
+    background: var(--danger-bg);
+}
 
 .copy-box { background: #263238; padding: 15px; border-radius: 8px; margin-top: 10px; }
 #copyTextarea { 
@@ -170,14 +206,14 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
 
 /* 履歴デザイン */
 .history-item { 
-    background: #fff; border-left: 4px solid var(--history); padding: 12px; 
+    background: var(--card); border-left: 4px solid var(--history); padding: 12px; 
     margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 }
 .h-date { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 2px;}
 .h-summary { font-weight: bold; font-size: 0.9rem; }
 .history-btns { display: flex; gap: 8px; }
 .btn-h-restore { font-size: 0.8rem; background: var(--primary-light); color: var(--primary); border:none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-.btn-h-delete { font-size: 0.8rem; background: #ffebee; color: var(--danger); border:none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+.btn-h-delete { font-size: 0.8rem; background: var(--danger-bg); color: var(--danger); border:none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
 
 </style>
 </head>
@@ -186,6 +222,7 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
 <div class="container">
     <header>
         <h1>⛰️ 山歩会用 ガソリン精算ツール</h1>
+        <h1><span>v3.0 Dark Mode 対応版</span></h1>
     </header>
 
     <div class="usage-guide">
@@ -200,18 +237,29 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
     </div>
 
     <div class="card" style="padding-bottom: 10px;">
-        <h2>🚗 車両情報の登録 <span class="sub-title">（※代表者がまとめて入力）</span></h2>
+        <h2>🚗 車両情報の登録 <span class="sub-title">（代表者が入力）</span></h2>
         <div id="carList"></div>
         <button class="btn btn-outline" onclick="addCar()">+ 車両を追加</button>
     </div>
 
     <div class="card">
         <h2>👥 精算の設定</h2>
+        
+        <div class="input-group">
+            <label>端数処理（切り上げ単位）</label>
+            <select id="roundingUnit">
+                <option value="100" selected>100円単位（現金精算向け）</option>
+                <option value="10">10円単位</option>
+                <option value="1">1円単位（PayPay/完全割り勘）</option>
+            </select>
+        </div>
+
         <div class="input-group">
             <label>今回の企画の参加人数(企画者含む)</label>
             <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric">
         </div>
-        <label class="checkbox-card">
+        
+        <label class="checkbox-card" style="margin-bottom: 15px;">
             <input type="checkbox" id="organizerFree">
             <span>企画者はガソリン代を支払わない</span>
         </label>
@@ -233,7 +281,7 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
                 <div id="resDriverList"></div>
             </div>
 
-            <div class="res-section" style="margin-top:20px; padding-top:15px; border-top: 1px dashed #ccc;">
+            <div class="res-section" style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--input-border);">
                 <label>💰 サークル会計からの支出</label>
                 <div style="font-size:0.9rem; display: flex; justify-content: space-between; margin-top:5px;">
                     <span>経費・調整費の合計</span>
@@ -243,7 +291,8 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
                     <span>端数充当額（参加者からの余剰金）</span>
                     <span id="resGasSurplus">0円</span>
                 </div>
-                <div style="font-size:1.1rem; font-weight: bold; display: flex; justify-content: space-between; margin-top:10px; color: var(--danger); border: 2px solid var(--danger); padding: 10px; border-radius: 8px; background: #ffebee;">
+                
+                <div class="withdraw-box">
                     <span>会計からの実支出</span>
                     <span id="resWithdraw">0円</span>
                 </div>
@@ -255,7 +304,7 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
             <div class="copy-box">
                 <textarea id="copyTextarea" readonly></textarea>
                 <div style="display: flex; gap: 10px;">
-                    <button class="btn-copy" onclick="copyToClipboard()">📋 テキストをコピー</button>
+                    <button class="btn-copy" onclick="copyToClipboard()">📋 コピー</button>
                     <a id="btnLineShare" href="#" target="_blank" class="btn btn-line" style="display:none; width:100%;">💬 LINEで送る</a>
                 </div>
             </div>
@@ -276,13 +325,10 @@ window.onload = function() {
     updateHistory();
 };
 
-// 車両カード追加（折りたたみ機能付き）
 function addCar(data = null) {
     const list = document.getElementById('carList');
     const idx = list.children.length;
     const c = data || { ...DEFAULT_CAR, extras: [] };
-    
-    // 新規追加時は開く
     const isOpen = data ? '' : 'open';
 
     const div = document.createElement('div');
@@ -302,12 +348,12 @@ function addCar(data = null) {
         <div class="car-body">
             <div class="input-group">
                 <label>ドライバー名（任意）</label>
-                <input type="text" class="inp-name" value="${c.name}" placeholder="氏名（例: 佐藤）" oninput="updateHeaderName(${idx}, this.value)">
+                <input type="text" class="inp-name" value="${c.name}" placeholder="氏名" oninput="updateHeaderName(${idx}, this.value)">
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離(km)<span style="color:red">*</span></label><input type="number" class="inp-dist" value="${c.dist}" inputmode="decimal"></div>
-                <div class="input-group"><label>燃費(km/L)<span style="color:red">*</span></label><input type="number" class="inp-eco" value="${c.eco}" inputmode="decimal"></div>
-                <div class="input-group"><label>単価(円)<span style="color:red">*</span></label><input type="number" class="inp-price" value="${c.price}" inputmode="numeric"></div>
+                <div class="input-group"><label>距離(km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" value="${c.dist}" inputmode="decimal"></div>
+                <div class="input-group"><label>燃費(km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" value="${c.eco}" inputmode="decimal"></div>
+                <div class="input-group"><label>単価(円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" value="${c.price}" inputmode="numeric"></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ 諸費用（高速・駐車場代など）</label>
@@ -320,13 +366,11 @@ function addCar(data = null) {
     if(c.extras) c.extras.forEach(ex => addExtra(idx, ex.name, ex.amount));
 }
 
-// 折りたたみ切り替え
 function toggleCar(header) {
     const card = header.parentElement;
     card.classList.toggle('open');
 }
 
-// ヘッダーの名前を連動更新
 function updateHeaderName(idx, val) {
     const title = document.getElementById(`car-title-${idx}`);
     title.textContent = val ? `🚙 ${val}` : `🚙 車両 ${idx + 1}`;
@@ -345,7 +389,7 @@ function addExtra(idx, name="", amount="") {
 }
 
 function removeCar(e, btn){ 
-    e.stopPropagation(); // アコーディオン開閉を防止
+    e.stopPropagation(); 
     if(confirm("この車両情報を削除しますか？")) { 
         btn.closest('.car-card').remove(); 
         saveDraft(); 
@@ -356,10 +400,9 @@ function calculate() {
     const totalPeople = parseInt(document.getElementById('totalPeople').value);
     const isOrgFree = document.getElementById('organizerFree').checked;
     
-    // --- バリデーション開始 ---
+    // バリデーション
     let errorMsgs = [];
     if (!totalPeople || totalPeople <= 0) errorMsgs.push("・参加人数を入力してください");
-
     const cards = document.querySelectorAll('.car-card');
     if (cards.length === 0) errorMsgs.push("・車両が1台も登録されていません");
 
@@ -368,18 +411,12 @@ function calculate() {
         const dist = card.querySelector('.inp-dist').value;
         const eco = card.querySelector('.inp-eco').value;
         const price = card.querySelector('.inp-price').value;
-
-        // 空チェック
         if(!dist) errorMsgs.push(`・${name}: 走行距離が未入力です`);
         if(!eco) errorMsgs.push(`・${name}: 燃費が未入力です`);
         if(!price) errorMsgs.push(`・${name}: ガソリン単価が未入力です`);
     });
 
-    if (errorMsgs.length > 0) {
-        alert("⚠️ 入力エラーがあります:\n" + errorMsgs.join("\n"));
-        return; // 計算中止
-    }
-    // --- バリデーション終了 ---
+    if (errorMsgs.length > 0) { alert("⚠️ 入力エラーがあります:\n" + errorMsgs.join("\n")); return; }
 
     let totalGas = 0; let totalExtras = 0; let totalReward = 0;
     let driverResults = []; 
@@ -399,7 +436,7 @@ function calculate() {
             if(val > 0) { extrasTotal += val; exs.push({name: nm, amount: val}); }
         });
 
-        const reward = 1000; // ドライバー調整費（固定）
+        const reward = 1000; 
         totalGas += gasCost; 
         totalExtras += extrasTotal; 
         totalReward += reward;
@@ -418,22 +455,23 @@ function calculate() {
     });
 
     const payers = isOrgFree ? (totalPeople - 1) : totalPeople;
-    const perPersonGas = payers > 0 ? Math.ceil((totalGas / payers) / 100) * 100 : 0;
+
+    // 端数処理ロジックの追加
+    const roundUnit = parseInt(document.getElementById('roundingUnit').value);
+    const perPersonGas = payers > 0 ? Math.ceil((totalGas / payers) / roundUnit) * roundUnit : 0;
+    
     const collectedGasTotal = perPersonGas * payers;
     const gasSurplus = collectedGasTotal - totalGas;
     const circleNeed = (totalExtras + totalReward) - gasSurplus;
 
-    // --- 画面表示 ---
     document.getElementById('resPerPerson').textContent = perPersonGas.toLocaleString() + " 円";
-    document.getElementById('resTargetDetail').innerHTML = `徴収人数：${payers}名 ／ ガソリン代実費合計：${totalGas.toLocaleString()}円`;
+    document.getElementById('resTargetDetail').innerHTML = `徴収人数：${payers}名 ／ ガソリン代実費合計：${totalGas.toLocaleString()}円<br>（端数処理: ${roundUnit}円単位）`;
     
-    // ドライバーリスト生成
     const dList = document.getElementById('resDriverList'); 
     dList.innerHTML = "";
     driverResults.forEach(d => {
         const row = document.createElement('div'); 
         row.className = 'driver-row';
-        
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
@@ -441,14 +479,13 @@ function calculate() {
             });
             extrasHtml = `<div class="detail-group"><div class="detail-label">立替経費</div>${extrasHtml}</div>`;
         }
-
         row.innerHTML = `
             <div class="driver-main">
                 <span class="driver-name">${d.name} 様</span>
                 <span class="driver-total-price">${d.totalPay.toLocaleString()} 円</span>
             </div>
             <div>
-                <div class="detail-line"><span>ガソリン代（走行距離・燃費から算出）</span><span>${d.gasCost.toLocaleString()}円</span></div>
+                <div class="detail-line"><span>ガソリン代</span><span>${d.gasCost.toLocaleString()}円</span></div>
                 <div class="detail-line"><span>ドライバー調整費</span><span>${d.reward.toLocaleString()}円</span></div>
             </div>
             ${extrasHtml}
@@ -463,7 +500,7 @@ function calculate() {
     
     document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
 
-    // LINEテキスト生成
+    // LINEテキスト
     let lineText = `【山歩会 精算報告 🚙】\n`;
     lineText += `■徴収額（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
@@ -479,11 +516,10 @@ function calculate() {
     lineText += `\n■サークル会計からの支出\n計：${circleNeed.toLocaleString()}円\n\nお疲れ様でした！`;
     document.getElementById('copyTextarea').value = lineText;
 
-    // LINEボタンのリンク更新
     const encodedText = encodeURIComponent(lineText);
     const lineBtn = document.getElementById('btnLineShare');
     lineBtn.href = `https://line.me/R/msg/text/?${encodedText}`;
-    lineBtn.style.display = 'flex'; // ボタンを表示
+    lineBtn.style.display = 'flex';
 
     saveToHistory({ 
         date: new Date().toLocaleString('ja-JP', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}), 
@@ -512,16 +548,23 @@ function saveDraft() {
         price: card.querySelector('.inp-price').value,
         extras: Array.from(card.querySelectorAll('.extra-item')).map(row => ({ name: row.querySelector('.ex-name').value, amount: row.querySelector('.ex-amount').value }))
     }));
-    localStorage.setItem('gas_draft_v2', JSON.stringify({ total: document.getElementById('totalPeople').value, org: document.getElementById('organizerFree').checked, cars: carDatas }));
+    // 設定項目も保存
+    const settings = {
+        total: document.getElementById('totalPeople').value,
+        org: document.getElementById('organizerFree').checked,
+        rounding: document.getElementById('roundingUnit').value // 追加
+    };
+    localStorage.setItem('gas_draft_v3', JSON.stringify({ ...settings, cars: carDatas }));
 }
 
 function loadDraft() {
-    const raw = localStorage.getItem('gas_draft_v2'); 
+    const raw = localStorage.getItem('gas_draft_v3'); 
     if(!raw) { addCar(); return; }
     
     const d = JSON.parse(raw); 
-    document.getElementById('totalPeople').value = d.total;
-    document.getElementById('organizerFree').checked = d.org;
+    document.getElementById('totalPeople').value = d.total || "";
+    document.getElementById('organizerFree').checked = d.org || false;
+    if(d.rounding) document.getElementById('roundingUnit').value = d.rounding; // 追加
     
     document.getElementById('carList').innerHTML = "";
     if(d.cars && d.cars.length) {
@@ -531,7 +574,6 @@ function loadDraft() {
     }
 }
 
-// 履歴保存機能（補助関数）
 function saveToHistory(record) {
     let history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
     history.unshift(record);
@@ -543,7 +585,7 @@ function saveToHistory(record) {
 function updateHistory() {
     const history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
     const container = document.getElementById('historyList');
-    container.innerHTML = history.length === 0 ? "<p style='font-size:0.85rem; color:#999; text-align:center;'>履歴なし</p>" : "";
+    container.innerHTML = history.length === 0 ? "<p style='font-size:0.85rem; color:var(--text-sub); text-align:center;'>履歴なし</p>" : "";
     history.forEach((h, i) => {
         const div = document.createElement('div'); div.className = 'history-item';
         div.innerHTML = `
@@ -568,14 +610,13 @@ function restoreHistory(index) {
     document.getElementById('carList').innerHTML = "";
     
     data.cars.forEach(c => {
-        const inputData = {
+        addCar({
             name: c.name,
             dist: c.dist || "",
             eco: c.eco || "",
             price: c.price || "",
             extras: c.extras || []
-        };
-        addCar(inputData);
+        });
     });
     calculate();
 }
@@ -588,7 +629,7 @@ function deleteHistory(index) {
     updateHistory();
 }
 
-function resetAll() { if(confirm("入力をすべてリセットしますか？")) { localStorage.removeItem('gas_draft_v2'); location.reload(); } }
+function resetAll() { if(confirm("入力をすべてリセットしますか？")) { localStorage.removeItem('gas_draft_v3'); location.reload(); } }
 document.addEventListener('input', saveDraft);
 </script>
 
