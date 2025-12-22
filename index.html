@@ -7,10 +7,11 @@
 
 <style>
 :root {
-    --primary: #2e7d32;
+    --primary: #2e7d32;      /* 緑：プラス・集金 */
     --primary-light: #e8f5e9;
     --accent: #f57c00;
-    --danger: #d32f2f;
+    --danger: #d32f2f;      /* 赤：マイナス・支出 */
+    --line-color: #06c755;  /* LINEブランドカラー */
     --history: #0288d1;
     --text-main: #333333;
     --text-sub: #666666;
@@ -70,8 +71,13 @@ h2 { font-size: 1.1rem; margin: 0 0 15px 0; display: flex; align-items: center; 
 
 .input-group { margin-bottom: 15px; }
 label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; color: var(--text-sub); }
+
+/* UI調整：等幅フォントで見やすく */
 input[type="number"], input[type="text"] {
-    width: 100%; padding: 12px; border: 1px solid #cfd8dc; border-radius: 8px; font-size: 16px; transition: border 0.2s; background: #fafafa;
+    width: 100%; padding: 12px; border: 1px solid #cfd8dc; border-radius: 8px; 
+    font-size: 16px; transition: border 0.2s; background: #fafafa;
+    font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace; /* 数字を見やすく */
+    font-feature-settings: "tnum";
 }
 input:focus { outline: none; border-color: var(--primary); background: #fff; box-shadow: 0 0 0 2px var(--primary-light); }
 
@@ -120,18 +126,26 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
 .btn {
     width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: bold;
     padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    text-decoration: none;
 }
 .btn-primary { background: var(--primary); color: white; margin-top: 10px; box-shadow: 0 4px 12px rgba(46, 125, 50, 0.3); }
 .btn-primary:active { transform: scale(0.98); }
 .btn-outline { background: white; border: 2px dashed #b0bec5; color: var(--text-sub); margin-bottom: 15px; padding: 12px; }
 .btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 20px; text-decoration: underline; padding: 10px; }
 
+/* LINEボタン */
+.btn-line {
+    background: var(--line-color); color: white; margin-top: 10px;
+}
+.btn-line:hover { opacity: 0.9; }
+
 #resultArea { display: none; }
 
 .result-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid #eee; }
 .price-tag { font-size: 2.4rem; font-weight: 800; color: var(--primary); display: block; line-height: 1.2; margin: 5px 0; }
+.price-tag-sub { font-size: 2.0rem; font-weight: 800; color: var(--danger); display: block; line-height: 1.2; margin: 5px 0; }
 
-/* 支払いリストのデザイン修正 */
+/* 支払いリストのデザイン */
 .driver-row { 
     background: #fff; border: 1px solid #eee; border-radius: 8px; 
     padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
@@ -185,8 +199,14 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
         </ul>
     </div>
 
+    <div class="card" style="padding-bottom: 10px;">
+        <h2>🚗 車両情報の登録 <span class="sub-title">（※代表者がまとめて入力）</span></h2>
+        <div id="carList"></div>
+        <button class="btn btn-outline" onclick="addCar()">+ 車両を追加</button>
+    </div>
+
     <div class="card">
-        <h2>⚙️ 基本設定</h2>
+        <h2>👥 精算の設定</h2>
         <div class="input-group">
             <label>今回の企画の参加人数(企画者含む)</label>
             <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric">
@@ -195,12 +215,6 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
             <input type="checkbox" id="organizerFree">
             <span>企画者はガソリン代を支払わない</span>
         </label>
-    </div>
-
-    <div class="card" style="padding-bottom: 10px;">
-        <h2>🚗 車両情報の登録 <span class="sub-title">（※代表者がまとめて入力）</span></h2>
-        <div id="carList"></div>
-        <button class="btn btn-outline" onclick="addCar()">+ 車両を追加</button>
     </div>
 
     <button class="btn btn-primary" onclick="calculate()">🚀 精算を実行する</button>
@@ -229,7 +243,7 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
                     <span>端数充当額（参加者からの余剰金）</span>
                     <span id="resGasSurplus">0円</span>
                 </div>
-                <div style="font-size:1.1rem; font-weight: bold; display: flex; justify-content: space-between; margin-top:10px; color: var(--danger);">
+                <div style="font-size:1.1rem; font-weight: bold; display: flex; justify-content: space-between; margin-top:10px; color: var(--danger); border: 2px solid var(--danger); padding: 10px; border-radius: 8px; background: #ffebee;">
                     <span>会計からの実支出</span>
                     <span id="resWithdraw">0円</span>
                 </div>
@@ -240,7 +254,10 @@ input:focus { outline: none; border-color: var(--primary); background: #fff; box
             <h2 style="color: white; border-color: #546e7a;">📱 LINE送信用メッセージ</h2>
             <div class="copy-box">
                 <textarea id="copyTextarea" readonly></textarea>
-                <button class="btn-copy" onclick="copyToClipboard()">テキストをコピー</button>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn-copy" onclick="copyToClipboard()">📋 テキストをコピー</button>
+                    <a id="btnLineShare" href="#" target="_blank" class="btn btn-line" style="display:none; width:100%;">💬 LINEで送る</a>
+                </div>
             </div>
         </div>
     </div>
@@ -288,9 +305,9 @@ function addCar(data = null) {
                 <input type="text" class="inp-name" value="${c.name}" placeholder="氏名（例: 佐藤）" oninput="updateHeaderName(${idx}, this.value)">
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離(km)</label><input type="number" class="inp-dist" value="${c.dist}" inputmode="decimal"></div>
-                <div class="input-group"><label>燃費(km/L)</label><input type="number" class="inp-eco" value="${c.eco}" inputmode="decimal"></div>
-                <div class="input-group"><label>単価(円)</label><input type="number" class="inp-price" value="${c.price}" inputmode="numeric"></div>
+                <div class="input-group"><label>距離(km)<span style="color:red">*</span></label><input type="number" class="inp-dist" value="${c.dist}" inputmode="decimal"></div>
+                <div class="input-group"><label>燃費(km/L)<span style="color:red">*</span></label><input type="number" class="inp-eco" value="${c.eco}" inputmode="decimal"></div>
+                <div class="input-group"><label>単価(円)<span style="color:red">*</span></label><input type="number" class="inp-price" value="${c.price}" inputmode="numeric"></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ 諸費用（高速・駐車場代など）</label>
@@ -338,9 +355,32 @@ function removeCar(e, btn){
 function calculate() {
     const totalPeople = parseInt(document.getElementById('totalPeople').value);
     const isOrgFree = document.getElementById('organizerFree').checked;
-    if (!totalPeople || totalPeople <= 0) { alert("参加人数を入力してください"); return; }
+    
+    // --- バリデーション開始 ---
+    let errorMsgs = [];
+    if (!totalPeople || totalPeople <= 0) errorMsgs.push("・参加人数を入力してください");
 
     const cards = document.querySelectorAll('.car-card');
+    if (cards.length === 0) errorMsgs.push("・車両が1台も登録されていません");
+
+    cards.forEach((card, index) => {
+        const name = card.querySelector('.inp-name').value || `車両 ${index + 1}`;
+        const dist = card.querySelector('.inp-dist').value;
+        const eco = card.querySelector('.inp-eco').value;
+        const price = card.querySelector('.inp-price').value;
+
+        // 空チェック
+        if(!dist) errorMsgs.push(`・${name}: 走行距離が未入力です`);
+        if(!eco) errorMsgs.push(`・${name}: 燃費が未入力です`);
+        if(!price) errorMsgs.push(`・${name}: ガソリン単価が未入力です`);
+    });
+
+    if (errorMsgs.length > 0) {
+        alert("⚠️ 入力エラーがあります:\n" + errorMsgs.join("\n"));
+        return; // 計算中止
+    }
+    // --- バリデーション終了 ---
+
     let totalGas = 0; let totalExtras = 0; let totalReward = 0;
     let driverResults = []; 
 
@@ -385,7 +425,6 @@ function calculate() {
 
     // --- 画面表示 ---
     document.getElementById('resPerPerson').textContent = perPersonGas.toLocaleString() + " 円";
-    // ⑪ 詳細文修正
     document.getElementById('resTargetDetail').innerHTML = `徴収人数：${payers}名 ／ ガソリン代実費合計：${totalGas.toLocaleString()}円`;
     
     // ドライバーリスト生成
@@ -403,7 +442,6 @@ function calculate() {
             extrasHtml = `<div class="detail-group"><div class="detail-label">立替経費</div>${extrasHtml}</div>`;
         }
 
-        // ⑬ ガソリン代の明細文言修正
         row.innerHTML = `
             <div class="driver-main">
                 <span class="driver-name">${d.name} 様</span>
@@ -430,7 +468,6 @@ function calculate() {
     lineText += `■徴収額（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
     
-    // ⑰ ドライバー支払いLINE文言修正
     lineText += `\n■ドライバーへの支払額\n`;
     driverResults.forEach(d => {
         lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
@@ -439,9 +476,14 @@ function calculate() {
         lineText += `)\n`;
     });
     
-    // ⑱ サークル会計LINE文言修正
     lineText += `\n■サークル会計からの支出\n計：${circleNeed.toLocaleString()}円\n\nお疲れ様でした！`;
     document.getElementById('copyTextarea').value = lineText;
+
+    // LINEボタンのリンク更新
+    const encodedText = encodeURIComponent(lineText);
+    const lineBtn = document.getElementById('btnLineShare');
+    lineBtn.href = `https://line.me/R/msg/text/?${encodedText}`;
+    lineBtn.style.display = 'flex'; // ボタンを表示
 
     saveToHistory({ 
         date: new Date().toLocaleString('ja-JP', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}), 
@@ -487,6 +529,15 @@ function loadDraft() {
     } else {
         addCar();
     }
+}
+
+// 履歴保存機能（補助関数）
+function saveToHistory(record) {
+    let history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
+    history.unshift(record);
+    if(history.length > 5) history.pop();
+    localStorage.setItem('gas_history_v2', JSON.stringify(history));
+    updateHistory();
 }
 
 function updateHistory() {
