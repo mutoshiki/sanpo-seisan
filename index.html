@@ -248,9 +248,10 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         <div class="input-group">
             <label>端数処理（切り上げ単位）</label>
             <select id="roundingUnit">
-                <option value="100" selected>100円単位（現金精算向け）</option>
-                <option value="10">10円単位</option>
-                <option value="1">1円単位（PayPay/完全割り勘）</option>
+                <option value="100" selected>100円</option>
+                <option value="50">50円</option>
+                <option value="10">10円</option>
+                <option value="1">1円</option>
             </select>
         </div>
 
@@ -351,9 +352,9 @@ function addCar(data = null) {
                 <input type="text" class="inp-name" value="${c.name}" placeholder="氏名" oninput="updateHeaderName(${idx}, this.value)">
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離(km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" value="${c.dist}" inputmode="decimal"></div>
-                <div class="input-group"><label>燃費(km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" value="${c.eco}" inputmode="decimal"></div>
-                <div class="input-group"><label>単価(円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" value="${c.price}" inputmode="numeric"></div>
+                <div class="input-group"><label>走行距離(km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" value="${c.dist}" placeholder="例: 250" inputmode="decimal"></div>
+                <div class="input-group"><label>燃費(km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" value="${c.eco}" placeholder="例: 15" inputmode="decimal"></div>
+                <div class="input-group"><label>ガソリン価格(円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" value="${c.price}" placeholder="例: 170" inputmode="numeric"></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ 諸費用（高速・駐車場代など）</label>
@@ -413,7 +414,7 @@ function calculate() {
         const price = card.querySelector('.inp-price').value;
         if(!dist) errorMsgs.push(`・${name}: 走行距離が未入力です`);
         if(!eco) errorMsgs.push(`・${name}: 燃費が未入力です`);
-        if(!price) errorMsgs.push(`・${name}: ガソリン単価が未入力です`);
+        if(!price) errorMsgs.push(`・${name}: ガソリン価格が未入力です`);
     });
 
     if (errorMsgs.length > 0) { alert("⚠️ 入力エラーがあります:\n" + errorMsgs.join("\n")); return; }
@@ -456,7 +457,7 @@ function calculate() {
 
     const payers = isOrgFree ? (totalPeople - 1) : totalPeople;
 
-    // 端数処理ロジックの追加
+    // 端数処理ロジック
     const roundUnit = parseInt(document.getElementById('roundingUnit').value);
     const perPersonGas = payers > 0 ? Math.ceil((totalGas / payers) / roundUnit) * roundUnit : 0;
     
@@ -548,11 +549,10 @@ function saveDraft() {
         price: card.querySelector('.inp-price').value,
         extras: Array.from(card.querySelectorAll('.extra-item')).map(row => ({ name: row.querySelector('.ex-name').value, amount: row.querySelector('.ex-amount').value }))
     }));
-    // 設定項目も保存
     const settings = {
         total: document.getElementById('totalPeople').value,
         org: document.getElementById('organizerFree').checked,
-        rounding: document.getElementById('roundingUnit').value // 追加
+        rounding: document.getElementById('roundingUnit').value
     };
     localStorage.setItem('gas_draft_v3', JSON.stringify({ ...settings, cars: carDatas }));
 }
@@ -564,7 +564,7 @@ function loadDraft() {
     const d = JSON.parse(raw); 
     document.getElementById('totalPeople').value = d.total || "";
     document.getElementById('organizerFree').checked = d.org || false;
-    if(d.rounding) document.getElementById('roundingUnit').value = d.rounding; // 追加
+    if(d.rounding) document.getElementById('roundingUnit').value = d.rounding;
     
     document.getElementById('carList').innerHTML = "";
     if(d.cars && d.cars.length) {
