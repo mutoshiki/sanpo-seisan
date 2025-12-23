@@ -3,8 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v3.1</title>
-
+<title>山歩会会計精算ツール v4.1</title>
 <style>
 /* --- ライトモード（デフォルト） --- */
 :root {
@@ -14,7 +13,6 @@
     --danger: #d32f2f;
     --danger-bg: #ffebee;
     --line-color: #06c755;
-    --history: #0288d1;
     --text-main: #333333;
     --text-sub: #666666;
     --bg: #f0f2f5;
@@ -22,17 +20,17 @@
     --input-bg: #fafafa;
     --input-border: #cfd8dc;
     --header-bg: #f5f5f5;
-    --guide-bg: #fff8e1;
-    --guide-border: #ffe0b2;
-    --guide-text: #5d4037;
-    --info-bg: #e3f2fd;      /* アップデート情報用 青系 */
-    --info-border: #90caf9;
-    --info-text: #0d47a1;
+    --guide-bg: #e3f2fd; /* 青系に変更 */
+    --guide-border: #bbdefb;
+    --guide-text: #0d47a1;
     --radius: 12px;
     --shadow: 0 4px 15px rgba(0,0,0,0.05);
+    --sync-status: #4caf50;
+    --room-badge-bg: #37474f;
+    --room-badge-text: #eceff1;
 }
 
-/* --- ダークモード（スマホ設定連動） --- */
+/* --- ダークモード --- */
 @media (prefers-color-scheme: dark) {
     :root {
         --primary: #81c784;
@@ -40,7 +38,6 @@
         --accent: #ffb74d;
         --danger: #ef5350;
         --danger-bg: #4a1515;
-        --history: #4fc3f7;
         --text-main: #e0e0e0;
         --text-sub: #b0bec5;
         --bg: #121212;
@@ -48,80 +45,58 @@
         --input-bg: #2c2c2c;
         --input-border: #424242;
         --header-bg: #2c2c2c;
-        --guide-bg: #3e2723;
-        --guide-border: #5d4037;
-        --guide-text: #fff8e1;
-        --info-bg: #1a237e;
-        --info-border: #3949ab;
-        --info-text: #bbdefb;
+        --guide-bg: #263238;
+        --guide-border: #37474f;
+        --guide-text: #eceff1;
         --shadow: 0 4px 15px rgba(0,0,0,0.5);
+        --room-badge-bg: #cfd8dc;
+        --room-badge-text: #263238;
     }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
     font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-    margin: 0;
-    padding: 20px 15px;
-    background: var(--bg);
-    color: var(--text-main);
-    line-height: 1.6;
-    font-size: 16px;
+    margin: 0; padding: 20px 15px;
+    background: var(--bg); color: var(--text-main);
+    line-height: 1.6; font-size: 16px;
     transition: background 0.3s, color 0.3s;
 }
 
-.container { max-width: 500px; margin: 0 auto; }
-header { text-align: center; margin-bottom: 25px; }
+.container { max-width: 500px; margin: 0 auto; padding-bottom: 60px;}
+header { text-align: center; margin-bottom: 20px; }
 h1 { font-size: 1.4rem; margin: 0; color: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; }
-h1 span { font-size: 0.9rem; margin-top: 5px; color: var(--text-sub); font-weight: normal; }
+h1 span { font-size: 0.8rem; margin-top: 4px; color: var(--text-sub); font-weight: normal; opacity: 0.8; }
 
-/* アップデート情報（×で消せる） */
-.update-info {
-    background: var(--info-bg);
-    border: 1px solid var(--info-border);
-    color: var(--info-text);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    position: relative;
-    display: none; /* JSで表示制御 */
-    animation: slideDown 0.4s ease;
+/* ルームIDバッジ */
+.room-badge {
+    background: var(--room-badge-bg); color: var(--room-badge-text);
+    padding: 6px 16px; border-radius: 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 1px;
+    margin: 10px auto; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.1s;
 }
-@keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+.room-badge:active { transform: scale(0.96); }
+.room-badge small { font-size: 0.7rem; opacity: 0.8; font-family: sans-serif; letter-spacing: 0; }
 
-.update-info h3 { margin: 0 0 8px 0; font-size: 1rem; display: flex; align-items: center; gap: 6px; }
-.update-info ul { margin: 0; padding-left: 20px; font-size: 0.85rem; }
-.close-info-btn {
-    position: absolute; top: 10px; right: 10px;
-    background: none; border: none; font-size: 1.2rem; color: var(--info-text);
-    cursor: pointer; opacity: 0.7; padding: 0 5px;
+/* 接続ステータス */
+.sync-indicator {
+    font-size: 0.75rem; color: var(--primary); 
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    margin-top: 5px; opacity: 0.9;
 }
-.close-info-btn:hover { opacity: 1; }
+.dot { width: 8px; height: 8px; background: var(--sync-status); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-/* 既存の案内ボックス */
 .usage-guide {
-    background: var(--guide-bg);
-    border: 1px solid var(--guide-border);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 25px;
-    font-size: 0.9rem;
-    color: var(--guide-text);
+    background: var(--guide-bg); border: 1px solid var(--guide-border);
+    padding: 12px 15px; border-radius: 8px; margin-bottom: 25px;
+    font-size: 0.85rem; color: var(--guide-text);
 }
-.usage-guide h3 {
-    margin: 0 0 8px 0;
-    color: var(--accent);
-    font-size: 1rem;
-    display: flex; align-items: center; gap: 6px;
-}
-.usage-guide ul { margin: 0; padding-left: 20px; font-size: 0.85rem; }
+.usage-guide h3 { margin: 0 0 5px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
 
 .card {
-    background: var(--card);
-    padding: 20px;
-    border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    margin-bottom: 20px;
+    background: var(--card); padding: 20px; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 20px;
 }
 
 h2 { font-size: 1.1rem; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; color: var(--primary); }
@@ -168,9 +143,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .toggle-icon { font-size: 0.8rem; color: var(--text-sub); transition: transform 0.3s; }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
-.car-body {
-    padding: 15px; display: none; animation: fadeIn 0.3s ease;
-}
+.car-body { padding: 15px; display: none; animation: fadeIn 0.3s ease; }
 .car-card.open .car-body { display: block; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
@@ -184,21 +157,16 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 .btn {
     width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: bold;
-    padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-    text-decoration: none;
+    padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
 }
 .btn-primary { background: var(--primary); color: white; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
 .btn-primary:active { transform: scale(0.98); }
 .btn-outline { background: var(--card); border: 2px dashed var(--text-sub); color: var(--text-sub); margin-bottom: 15px; padding: 12px; }
-.btn-share { background: var(--info-text); color: white; margin-bottom: 20px; font-size: 0.9rem; padding: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
 .btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 20px; text-decoration: underline; padding: 10px; border:none; cursor:pointer;}
-
-/* LINEボタン */
 .btn-line { background: var(--line-color); color: white; margin-top: 10px; }
-.btn-line:hover { opacity: 0.9; }
+.btn-history { background: #546e7a; color: white; font-size: 0.9rem; padding: 10px; border-radius: 8px; margin-top: 10px; }
 
 #resultArea { display: none; }
-
 .result-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--input-border); }
 .price-tag { font-size: 2.4rem; font-weight: 800; color: var(--primary); display: block; line-height: 1.2; margin: 5px 0; }
 
@@ -228,18 +196,18 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     width: 100%; height: 160px; background: transparent; border: none; color: #eceff1; 
     font-size: 0.85rem; resize: none; font-family: monospace; outline: none;
 }
-.btn-copy { background: #546e7a; color: white; padding: 12px; margin-top: 10px; border-radius: 6px; border: none; width: 100%; font-weight: bold; cursor: pointer; }
+.btn-copy { background: #455a64; color: white; padding: 12px; margin-top: 10px; border-radius: 6px; border: none; width: 100%; font-weight: bold; cursor: pointer; }
 
-/* 履歴デザイン */
+/* 履歴リスト */
+.history-list { list-style: none; padding: 0; margin: 10px 0 0 0; }
 .history-item { 
-    background: var(--card); border-left: 4px solid var(--history); padding: 12px; 
-    margin-bottom: 10px; border-radius: 4px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    background: var(--header-bg); padding: 10px; border-radius: 6px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--input-border);
 }
-.h-date { font-size: 0.75rem; color: var(--text-sub); margin-bottom: 2px;}
-.h-summary { font-weight: bold; font-size: 0.9rem; }
-.history-btns { display: flex; gap: 8px; }
-.btn-h-restore { font-size: 0.8rem; background: var(--primary-light); color: var(--primary); border:none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
-.btn-h-delete { font-size: 0.8rem; background: var(--danger-bg); color: var(--danger); border:none; padding: 6px 12px; border-radius: 4px; cursor: pointer; }
+.history-info { font-size: 0.85rem; }
+.history-date { font-size: 0.75rem; color: var(--text-sub); display: block; }
+.btn-load { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-left:10px; }
+.btn-del-hist { background: none; color: var(--danger); border: none; font-size: 1.2rem; cursor: pointer; padding: 0 5px; }
 
 /* トースト通知 */
 #toast {
@@ -254,38 +222,28 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 <div class="container">
     <header>
-        <h1>⛰️ 山歩会用 ガソリン精算ツール</h1>
-        <h1><span>v3.1 (クラウド共有対応)</span></h1>
+        <h1>⛰️ 山歩会会計精算ツール<span>v4.1</span></h1>
+        
+        <div class="room-badge" onclick="copyRoomLink()">
+            <small>今いる部屋:</small> <span id="dispRoomId">...</span> 🔗
+        </div>
+
+        <div class="sync-indicator">
+            <span class="dot"></span>
+            <span id="syncText">同期中...</span>
+        </div>
     </header>
 
-    <div id="updateInfo" class="update-info">
-        <button class="close-info-btn" onclick="closeUpdateInfo()">×</button>
-        <h3>🆕 v3.1 アップデート情報</h3>
-        <p style="font-size:0.9rem; margin:0 0 10px 0;"><strong>URLで共同編集ができるようになりました！</strong></p>
-        <ul style="margin-bottom:10px;">
-            <li>入力内容はURLに自動保存されます。</li>
-            <li>下の「🔗 URLをコピー」ボタンで送れば、他の人も同じ内容を見たり編集したりできます。</li>
-        </ul>
-        <p style="font-size:0.85rem; margin:0;">※引き続き、計算の間違いを防ぐため<strong>代表者1名がまとめて入力</strong>する運用を推奨します。</p>
-    </div>
-
     <div class="usage-guide">
-        <h3>⚠️ 参加者・ドライバーの皆様へ</h3>
-        <p>このツールは、<strong>代表者（会計担当）1名が入力するためのツール</strong>です。各自で精算計算は行わず、以下の情報を代表者にLINE等でお知らせください。</p>
-        <ul style="margin-top:10px;">
-            <li>走行距離</li>
-            <li>燃費</li>
-            <li>ガソリン価格</li>
-            <li>諸費用（高速代・駐車場代など）</li>
-        </ul>
+        <h3>📡 リアルタイム共同編集機能</h3>
+        <p>この画面への入力内容は、同じルームIDを開いているメンバー全員の画面に
+<strong>リアルタイムで反映</strong>されます。入力内容は自動的に保存されます。</p>
     </div>
-
-    <button class="btn btn-share" onclick="copyShareLink()">🔗 現在の入力状態のURLをコピー</button>
 
     <div class="card" style="padding-bottom: 10px;">
-        <h2>🚗 車両情報の登録 <span class="sub-title">（代表者が入力）</span></h2>
+        <h2>🚗 車両情報の登録</h2>
         <div id="carList"></div>
-        <button class="btn btn-outline" onclick="addCar()">+ 車両を追加</button>
+        <button class="btn btn-outline" onclick="handleAddCarBtn()">+ 車両を追加</button>
     </div>
 
     <div class="card">
@@ -293,7 +251,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         
         <div class="input-group">
             <label>端数処理（切り上げ単位）</label>
-            <select id="roundingUnit">
+            <select id="roundingUnit" onchange="pushData()">
                 <option value="100" selected>100円</option>
                 <option value="50">50円</option>
                 <option value="10">10円</option>
@@ -303,17 +261,29 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
         <div class="input-group">
             <label>今回の企画の参加人数(企画者含む)</label>
-            <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric">
+            <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()">
         </div>
         
         <label class="checkbox-card" style="margin-bottom: 15px;">
-            <input type="checkbox" id="organizerFree">
+            <input type="checkbox" id="organizerFree" onchange="pushData()">
             <span>企画者はガソリン代を支払わない</span>
         </label>
     </div>
 
     <button class="btn btn-primary" onclick="calculate()">🚀 精算を実行する</button>
-    <button class="btn btn-reset" onclick="resetAll()">全ての入力をリセット</button>
+
+    <div style="margin-top: 30px; border-top: 1px solid var(--input-border); padding-top: 20px;">
+        <details>
+            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold;">📂 履歴の読み込み / 保存</summary>
+            <div style="margin-top: 15px;">
+                <button class="btn btn-history" onclick="saveToHistory()">💾 現在の入力を履歴に保存</button>
+                <ul id="historyList" class="history-list">
+                    <li style="text-align:center; color:var(--text-sub); padding:10px;">履歴はありません</li>
+                </ul>
+            </div>
+        </details>
+        <button class="btn btn-reset" onclick="resetRoom()">⚠️ 入力を全てクリア (全員の画面から消去)</button>
+    </div>
 
     <div id="resultArea">
         <div class="card" style="border-top: 6px solid var(--primary); margin-top:30px;">
@@ -357,92 +327,172 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
             </div>
         </div>
     </div>
-
-    <div class="history-section" style="margin-top: 40px; margin-bottom: 40px;">
-        <h2 style="border:none; color: var(--history);">🕒 最近の計算履歴</h2>
-        <div id="historyList"></div>
-    </div>
 </div>
 
-<div id="toast">URLをコピーしました！<br>LINE等に貼り付けて共有してください。</div>
+<div id="toast"></div>
 
-<script>
-const DEFAULT_CAR = { name: "", dist: "", eco: "", price: "", extras: [] };
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// ページ読み込み時
-window.onload = function() {
-    // アップデート情報の表示制御
-    const infoClosed = localStorage.getItem('update_info_v3_1_closed');
-    if (!infoClosed) {
-        document.getElementById('updateInfo').style.display = 'block';
-    }
-
-    // URLパラメータがあるかチェック
-    const urlParams = new URLSearchParams(window.location.search);
-    const sharedData = urlParams.get('d');
-
-    if (sharedData) {
-        // URLにデータがあればそれを復元
-        try {
-            const data = JSON.parse(decodeURIComponent(sharedData));
-            restoreData(data);
-            showToast("🔗 共有されたデータを読み込みました");
-        } catch (e) {
-            console.error("データ読み込みエラー", e);
-            loadDraft(); // 失敗したらローカルから
-        }
-    } else {
-        // なければローカルストレージから復元
-        loadDraft();
-    }
-    updateHistory();
+// Firebase Config
+const firebaseConfig = {
+  apiKey: "AIzaSyAypqRPRn-YHWLwjT3lQ6pN6_bWBqzUvp4",
+  authDomain: "sanpo-seisan.firebaseapp.com",
+  databaseURL: "https://sanpo-seisan-default-rtdb.firebaseio.com",
+  projectId: "sanpo-seisan",
+  storageBucket: "sanpo-seisan.firebasestorage.app",
+  messagingSenderId: "709215338656",
+  appId: "1:709215338656:web:c2b0dbc9aceb0fa60f89c5"
 };
 
-// アップデート情報を閉じる
-function closeUpdateInfo() {
-    document.getElementById('updateInfo').style.display = 'none';
-    localStorage.setItem('update_info_v3_1_closed', 'true');
-}
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
 
-// 入力があるたびに保存＆URL更新
-document.addEventListener('input', () => {
-    saveDraft();
-    updateUrlWithState();
+// ルームID管理 (URLパラメータ ?room=... を使用)
+let roomId = new URLSearchParams(window.location.search).get("room");
+if (!roomId) {
+    roomId = Math.random().toString(36).substring(2, 6).toUpperCase(); // 短く読みやすく
+    const newUrl = window.location.pathname + "?room=" + roomId;
+    window.history.replaceState(null, null, newUrl);
+}
+document.getElementById('dispRoomId').textContent = roomId;
+
+// DB参照
+const roomRef = ref(db, 'sessions/' + roomId);
+
+// グローバル関数公開
+window.pushData = debounce(pushDataToFirebase, 500);
+window.handleAddCarBtn = handleAddCarBtn;
+window.resetRoom = resetRoom;
+window.saveToHistory = saveToHistory;
+window.loadFromHistory = loadFromHistory;
+window.deleteHistory = deleteHistory;
+
+// 初期化：履歴の描画
+renderHistoryList();
+
+// ==========================================
+//  データ受信 (Read)
+// ==========================================
+onValue(roomRef, (snapshot) => {
+    const data = snapshot.val();
+    const syncText = document.getElementById("syncText");
+    
+    if (data) {
+        syncText.textContent = "同期完了";
+        renderForm(data);
+    } else {
+        syncText.textContent = "新規ルーム";
+        // データがない場合(リセット後や初回)
+        if(document.getElementById('carList').children.length === 0) {
+            addCarToDOM(null, 0, true);
+        }
+    }
 });
 
-function updateUrlWithState() {
-    const data = getFormData();
-    const jsonStr = JSON.stringify(data);
-    const encoded = encodeURIComponent(jsonStr);
+// フォームの描画（他人が更新したデータを反映）
+function renderForm(data) {
+    setValIfDiff('totalPeople', data.total);
+    setCheckIfDiff('organizerFree', data.org);
+    setValIfDiff('roundingUnit', data.rounding);
+
+    const carList = document.getElementById('carList');
+    const remoteCars = data.cars || [];
     
-    const newUrl = window.location.pathname + '?d=' + encoded;
-    window.history.replaceState({path: newUrl}, '', newUrl);
+    const currentCards = carList.getElementsByClassName('car-card');
+    
+    // 足りない分を追加
+    while(currentCards.length < remoteCars.length) {
+        addCarToDOM(null, currentCards.length, true);
+    }
+    // 多い分を削除
+    while(currentCards.length > remoteCars.length) {
+        carList.removeChild(carList.lastChild);
+    }
+
+    // 値を流し込む
+    Array.from(currentCards).forEach((card, i) => {
+        const cData = remoteCars[i];
+        
+        const inputs = {
+            name: card.querySelector('.inp-name'),
+            dist: card.querySelector('.inp-dist'),
+            eco: card.querySelector('.inp-eco'),
+            price: card.querySelector('.inp-price')
+        };
+        
+        // フォーカスがある要素は更新しない（入力の邪魔をしないため）
+        if(document.activeElement !== inputs.name) inputs.name.value = cData.name || "";
+        if(document.activeElement !== inputs.dist) inputs.dist.value = cData.dist || "";
+        if(document.activeElement !== inputs.eco) inputs.eco.value = cData.eco || "";
+        if(document.activeElement !== inputs.price) inputs.price.value = cData.price || "";
+        
+        // ヘッダータイトルの更新
+        const title = card.querySelector('.car-title-text');
+        const dName = cData.name || `車両 ${i + 1}`;
+        title.textContent = `🚙 ${dName}`;
+
+        // Extras (諸経費) の同期
+        const extrasBox = card.querySelector('.extra-section div[id^="extras-"]');
+        if(!extrasBox) return; // 安全策
+
+        const remoteExtras = cData.extras || [];
+        const currentExtras = extrasBox.getElementsByClassName('extra-item');
+
+        while(currentExtras.length < remoteExtras.length) {
+            addExtraToDOM(extrasBox, "", "");
+        }
+        while(currentExtras.length > remoteExtras.length) {
+            extrasBox.removeChild(extrasBox.lastChild);
+        }
+
+        Array.from(currentExtras).forEach((row, j) => {
+            const exData = remoteExtras[j];
+            const nameInp = row.querySelector('.ex-name');
+            const amtInp = row.querySelector('.ex-amount');
+            
+            if(document.activeElement !== nameInp) nameInp.value = exData.name || "";
+            if(document.activeElement !== amtInp) amtInp.value = exData.amount || "";
+        });
+    });
 }
 
-function copyShareLink() {
-    updateUrlWithState(); 
-    const url = window.location.href;
-    
-    if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => {
-            showToast("📋 共有用URLをコピーしました！<br>これを仲間に送ってください。");
-        });
-    } else {
-        const ta = document.createElement("textarea");
-        ta.value = url;
-        document.body.appendChild(ta);
-        ta.select();
-        document.execCommand("copy");
-        document.body.removeChild(ta);
-        showToast("📋 共有用URLをコピーしました！");
+function setValIfDiff(id, val) {
+    const el = document.getElementById(id);
+    if (el && document.activeElement !== el && el.value != val) {
+        el.value = val || "";
+    }
+}
+function setCheckIfDiff(id, val) {
+    const el = document.getElementById(id);
+    if (el && el.checked != val) {
+        el.checked = val || false;
     }
 }
 
-function showToast(msg) {
-    const toast = document.getElementById("toast");
-    toast.innerHTML = msg;
-    toast.className = "show";
-    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+// ==========================================
+//  データ送信 (Write)
+// ==========================================
+function pushDataToFirebase() {
+    const data = getFormData();
+    document.getElementById("syncText").textContent = "保存中...";
+    set(roomRef, data).then(() => {
+        document.getElementById("syncText").textContent = "同期完了";
+    }).catch((e) => {
+        document.getElementById("syncText").textContent = "エラー";
+        console.error(e);
+    });
+}
+
+function debounce(func, wait) {
+    let timeout;
+    return function(...args) {
+        const context = this;
+        clearTimeout(timeout);
+        timeout = setTimeout(() => func.apply(context, args), wait);
+    };
 }
 
 function getFormData() {
@@ -461,38 +511,116 @@ function getFormData() {
         total: document.getElementById('totalPeople').value,
         org: document.getElementById('organizerFree').checked,
         rounding: document.getElementById('roundingUnit').value,
-        cars: carDatas
+        cars: carDatas,
+        updatedAt: Date.now()
     };
 }
 
-function restoreData(d) {
-    document.getElementById('totalPeople').value = d.total || "";
-    document.getElementById('organizerFree').checked = d.org || false;
-    if(d.rounding) document.getElementById('roundingUnit').value = d.rounding;
-    
-    document.getElementById('carList').innerHTML = "";
-    if(d.cars && d.cars.length) {
-        d.cars.forEach(c => addCar(c));
-    } else {
-        addCar();
+function resetRoom() {
+    if(confirm("ルームの入力を初期化します。\n（他の参加者の画面からも消えます）")) {
+        set(roomRef, null).then(() => {
+            window.location.reload();
+        });
     }
 }
 
-function addCar(data = null) {
+// ==========================================
+//  履歴機能 (Local Storage)
+// ==========================================
+function saveToHistory() {
+    const data = getFormData();
+    if(!data.total && data.cars.length === 1 && !data.cars[0].dist) {
+        showToast("⚠️ 空のデータは保存できません");
+        return;
+    }
+    
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    const summary = `${data.total || "?"}名 / 車${data.cars.length}台`;
+    history.unshift({ 
+        date: new Date().toLocaleString(), 
+        summary: summary,
+        data: data 
+    });
+    
+    // 最大5件保存
+    localStorage.setItem('sanpo_history_v4', JSON.stringify(history.slice(0, 5)));
+    renderHistoryList();
+    showToast("💾 履歴に保存しました");
+}
+
+function renderHistoryList() {
+    const list = document.getElementById('historyList');
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    
+    if (history.length === 0) {
+        list.innerHTML = `<li style="text-align:center; color:var(--text-sub); padding:10px;">履歴はありません</li>`;
+        return;
+    }
+
+    list.innerHTML = "";
+    history.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.className = 'history-item';
+        li.innerHTML = `
+            <div class="history-info">
+                <span class="history-date">${item.date}</span>
+                <span>${item.summary}</span>
+            </div>
+            <div>
+                <button class="btn-del-hist" onclick="deleteHistory(${index})">🗑️</button>
+                <button class="btn-load" onclick="loadFromHistory(${index})">復元</button>
+            </div>
+        `;
+        list.appendChild(li);
+    });
+}
+
+function loadFromHistory(index) {
+    if(!confirm("現在の入力を上書きして、履歴から復元しますか？\n（ルーム内の全員に反映されます）")) return;
+
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    const item = history[index];
+    if(item && item.data) {
+        set(roomRef, item.data).then(() => {
+            showToast("📂 履歴から復元しました");
+            document.querySelector('details').open = false; // 閉じる
+        });
+    }
+}
+
+function deleteHistory(index) {
+    if(!confirm("この履歴を削除しますか？")) return;
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    history.splice(index, 1);
+    localStorage.setItem('sanpo_history_v4', JSON.stringify(history));
+    renderHistoryList();
+}
+
+// ==========================================
+//  DOM操作系
+// ==========================================
+
+function handleAddCarBtn() {
+    addCarToDOM();
+    pushDataToFirebase();
+}
+
+window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
     const list = document.getElementById('carList');
-    const idx = list.children.length;
-    const c = data || { ...DEFAULT_CAR, extras: [] };
-    const isOpen = data ? '' : 'open'; 
+    if (idx === -1) idx = list.children.length;
+    
+    if(list.children[idx]) return;
 
     const div = document.createElement('div');
+    const isOpen = forceOpen ? 'open' : 'open';
     div.className = `car-card ${isOpen}`;
-    div.id = `car-card-${idx}`;
-    
-    const displayName = c.name ? c.name : `車両 ${idx + 1}`;
+    const onInput = `oninput="window.pushData()"`;
+    // ID生成の安定化のため
+    const extrasId = `extras-${Date.now()}-${Math.random().toString(36).substr(2,5)}`;
 
     div.innerHTML = `
-        <div class="car-header" onclick="toggleCar(this)">
-            <span class="car-title-text" id="car-title-${idx}">🚙 ${displayName}</span>
+        <div class="car-header" onclick="this.parentElement.classList.toggle('open')">
+            <span class="car-title-text">🚙 車両 ${idx + 1}</span>
             <div style="display:flex; align-items:center; gap:10px;">
                 <button class="remove-btn" onclick="removeCar(event, this)">削除</button>
                 <span class="toggle-icon">▼</span>
@@ -501,56 +629,52 @@ function addCar(data = null) {
         <div class="car-body">
             <div class="input-group">
                 <label>ドライバー名（任意）</label>
-                <input type="text" class="inp-name" value="${c.name}" placeholder="氏名" oninput="updateHeaderName(${idx}, this.value)">
+                <input type="text" class="inp-name" placeholder="氏名" ${onInput}>
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>走行距離(km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" value="${c.dist}" placeholder="例: 250" inputmode="decimal"></div>
-                <div class="input-group"><label>燃費(km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" value="${c.eco}" placeholder="例: 15" inputmode="decimal"></div>
-                <div class="input-group"><label>ガソ価(円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" value="${c.price}" placeholder="例: 170" inputmode="numeric"></div>
+                <div class="input-group"><label>距離(km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="250" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>燃費(km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="15" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>ガソ価<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="170" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ 諸費用（高速・駐車場代など）</label>
-                <div id="extras-${idx}"></div>
-                <button class="btn-reset" style="padding:0; margin:10px 0 0 0; text-align:left; font-size:0.8rem;" onclick="addExtra(${idx})">+ 経費を追加</button>
+                <div id="${extrasId}"></div>
+                <button class="btn-reset" style="padding:0; margin:10px 0 0 0; text-align:left; font-size:0.8rem;" onclick="handleAddExtra(this)">+ 経費を追加</button>
             </div>
         </div>
     `;
     list.appendChild(div);
-    if(c.extras) c.extras.forEach(ex => addExtra(idx, ex.name, ex.amount));
 }
 
-function toggleCar(header) {
-    const card = header.parentElement;
-    card.classList.toggle('open');
-}
-
-function updateHeaderName(idx, val) {
-    const title = document.getElementById(`car-title-${idx}`);
-    title.textContent = val ? `🚙 ${val}` : `🚙 車両 ${idx + 1}`;
-}
-
-function addExtra(idx, name="", amount="") {
-    const box = document.getElementById(`extras-${idx}`);
-    const div = document.createElement('div');
-    div.className = 'extra-item';
-    div.innerHTML = `
-        <input type="text" class="ex-name" placeholder="名目" value="${name}" style="flex:2; padding:10px;">
-        <input type="number" class="ex-amount" placeholder="金額" value="${amount}" style="flex:1; padding:10px;" inputmode="numeric">
-        <button class="remove-btn" style="width:35px; border-radius:4px; font-size:1.2rem; padding:0;" onclick="this.parentElement.remove()">×</button>
-    `;
-    box.appendChild(div);
-}
-
-function removeCar(e, btn){ 
+window.removeCar = function(e, btn){ 
     e.stopPropagation(); 
     if(confirm("この車両情報を削除しますか？")) { 
         btn.closest('.car-card').remove(); 
-        saveDraft(); 
-        updateUrlWithState();
+        pushDataToFirebase();
     } 
 }
 
-function calculate() {
+window.handleAddExtra = function(btn) {
+    const box = btn.previousElementSibling;
+    addExtraToDOM(box);
+    pushDataToFirebase();
+}
+
+function addExtraToDOM(container, name="", amount="") {
+    const div = document.createElement('div');
+    div.className = 'extra-item';
+    div.innerHTML = `
+        <input type="text" class="ex-name" placeholder="名目" value="${name}" style="flex:2; padding:10px;" oninput="window.pushData()">
+        <input type="number" class="ex-amount" placeholder="金額" value="${amount}" style="flex:1; padding:10px;" inputmode="numeric" oninput="window.pushData()">
+        <button class="remove-btn" style="width:35px; border-radius:4px; font-size:1.2rem; padding:0;" onclick="this.parentElement.remove(); window.pushData();">×</button>
+    `;
+    container.appendChild(div);
+}
+
+// ==========================================
+//  計算ロジック
+// ==========================================
+window.calculate = function() {
     const data = getFormData();
     const totalPeople = parseInt(data.total);
     const isOrgFree = data.org;
@@ -645,6 +769,7 @@ function calculate() {
     
     document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
 
+    // LINE用テキスト生成
     let lineText = `【山歩会 精算報告 🚙】\n`;
     lineText += `■徴収額（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
@@ -658,9 +783,7 @@ function calculate() {
     });
     
     lineText += `\n■サークル会計からの支出\n計：${circleNeed.toLocaleString()}円\n\nお疲れ様でした！`;
-    
-    updateUrlWithState();
-    lineText += `\n\n▼計算詳細・編集URL\n${window.location.href}`;
+    lineText += `\n\n▼計算・編集URL\n${window.location.href}`;
 
     document.getElementById('copyTextarea').value = lineText;
 
@@ -668,87 +791,36 @@ function calculate() {
     const lineBtn = document.getElementById('btnLineShare');
     lineBtn.href = `https://line.me/R/msg/text/?${encodedText}`;
     lineBtn.style.display = 'flex';
-
-    saveToHistory({ 
-        date: new Date().toLocaleString('ja-JP', {month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit'}), 
-        totalPeople, 
-        isOrgFree, 
-        cars: driverResults, 
-        perPersonGas,
-        url: window.location.href
-    });
 }
 
-function copyToClipboard() {
+// ユーティリティ
+window.copyRoomLink = function() {
+    const url = window.location.href;
+    if (navigator.clipboard) {
+        navigator.clipboard.writeText(url).then(() => showToast("📋 共有URLをコピーしました！<br>仲間に送信してください。"));
+    } else {
+        const ta = document.createElement("textarea");
+        ta.value = url;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand("copy");
+        document.body.removeChild(ta);
+        showToast("📋 共有URLをコピーしました！");
+    }
+}
+
+window.copyToClipboard = function() {
     const textarea = document.getElementById('copyTextarea');
     textarea.select(); document.execCommand('copy');
     showToast("✅ 結果テキストをコピーしました！");
 }
 
-function saveDraft() {
-    const data = getFormData();
-    localStorage.setItem('gas_draft_v3', JSON.stringify(data));
-}
-
-function loadDraft() {
-    const raw = localStorage.getItem('gas_draft_v3'); 
-    if(!raw) { addCar(); return; }
-    restoreData(JSON.parse(raw));
-}
-
-function saveToHistory(record) {
-    let history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
-    history.unshift(record);
-    if(history.length > 5) history.pop();
-    localStorage.setItem('gas_history_v2', JSON.stringify(history));
-    updateHistory();
-}
-
-function updateHistory() {
-    const history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
-    const container = document.getElementById('historyList');
-    container.innerHTML = history.length === 0 ? "<p style='font-size:0.85rem; color:var(--text-sub); text-align:center;'>履歴なし</p>" : "";
-    history.forEach((h, i) => {
-        const div = document.createElement('div'); div.className = 'history-item';
-        div.innerHTML = `
-            <div>
-                <div class="h-date">${h.date}</div>
-                <div class="h-summary">${h.totalPeople}名 / 1人 ${h.perPersonGas.toLocaleString()}円</div>
-            </div>
-            <div class="history-btns">
-                <button class="btn-h-restore" onclick="restoreHistory(${i})">復元</button>
-                <button class="btn-h-delete" onclick="deleteHistory(${i})">削除</button>
-            </div>`;
-        container.appendChild(div);
-    });
-}
-
-function restoreHistory(index) {
-    if(!confirm("現在の入力を破棄して、この履歴を復元しますか？")) return;
-    const history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
-    const data = history[index];
-    if(data.url) {
-        window.location.href = data.url;
-    } else {
-        alert("古い履歴のため完全な復元ができません。");
-    }
-}
-
-function deleteHistory(index) {
-    if(!confirm("この履歴を削除しますか？")) return;
-    let history = JSON.parse(localStorage.getItem('gas_history_v2') || "[]");
-    history.splice(index, 1);
-    localStorage.setItem('gas_history_v2', JSON.stringify(history));
-    updateHistory();
-}
-
-function resetAll() { 
-    if(confirm("入力をすべてリセットしますか？")) { 
-        localStorage.removeItem('gas_draft_v3'); 
-        window.location.href = window.location.pathname;
-    } 
+function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.innerHTML = msg;
+    toast.className = "show";
+    setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
 }
 </script>
-
 </body>
 </html>
