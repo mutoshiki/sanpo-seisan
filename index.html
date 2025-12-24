@@ -7,24 +7,25 @@
 <title>山歩会会計精算ツール v4.1</title>
 <style>
 :root {
-    --primary: #2e7d32;
+    --primary: #43a047;
+    --primary-dark: #2e7d32;
     --primary-light: #e8f5e9;
-    --accent: #f57c00;
-    --danger: #d32f2f;
+    --accent: #ff9800;
+    --danger: #e53935;
     --danger-bg: #ffebee;
     --line-color: #06c755;
-    --text-main: #333333;
-    --text-sub: #666666;
-    --bg: #f0f2f5;
+    --text-main: #2d3748;
+    --text-sub: #718096;
+    --bg: #f7fafc;
     --card: #ffffff;
-    --input-bg: #fafafa;
-    --input-border: #cfd8dc;
-    --header-bg: #f5f5f5;
+    --input-bg: #ffffff;
+    --input-border: #e2e8f0;
+    --header-bg: #f8f9fa;
     --guide-bg: #e3f2fd;
     --guide-border: #bbdefb;
     --guide-text: #0d47a1;
-    --radius: 12px;
-    --shadow: 0 4px 15px rgba(0,0,0,0.05);
+    --radius: 16px;
+    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
     --sync-status: #4caf50;
     --room-badge-bg: #37474f;
     --room-badge-text: #eceff1;
@@ -32,18 +33,19 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        --primary: #81c784;
-        --primary-light: #1b5e20;
+        --primary: #66bb6a;
+        --primary-dark: #1b5e20;
+        --primary-light: #2d3748;
         --accent: #ffb74d;
         --danger: #ef5350;
-        --danger-bg: #4a1515;
+        --danger-bg: #3e2723;
         --text-main: #e0e0e0;
         --text-sub: #b0bec5;
-        --bg: #121212;
-        --card: #1e1e1e;
+        --bg: #1a202c;
+        --card: #2d3748;
         --input-bg: #2c2c2c;
         --input-border: #424242;
-        --header-bg: #2c2c2c;
+        --header-bg: #4a5568;
         --guide-bg: #263238;
         --guide-border: #37474f;
         --guide-text: #eceff1;
@@ -55,23 +57,23 @@
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
     margin: 0; padding: 20px 15px;
     background: var(--bg); color: var(--text-main);
     line-height: 1.6; font-size: 16px;
     transition: background 0.3s, color 0.3s;
 }
 
-.container { max-width: 500px; margin: 0 auto; padding-bottom: 60px;}
+.container { max-width: 600px; margin: 0 auto; padding-bottom: 80px;}
 header { text-align: center; margin-bottom: 20px; }
-h1 { font-size: 1.4rem; margin: 0; color: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; }
+h1 { font-size: 1.5rem; margin: 0; color: var(--primary-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; letter-spacing: 0.05em; }
 h1 span { font-size: 0.8rem; margin-top: 4px; color: var(--text-sub); font-weight: normal; opacity: 0.8; }
 
 .room-badge {
     background: var(--room-badge-bg); color: var(--room-badge-text);
     padding: 6px 16px; border-radius: 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 1px;
-    margin: 10px auto; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.15); transition: transform 0.1s;
+    margin: 15px auto; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.1s, box-shadow 0.2s;
 }
 .room-badge:active { transform: scale(0.96); }
 .room-badge small { font-size: 0.7rem; opacity: 0.8; font-family: sans-serif; letter-spacing: 0; }
@@ -86,97 +88,124 @@ h1 span { font-size: 0.8rem; margin-top: 4px; color: var(--text-sub); font-weigh
 
 .usage-guide {
     background: var(--guide-bg); border: 1px solid var(--guide-border);
-    padding: 12px 15px; border-radius: 8px; margin-bottom: 25px;
+    padding: 15px 20px; border-radius: var(--radius); margin-bottom: 25px;
     font-size: 0.85rem; color: var(--guide-text);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 .usage-guide h3 { margin: 0 0 5px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
 
 .card {
     background: var(--card); padding: 20px; border-radius: var(--radius);
-    box-shadow: var(--shadow); margin-bottom: 20px;
+    box-shadow: var(--shadow); margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.03);
 }
 
-h2 { font-size: 1.1rem; margin: 0 0 15px 0; display: flex; align-items: center; gap: 8px; border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; color: var(--primary); }
+h2 { font-size: 1.1rem; margin: 0 0 20px 0; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px; color: var(--primary-dark); font-weight: 700; }
 .sub-title { font-size: 0.8rem; font-weight: normal; color: var(--text-sub); margin-left: auto; }
 
-.input-group { margin-bottom: 15px; }
-label { display: block; font-size: 0.85rem; font-weight: bold; margin-bottom: 6px; color: var(--text-sub); }
+.input-group { margin-bottom: 18px; }
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-sub); }
 
 input[type="number"], input[type="text"], select {
-    width: 100%; padding: 12px; 
+    width: 100%; padding: 14px; 
     border: 1px solid var(--input-border); 
-    border-radius: 8px; 
+    border-radius: 10px; 
     font-size: 16px; 
     background: var(--input-bg);
     color: var(--text-main);
     font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
     font-feature-settings: "tnum";
     transition: 0.2s;
+    appearance: none;
 }
-input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px var(--primary-light); }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.2); }
 
 .flex-row { display: flex; gap: 10px; }
 .flex-row > div { flex: 1; }
 
+/* トグルスイッチ風チェックボックス */
 .checkbox-card {
-    display: flex; align-items: center; gap: 10px; background: var(--primary-light);
-    padding: 12px; border-radius: 8px; cursor: pointer; user-select: none; color: var(--text-main);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg); border: 1px solid var(--input-border);
+    padding: 16px; border-radius: 12px; cursor: pointer; user-select: none; color: var(--text-main);
+    transition: all 0.2s;
 }
-.checkbox-card input { width: 20px; height: 20px; cursor: pointer; accent-color: var(--primary); }
+.checkbox-card:active { background: var(--primary-light); }
+.checkbox-card input { display: none; }
+.toggle-switch {
+    width: 44px; height: 24px; background: #ccc; border-radius: 24px; position: relative; transition: 0.3s;
+}
+.toggle-switch::after {
+    content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+    background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.checkbox-card input:checked + .toggle-switch { background: var(--primary); }
+.checkbox-card input:checked + .toggle-switch::after { transform: translateX(20px); }
 
 .car-card {
-    border: 1px solid var(--input-border); border-radius: 10px; margin-bottom: 15px;
-    background: var(--card); overflow: hidden;
+    border: 1px solid var(--input-border); border-radius: 12px; margin-bottom: 16px;
+    background: var(--card); overflow: hidden; transition: box-shadow 0.2s;
 }
+.car-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 .car-header {
-    background: var(--header-bg); padding: 12px 15px;
+    background: var(--header-bg); padding: 14px 18px;
     display: flex; justify-content: space-between; align-items: center;
     cursor: pointer; user-select: none;
-    font-weight: bold; color: var(--text-main);
+    font-weight: 600; color: var(--text-main);
     transition: background 0.2s;
 }
 .car-header:active { opacity: 0.8; }
-.car-title-text { display: flex; align-items: center; gap: 10px; font-size: 0.95rem; }
+.car-title-text { display: flex; align-items: center; gap: 10px; font-size: 1rem; }
 .toggle-icon { font-size: 0.8rem; color: var(--text-sub); transition: transform 0.3s; }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
-.car-body { padding: 15px; display: none; animation: fadeIn 0.3s ease; }
+.car-body { padding: 20px; display: none; animation: fadeIn 0.3s ease; border-top: 1px solid var(--input-border); }
 .car-card.open .car-body { display: block; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 .remove-btn { 
-    color: var(--danger); background: none; border: 1px solid var(--danger);
-    font-size: 0.75rem; padding: 4px 10px; border-radius: 20px; cursor: pointer;
+    color: var(--danger); background: rgba(255, 255, 255, 0.5); border: 1px solid var(--danger);
+    font-size: 0.85rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: 0.2s;
 }
+.remove-btn:hover { background: var(--danger); color: white; }
 
-.extra-section { background: var(--header-bg); padding: 12px; border-radius: 8px; margin-top: 15px; border: 1px dashed var(--input-border); }
+.extra-section { background: var(--bg); padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--input-border); }
 .extra-item { display: flex; gap: 8px; margin-bottom: 8px; }
 
 .btn {
-    width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: bold;
-    padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;
+    width: 100%; border: none; border-radius: 50px; font-size: 1.05rem; font-weight: 700;
+    padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; letter-spacing: 0.02em;
 }
-.btn-primary { background: var(--primary); color: white; margin-top: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2); }
-.btn-primary:active { transform: scale(0.98); }
-.btn-outline { background: var(--card); border: 2px dashed var(--text-sub); color: var(--text-sub); margin-bottom: 15px; padding: 12px; }
-.btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 20px; text-decoration: underline; padding: 10px; border:none; cursor:pointer;}
+.btn-primary { 
+    background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
+    color: white; margin-top: 10px; 
+    box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3); 
+}
+.btn-primary:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(67, 160, 71, 0.2); }
+.btn-outline { 
+    background: transparent; border: 2px dashed var(--input-border); color: var(--primary); 
+    margin-bottom: 15px; padding: 14px; font-weight: 600;
+}
+.btn-outline:hover { background: var(--primary-light); border-color: var(--primary); }
+.btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 20px; text-decoration: underline; padding: 10px; border:none; cursor:pointer; opacity: 0.8;}
+.btn-reset:hover { opacity: 1; color: var(--danger); }
 .btn-line { background: var(--line-color); color: white; margin-top: 10px; }
 .btn-history { background: #546e7a; color: white; font-size: 0.9rem; padding: 10px; border-radius: 8px; margin-top: 10px; }
 
 #resultArea { display: none; }
-.result-header { text-align: center; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--input-border); }
-.price-tag { font-size: 2.4rem; font-weight: 800; color: var(--primary); display: block; line-height: 1.2; margin: 5px 0; }
+.result-header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--input-border); }
+.price-tag { font-size: 2.8rem; font-weight: 800; color: var(--primary-dark); display: block; line-height: 1.2; margin: 10px 0; letter-spacing: -0.02em; }
 
 .driver-row { 
-    background: var(--card); border: 1px solid var(--input-border); border-radius: 8px; 
-    padding: 15px; margin-bottom: 12px; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    background: var(--bg); border: 1px solid var(--input-border); border-radius: 12px; 
+    padding: 18px; margin-bottom: 15px; 
 }
 .driver-main { 
     display: flex; justify-content: space-between; align-items: center; 
-    border-bottom: 2px solid var(--primary-light); padding-bottom: 8px; margin-bottom: 8px;
+    border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 10px; margin-bottom: 10px;
 }
-.driver-name { font-weight: bold; font-size: 1.05rem; }
-.driver-total-price { font-size: 1.1rem; font-weight: bold; color: var(--primary); }
+.driver-name { font-weight: 700; font-size: 1.1rem; }
+.driver-total-price { font-size: 1.2rem; font-weight: 800; color: var(--primary-dark); }
 
 .detail-line { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; color: var(--text-sub); }
 .detail-group { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--input-border); }
@@ -184,7 +213,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 .withdraw-box {
     font-size: 1.1rem; font-weight: bold; display: flex; justify-content: space-between; margin-top: 10px;
-    color: var(--danger); border: 2px solid var(--danger); padding: 10px; border-radius: 8px;
+    color: var(--danger); border: 2px solid var(--danger); padding: 15px; border-radius: 12px;
     background: var(--danger-bg);
 }
 
@@ -231,9 +260,16 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     </header>
 
     <div class="usage-guide">
-        <h3>📡 リアルタイム共同編集機能</h3>
-        <p>この画面への入力内容は、同じルームIDを開いているメンバー全員の画面に
-<strong>リアルタイムで反映</strong>されます。入力内容は自動的に保存されます。</p>
+        <h3> このツールの使い方</h3>
+        <ol style="padding-left: 20px; margin: 5px 0 10px 0;">
+            <li><strong>車両を登録</strong>: 「+ 車両を追加」で車を登録します。</li>
+            <li><strong>情報を入力</strong>: 走行距離、燃費、ガソリン価格を入力します。</li>
+            <li><strong>経費を追加</strong>: 高速代などは「+ 経費を追加」に入力します。</li>
+            <li><strong>精算</strong>: 参加人数を入力し「精算を実行」で計算します。</li>
+        </ol>
+        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--guide-border); font-size: 0.8rem;">
+            <strong>📡 リアルタイム共有:</strong> 入力内容は同じURLを開いている全員に即座に共有・保存されます。
+        </div>
     </div>
 
     <div class="card" style="padding-bottom: 10px;">
@@ -261,8 +297,9 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         </div>
         
         <label class="checkbox-card" style="margin-bottom: 15px;">
-            <input type="checkbox" id="organizerFree" onchange="pushData()">
             <span>企画者はガソリン代を支払わない</span>
+            <input type="checkbox" id="organizerFree" onchange="pushData()">
+            <div class="toggle-switch"></div>
         </label>
     </div>
 
@@ -589,8 +626,8 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
     div.innerHTML = `
         <div class="car-header" onclick="this.parentElement.classList.toggle('open')">
             <span class="car-title-text">🚙 車両 ${idx + 1}</span>
-            <div style="display:flex; align-items:center; gap:10px;">
-                <button class="remove-btn" onclick="removeCar(event, this)">削除</button>
+            <div style="display:flex; align-items:center; gap:12px;">
+                <button class="remove-btn" onclick="removeCar(event, this)" title="削除">🗑️</button>
                 <span class="toggle-icon">▼</span>
             </div>
         </div>
