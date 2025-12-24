@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -5,7 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>山歩会会計精算ツール v4.1</title>
 <style>
-/* --- ライトモード（デフォルト） --- */
 :root {
     --primary: #2e7d32;
     --primary-light: #e8f5e9;
@@ -20,7 +20,7 @@
     --input-bg: #fafafa;
     --input-border: #cfd8dc;
     --header-bg: #f5f5f5;
-    --guide-bg: #e3f2fd; /* 青系に変更 */
+    --guide-bg: #e3f2fd;
     --guide-border: #bbdefb;
     --guide-text: #0d47a1;
     --radius: 12px;
@@ -30,7 +30,6 @@
     --room-badge-text: #eceff1;
 }
 
-/* --- ダークモード --- */
 @media (prefers-color-scheme: dark) {
     :root {
         --primary: #81c784;
@@ -68,7 +67,6 @@ header { text-align: center; margin-bottom: 20px; }
 h1 { font-size: 1.4rem; margin: 0; color: var(--primary); display: flex; flex-direction: column; align-items: center; justify-content: center; }
 h1 span { font-size: 0.8rem; margin-top: 4px; color: var(--text-sub); font-weight: normal; opacity: 0.8; }
 
-/* ルームIDバッジ */
 .room-badge {
     background: var(--room-badge-bg); color: var(--room-badge-text);
     padding: 6px 16px; border-radius: 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 1px;
@@ -78,7 +76,6 @@ h1 span { font-size: 0.8rem; margin-top: 4px; color: var(--text-sub); font-weigh
 .room-badge:active { transform: scale(0.96); }
 .room-badge small { font-size: 0.7rem; opacity: 0.8; font-family: sans-serif; letter-spacing: 0; }
 
-/* 接続ステータス */
 .sync-indicator {
     font-size: 0.75rem; color: var(--primary); 
     display: flex; align-items: center; justify-content: center; gap: 6px;
@@ -198,7 +195,6 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 }
 .btn-copy { background: #455a64; color: white; padding: 12px; margin-top: 10px; border-radius: 6px; border: none; width: 100%; font-weight: bold; cursor: pointer; }
 
-/* 履歴リスト */
 .history-list { list-style: none; padding: 0; margin: 10px 0 0 0; }
 .history-item { 
     background: var(--header-bg); padding: 10px; border-radius: 6px; margin-bottom: 8px;
@@ -209,7 +205,6 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .btn-load { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-left:10px; }
 .btn-del-hist { background: none; color: var(--danger); border: none; font-size: 1.2rem; cursor: pointer; padding: 0 5px; }
 
-/* トースト通知 */
 #toast {
     visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
     border-radius: 50px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px;
@@ -225,7 +220,8 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         <h1>⛰️ 山歩会会計精算ツール<span>v4.1</span></h1>
         
         <div class="room-badge" onclick="copyRoomLink()">
-            <small>タップでリンクコピー:</small> <span id="dispRoomId">...</span> 🔗
+            <span>ID: <span id="dispRoomId">...</span></span>
+            <small style="background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:12px; margin-left:8px;">🔗 共有URLをコピー</small>
         </div>
 
         <div class="sync-indicator">
@@ -272,19 +268,6 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
     <button class="btn btn-primary" onclick="calculate()">🚀 精算を実行する</button>
 
-    <div style="margin-top: 30px; border-top: 1px solid var(--input-border); padding-top: 20px;">
-        <details>
-            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold;">📂 履歴の読み込み / 保存</summary>
-            <div style="margin-top: 15px;">
-                <button class="btn btn-history" onclick="saveToHistory()">💾 現在の入力を履歴に保存</button>
-                <ul id="historyList" class="history-list">
-                    <li style="text-align:center; color:var(--text-sub); padding:10px;">履歴はありません</li>
-                </ul>
-            </div>
-        </details>
-        <button class="btn btn-reset" onclick="resetRoom()">⚠️ 入力を全てクリア (全員の画面から消去)</button>
-    </div>
-
     <div id="resultArea">
         <div class="card" style="border-top: 6px solid var(--primary); margin-top:30px;">
             <div class="result-header">
@@ -327,6 +310,19 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
             </div>
         </div>
     </div>
+
+    <div style="margin-top: 30px; border-top: 1px solid var(--input-border); padding-top: 20px;">
+        <details>
+            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold;">📂 履歴</summary>
+            <div style="margin-top: 15px;">
+                <button class="btn btn-history" onclick="saveToHistory()">💾 現在の入力を履歴に保存</button>
+                <ul id="historyList" class="history-list">
+                    <li style="text-align:center; color:var(--text-sub); padding:10px;">履歴はありません</li>
+                </ul>
+            </div>
+        </details>
+        <button class="btn btn-reset" onclick="resetRoom()">⚠️ 入力を全てクリア (全員の画面から消去)</button>
+    </div>
 </div>
 
 <div id="toast"></div>
@@ -335,7 +331,6 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// Firebase Config
 const firebaseConfig = {
   apiKey: "AIzaSyAypqRPRn-YHWLwjT3lQ6pN6_bWBqzUvp4",
   authDomain: "sanpo-seisan.firebaseapp.com",
@@ -346,23 +341,19 @@ const firebaseConfig = {
   appId: "1:709215338656:web:c2b0dbc9aceb0fa60f89c5"
 };
 
-// Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
-// ルームID管理 (URLパラメータ ?room=... を使用)
 let roomId = new URLSearchParams(window.location.search).get("room");
 if (!roomId) {
-    roomId = Math.random().toString(36).substring(2, 6).toUpperCase(); // 短く読みやすく
+    roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
     const newUrl = window.location.pathname + "?room=" + roomId;
     window.history.replaceState(null, null, newUrl);
 }
 document.getElementById('dispRoomId').textContent = roomId;
 
-// DB参照
 const roomRef = ref(db, 'sessions/' + roomId);
 
-// グローバル関数公開
 window.pushData = debounce(pushDataToFirebase, 500);
 window.handleAddCarBtn = handleAddCarBtn;
 window.resetRoom = resetRoom;
@@ -370,12 +361,8 @@ window.saveToHistory = saveToHistory;
 window.loadFromHistory = loadFromHistory;
 window.deleteHistory = deleteHistory;
 
-// 初期化：履歴の描画
 renderHistoryList();
 
-// ==========================================
-//  データ受信 (Read)
-// ==========================================
 onValue(roomRef, (snapshot) => {
     const data = snapshot.val();
     const syncText = document.getElementById("syncText");
@@ -385,14 +372,12 @@ onValue(roomRef, (snapshot) => {
         renderForm(data);
     } else {
         syncText.textContent = "新規ルーム";
-        // データがない場合(リセット後や初回)
         if(document.getElementById('carList').children.length === 0) {
             addCarToDOM(null, 0, true);
         }
     }
 });
 
-// フォームの描画（他人が更新したデータを反映）
 function renderForm(data) {
     setValIfDiff('totalPeople', data.total);
     setCheckIfDiff('organizerFree', data.org);
@@ -403,16 +388,13 @@ function renderForm(data) {
     
     const currentCards = carList.getElementsByClassName('car-card');
     
-    // 足りない分を追加
     while(currentCards.length < remoteCars.length) {
         addCarToDOM(null, currentCards.length, true);
     }
-    // 多い分を削除
     while(currentCards.length > remoteCars.length) {
         carList.removeChild(carList.lastChild);
     }
 
-    // 値を流し込む
     Array.from(currentCards).forEach((card, i) => {
         const cData = remoteCars[i];
         
@@ -423,20 +405,17 @@ function renderForm(data) {
             price: card.querySelector('.inp-price')
         };
         
-        // フォーカスがある要素は更新しない（入力の邪魔をしないため）
         if(document.activeElement !== inputs.name) inputs.name.value = cData.name || "";
         if(document.activeElement !== inputs.dist) inputs.dist.value = cData.dist || "";
         if(document.activeElement !== inputs.eco) inputs.eco.value = cData.eco || "";
         if(document.activeElement !== inputs.price) inputs.price.value = cData.price || "";
         
-        // ヘッダータイトルの更新
         const title = card.querySelector('.car-title-text');
         const dName = cData.name || `車両 ${i + 1}`;
         title.textContent = `🚙 ${dName}`;
 
-        // Extras (諸経費) の同期
         const extrasBox = card.querySelector('.extra-section div[id^="extras-"]');
-        if(!extrasBox) return; // 安全策
+        if(!extrasBox) return;
 
         const remoteExtras = cData.extras || [];
         const currentExtras = extrasBox.getElementsByClassName('extra-item');
@@ -472,9 +451,6 @@ function setCheckIfDiff(id, val) {
     }
 }
 
-// ==========================================
-//  データ送信 (Write)
-// ==========================================
 function pushDataToFirebase() {
     const data = getFormData();
     document.getElementById("syncText").textContent = "保存中...";
@@ -524,9 +500,6 @@ function resetRoom() {
     }
 }
 
-// ==========================================
-//  履歴機能 (Local Storage)
-// ==========================================
 function saveToHistory() {
     const data = getFormData();
     if(!data.total && data.cars.length === 1 && !data.cars[0].dist) {
@@ -542,7 +515,6 @@ function saveToHistory() {
         data: data 
     });
     
-    // 最大5件保存
     localStorage.setItem('sanpo_history_v4', JSON.stringify(history.slice(0, 5)));
     renderHistoryList();
     showToast("💾 履歴に保存しました");
@@ -583,7 +555,7 @@ function loadFromHistory(index) {
     if(item && item.data) {
         set(roomRef, item.data).then(() => {
             showToast("📂 履歴から復元しました");
-            document.querySelector('details').open = false; // 閉じる
+            document.querySelector('details').open = false;
         });
     }
 }
@@ -596,9 +568,6 @@ function deleteHistory(index) {
     renderHistoryList();
 }
 
-// ==========================================
-//  DOM操作系
-// ==========================================
 
 function handleAddCarBtn() {
     addCarToDOM();
@@ -615,7 +584,6 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
     const isOpen = forceOpen ? 'open' : 'open';
     div.className = `car-card ${isOpen}`;
     const onInput = `oninput="window.pushData()"`;
-    // ID生成の安定化のため
     const extrasId = `extras-${Date.now()}-${Math.random().toString(36).substr(2,5)}`;
 
     div.innerHTML = `
@@ -632,9 +600,9 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
                 <input type="text" class="inp-name" placeholder="氏名" ${onInput}>
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離(km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="250" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>燃費(km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="15" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>ガソ価<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="170" inputmode="numeric" ${onInput}></div>
+                <div class="input-group"><label>距離<small style="font-size:0.75em; font-weight:normal; margin-left:2px">(km)</small><span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="例: 250" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>燃費<small style="font-size:0.75em; font-weight:normal; margin-left:2px">(km/L)</small><span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>ガソリン価格<small style="font-size:0.75em; font-weight:normal; margin-left:2px">(円)</small><span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 170" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ 諸費用（高速・駐車場代など）</label>
@@ -671,9 +639,6 @@ function addExtraToDOM(container, name="", amount="") {
     container.appendChild(div);
 }
 
-// ==========================================
-//  計算ロジック
-// ==========================================
 window.calculate = function() {
     const data = getFormData();
     const totalPeople = parseInt(data.total);
@@ -769,7 +734,6 @@ window.calculate = function() {
     
     document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
 
-    // LINE用テキスト生成
     let lineText = `【山歩会 精算報告 🚙】\n`;
     lineText += `■徴収額（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
@@ -793,7 +757,6 @@ window.calculate = function() {
     lineBtn.style.display = 'flex';
 }
 
-// ユーティリティ
 window.copyRoomLink = function() {
     const url = window.location.href;
     if (navigator.clipboard) {
