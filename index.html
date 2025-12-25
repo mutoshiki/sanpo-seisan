@@ -1,285 +1,275 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v4.1</title>
+<title>山歩会会計精算ツール v5.1</title>
+<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <style>
 :root {
-    --primary: #43a047;
-    --primary-dark: #2e7d32;
+    /* カラーパレット: 落ち着いたモダンな配色 */
+    --primary: #2e7d32;      /* 深めの緑 */
     --primary-light: #e8f5e9;
-    --accent: #ff9800;
-    --danger: #e53935;
+    --accent: #f57f17;       /* 警告・強調用のオレンジ */
+    --danger: #c62828;
     --danger-bg: #ffebee;
+    --text-main: #1a202c;
+    --text-sub: #4a5568;
+    --bg: #f0f2f5;           /* 背景を少しグレーに */
+    --card-bg: #ffffff;
+    --border: #e2e8f0;
+    --radius: 12px;
+    --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+    
+    /* LINEカラー */
     --line-color: #06c755;
-    --text-main: #2d3748;
-    --text-sub: #718096;
-    --bg: #f7fafc;
-    --card: #ffffff;
-    --input-bg: #ffffff;
-    --input-border: #e2e8f0;
-    --header-bg: #f8f9fa;
-    --guide-bg: #e3f2fd;
-    --guide-border: #bbdefb;
-    --guide-text: #0d47a1;
-    --radius: 16px;
-    --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-    --sync-status: #4caf50;
-    --room-badge-bg: #37474f;
-    --room-badge-text: #eceff1;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         --primary: #66bb6a;
-        --primary-dark: #1b5e20;
         --primary-light: #2d3748;
         --accent: #ffb74d;
         --danger: #ef5350;
         --danger-bg: #3e2723;
-        --text-main: #e0e0e0;
-        --text-sub: #b0bec5;
-        --bg: #1a202c;
-        --card: #2d3748;
-        --input-bg: #2c2c2c;
-        --input-border: #424242;
-        --header-bg: #4a5568;
-        --guide-bg: #263238;
-        --guide-border: #37474f;
-        --guide-text: #eceff1;
-        --shadow: 0 4px 15px rgba(0,0,0,0.5);
-        --room-badge-bg: #cfd8dc;
-        --room-badge-text: #263238;
+        --text-main: #f7fafc;
+        --text-sub: #a0aec0;
+        --bg: #171923;
+        --card-bg: #2d3748;
+        --border: #4a5568;
     }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
-    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-    margin: 0; padding: 20px 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0; padding: 20px 12px;
     background: var(--bg); color: var(--text-main);
-    line-height: 1.6; font-size: 16px;
-    transition: background 0.3s, color 0.3s;
+    line-height: 1.6; font-size: 15px;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding-bottom: 80px;}
-header { text-align: center; margin-bottom: 20px; }
-h1 { font-size: 1.5rem; margin: 0; color: var(--primary-dark); display: flex; flex-direction: column; align-items: center; justify-content: center; letter-spacing: 0.05em; }
-h1 span { font-size: 0.8rem; margin-top: 4px; color: var(--text-sub); font-weight: normal; opacity: 0.8; }
+.container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
+
+/* --- ヘッダー周り --- */
+header { text-align: center; margin-bottom: 24px; }
+h1 { 
+    font-size: 1.4rem; margin: 0; color: var(--primary); 
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    font-weight: 800;
+}
+h1 i { font-size: 1.6rem; }
+h1 span { font-size: 0.8rem; color: var(--text-sub); font-weight: normal; margin-top: 4px; display: block;}
 
 .room-badge {
-    background: var(--room-badge-bg); color: var(--room-badge-text);
-    padding: 6px 16px; border-radius: 20px; font-family: monospace; font-size: 1.1rem; letter-spacing: 1px;
-    margin: 15px auto; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.1s, box-shadow 0.2s;
+    background: var(--text-main); color: var(--bg);
+    padding: 8px 16px; border-radius: 30px; font-family: monospace; font-size: 1rem;
+    margin: 16px auto; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
+    box-shadow: var(--shadow); transition: transform 0.1s;
 }
 .room-badge:active { transform: scale(0.96); }
-.room-badge small { font-size: 0.7rem; opacity: 0.8; font-family: sans-serif; letter-spacing: 0; }
+.room-badge i { font-size: 1.2rem; }
+.room-badge-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
+.room-badge-label { font-size: 0.65rem; opacity: 0.7; font-family: sans-serif; }
 
-.sync-indicator {
-    font-size: 0.75rem; color: var(--primary); 
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    margin-top: 5px; opacity: 0.9;
+.sync-status {
+    font-size: 0.75rem; color: var(--primary); font-weight: 600;
+    display: flex; align-items: center; justify-content: center; gap: 4px;
+    margin-top: 8px;
 }
-.dot { width: 8px; height: 8px; background: var(--sync-status); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+.sync-dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-.usage-guide {
-    background: var(--guide-bg); border: 1px solid var(--guide-border);
-    padding: 15px 20px; border-radius: var(--radius); margin-bottom: 25px;
-    font-size: 0.85rem; color: var(--guide-text);
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-.usage-guide h3 { margin: 0 0 5px 0; font-size: 0.95rem; display: flex; align-items: center; gap: 6px; }
-
+/* --- 共通コンポーネント --- */
 .card {
-    background: var(--card); padding: 20px; border-radius: var(--radius);
-    box-shadow: var(--shadow); margin-bottom: 24px; border: 1px solid rgba(0,0,0,0.03);
+    background: var(--card-bg); padding: 20px; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border);
 }
 
-h2 { font-size: 1.1rem; margin: 0 0 20px 0; display: flex; align-items: center; gap: 10px; border-bottom: 2px solid var(--primary-light); padding-bottom: 10px; color: var(--primary-dark); font-weight: 700; }
-.sub-title { font-size: 0.8rem; font-weight: normal; color: var(--text-sub); margin-left: auto; }
+h2 { 
+    font-size: 1.1rem; margin: 0 0 16px 0; 
+    display: flex; align-items: center; gap: 8px; 
+    color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 10px;
+}
+h2 i { color: var(--primary); font-size: 1.3rem; }
 
-.input-group { margin-bottom: 18px; }
-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-sub); }
+/* 入力フォーム */
+.input-group { margin-bottom: 16px; }
+label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
 
 input[type="number"], input[type="text"], select {
-    width: 100%; padding: 14px; 
-    border: 1px solid var(--input-border); 
-    border-radius: 10px; 
-    font-size: 16px; 
-    background: var(--input-bg);
-    color: var(--text-main);
-    font-family: "SF Mono", "Menlo", "Consolas", "Courier New", monospace;
-    font-feature-settings: "tnum";
+    width: 100%; padding: 12px; 
+    border: 1px solid var(--border); border-radius: 8px; 
+    font-size: 16px; background: var(--bg); color: var(--text-main);
     transition: 0.2s;
-    appearance: none;
 }
-input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(67, 160, 71, 0.2); }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(46, 125, 50, 0.15); }
 
-.flex-row { display: flex; gap: 10px; }
+.flex-row { display: flex; gap: 12px; }
 .flex-row > div { flex: 1; }
 
-/* トグルスイッチ風チェックボックス */
+/* トグルスイッチ */
 .checkbox-card {
     display: flex; align-items: center; justify-content: space-between;
-    background: var(--bg); border: 1px solid var(--input-border);
-    padding: 16px; border-radius: 12px; cursor: pointer; user-select: none; color: var(--text-main);
-    transition: all 0.2s;
+    background: var(--bg); padding: 12px 16px; border-radius: 8px; 
+    cursor: pointer; user-select: none; border: 1px solid var(--border);
 }
-.checkbox-card:active { background: var(--primary-light); }
 .checkbox-card input { display: none; }
 .toggle-switch {
-    width: 44px; height: 24px; background: #ccc; border-radius: 24px; position: relative; transition: 0.3s;
+    width: 40px; height: 22px; background: #cbd5e0; border-radius: 20px; position: relative; transition: 0.3s;
 }
 .toggle-switch::after {
-    content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
-    background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+    background: white; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .checkbox-card input:checked + .toggle-switch { background: var(--primary); }
-.checkbox-card input:checked + .toggle-switch::after { transform: translateX(20px); }
+.checkbox-card input:checked + .toggle-switch::after { transform: translateX(18px); }
 
+/* 車両カード */
 .car-card {
-    border: 1px solid var(--input-border); border-radius: 12px; margin-bottom: 16px;
-    background: var(--card); overflow: hidden; transition: box-shadow 0.2s;
+    border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px;
+    background: var(--card-bg); overflow: hidden;
 }
-.car-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
 .car-header {
-    background: var(--header-bg); padding: 14px 18px;
+    background: var(--bg); padding: 12px 16px;
     display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer; user-select: none;
-    font-weight: 600; color: var(--text-main);
-    transition: background 0.2s;
+    cursor: pointer; font-weight: 600; font-size: 0.95rem;
 }
-.car-header:active { opacity: 0.8; }
-.car-title-text { display: flex; align-items: center; gap: 10px; font-size: 1rem; }
-.toggle-icon { font-size: 0.8rem; color: var(--text-sub); transition: transform 0.3s; }
+.car-header i { margin-right: 6px; color: var(--text-sub); }
+.car-body { padding: 16px; display: none; border-top: 1px solid var(--border); }
+.car-card.open .car-body { display: block; }
+.toggle-icon { transition: transform 0.3s; font-size: 1.2rem; }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
-.car-body { padding: 20px; display: none; animation: fadeIn 0.3s ease; border-top: 1px solid var(--input-border); }
-.car-card.open .car-body { display: block; }
-@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-.remove-btn { 
-    color: var(--danger); background: rgba(255, 255, 255, 0.5); border: 1px solid var(--danger);
-    font-size: 0.85rem; width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: 0.2s;
+.btn-icon-only {
+    background: none; border: none; color: var(--danger); font-size: 1.2rem; 
+    cursor: pointer; padding: 4px; display: flex; align-items: center;
 }
-.remove-btn:hover { background: var(--danger); color: white; }
 
-.extra-section { background: var(--bg); padding: 15px; border-radius: 10px; margin-top: 20px; border: 1px dashed var(--input-border); }
-.extra-item { display: flex; gap: 8px; margin-bottom: 8px; }
+/* 諸経費セクション */
+.extra-section { 
+    background: var(--bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
+    border: 1px dashed var(--border); 
+}
+.extra-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: center;}
 
+/* ボタン類 */
 .btn {
-    width: 100%; border: none; border-radius: 50px; font-size: 1.05rem; font-weight: 700;
-    padding: 16px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none; letter-spacing: 0.02em;
+    width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: 700;
+    padding: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    text-decoration: none;
 }
 .btn-primary { 
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark)); 
-    color: white; margin-top: 10px; 
-    box-shadow: 0 4px 15px rgba(67, 160, 71, 0.3); 
+    background: var(--primary); color: white; margin-top: 10px; 
+    box-shadow: 0 4px 10px rgba(46, 125, 50, 0.3);
 }
-.btn-primary:active { transform: scale(0.98); box-shadow: 0 2px 8px rgba(67, 160, 71, 0.2); }
+.btn-primary:active { transform: scale(0.98); }
 .btn-outline { 
-    background: transparent; border: 2px dashed var(--input-border); color: var(--primary); 
-    margin-bottom: 15px; padding: 14px; font-weight: 600;
+    background: transparent; border: 2px dashed var(--border); color: var(--primary); 
+    padding: 12px; font-weight: 600;
 }
 .btn-outline:hover { background: var(--primary-light); border-color: var(--primary); }
-.btn-reset { background: none; color: var(--text-sub); font-size: 0.85rem; margin-top: 20px; text-decoration: underline; padding: 10px; border:none; cursor:pointer; opacity: 0.8;}
-.btn-reset:hover { opacity: 1; color: var(--danger); }
-.btn-line { background: var(--line-color); color: white; margin-top: 10px; }
-.btn-history { background: #546e7a; color: white; font-size: 0.9rem; padding: 10px; border-radius: 8px; margin-top: 10px; }
+.btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
 
+/* 結果表示エリア（大幅改修） */
 #resultArea { display: none; }
-.result-header { text-align: center; margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid var(--input-border); }
-.price-tag { font-size: 2.8rem; font-weight: 800; color: var(--primary-dark); display: block; line-height: 1.2; margin: 10px 0; letter-spacing: -0.02em; }
+.result-card { border-top: 5px solid var(--primary); }
 
-.driver-row { 
-    background: var(--bg); border: 1px solid var(--input-border); border-radius: 12px; 
-    padding: 18px; margin-bottom: 15px; 
+.total-payment-box {
+    text-align: center; padding: 20px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px;
 }
-.driver-main { 
-    display: flex; justify-content: space-between; align-items: center; 
-    border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 10px; margin-bottom: 10px;
+.total-payment-label { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 8px; display: block; }
+.total-payment-amount { 
+    font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1; letter-spacing: -1px;
 }
-.driver-name { font-weight: 700; font-size: 1.1rem; }
-.driver-total-price { font-size: 1.2rem; font-weight: 800; color: var(--primary-dark); }
+.payment-detail-note { font-size: 0.75rem; color: var(--text-sub); margin-top: 8px; }
 
-.detail-line { display: flex; justify-content: space-between; margin-bottom: 4px; font-size: 0.85rem; color: var(--text-sub); }
-.detail-group { margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--input-border); }
-.detail-label { color: var(--text-sub); font-size: 0.75rem; margin-bottom: 2px; opacity: 0.8; }
-
-.withdraw-box {
-    font-size: 1.1rem; font-weight: bold; display: flex; justify-content: space-between; margin-top: 10px;
-    color: var(--danger); border: 2px solid var(--danger); padding: 15px; border-radius: 12px;
-    background: var(--danger-bg);
+/* ドライバー支払いカード */
+.driver-card {
+    background: var(--bg); border-radius: 8px; padding: 15px; margin-bottom: 12px;
+    border-left: 4px solid var(--text-sub);
 }
+.driver-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid rgba(0,0,0,0.05); }
+.driver-name { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 6px; }
+.driver-amount { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
+.detail-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 4px; }
+.detail-row.sub { padding-left: 10px; border-left: 2px solid var(--border); margin-top: 4px; }
 
-.copy-box { background: #263238; padding: 15px; border-radius: 8px; margin-top: 10px; }
-#copyTextarea { 
-    width: 100%; height: 160px; background: transparent; border: none; color: #eceff1; 
-    font-size: 0.85rem; resize: none; font-family: monospace; outline: none;
+/* 会計サマリー */
+.accounting-summary {
+    margin-top: 24px; padding-top: 16px; border-top: 2px dashed var(--border);
 }
-.btn-copy { background: #455a64; color: white; padding: 12px; margin-top: 10px; border-radius: 6px; border: none; width: 100%; font-weight: bold; cursor: pointer; }
+.summary-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px; }
+.summary-row.highlight { color: var(--danger); font-weight: bold; font-size: 1rem; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
 
-.history-list { list-style: none; padding: 0; margin: 10px 0 0 0; }
+/* コピーエリア */
+.copy-area {
+    background: #2d3748; color: white; padding: 15px; border-radius: 8px; margin-top: 20px;
+}
+#copyTextarea { width: 100%; background: transparent; border: none; color: #e2e8f0; font-family: monospace; height: 120px; resize: none; font-size: 0.8rem; outline: none; }
+.btn-copy { background: #4a5568; color: white; padding: 10px; width: 100%; border: none; border-radius: 6px; margin-top: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+
+/* 履歴リスト */
+.history-container { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
 .history-item { 
-    background: var(--header-bg); padding: 10px; border-radius: 6px; margin-bottom: 8px;
-    display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--input-border);
+    background: var(--card-bg); padding: 10px 14px; border-radius: 8px; margin-bottom: 8px;
+    display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border);
 }
-.history-info { font-size: 0.85rem; }
-.history-date { font-size: 0.75rem; color: var(--text-sub); display: block; }
-.btn-load { background: var(--primary); color: white; border: none; padding: 6px 12px; border-radius: 4px; font-size: 0.8rem; cursor: pointer; margin-left:10px; }
-.btn-del-hist { background: none; color: var(--danger); border: none; font-size: 1.2rem; cursor: pointer; padding: 0 5px; }
+.history-meta { font-size: 0.75rem; color: var(--text-sub); }
+.btn-restore { background: var(--primary); color: white; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
 
+/* トースト通知 */
 #toast {
     visibility: hidden; min-width: 250px; background-color: #333; color: #fff; text-align: center;
-    border-radius: 50px; padding: 16px; position: fixed; z-index: 100; left: 50%; bottom: 30px;
-    transform: translateX(-50%); font-size: 14px; opacity: 0; transition: opacity 0.3s, bottom 0.3s;
+    border-radius: 50px; padding: 14px; position: fixed; z-index: 100; left: 50%; bottom: 30px;
+    transform: translateX(-50%); font-size: 0.9rem; opacity: 0; transition: opacity 0.3s, bottom 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
+
 </style>
 </head>
 <body>
 
 <div class="container">
     <header>
-        <h1>⛰️ 山歩会会計精算ツール<span>v4.1</span></h1>
+        <h1><i class='bx bxs-landscape'></i> 山歩会 精算<span>v5.1</span></h1>
         
         <div class="room-badge" onclick="copyRoomLink()">
-            <span>ID: <span id="dispRoomId">...</span></span>
-            <small style="background:rgba(255,255,255,0.2); padding:2px 8px; border-radius:12px; margin-left:8px;">🔗 共有URLをコピー</small>
+            <i class='bx bx-id-card'></i>
+            <div class="room-badge-text">
+                <span class="room-badge-label">Room ID</span>
+                <span id="dispRoomId">...</span>
+            </div>
+            <i class='bx bx-copy' style="font-size: 0.9rem; opacity: 0.5; margin-left: 4px;"></i>
         </div>
 
-        <div class="sync-indicator">
-            <span class="dot"></span>
+        <div class="sync-status">
+            <span class="sync-dot"></span>
             <span id="syncText">同期中...</span>
         </div>
     </header>
 
-    <div class="usage-guide">
-        <h3> このツールの使い方</h3>
-        <ol style="padding-left: 20px; margin: 5px 0 10px 0;">
-            <li><strong>車両を登録</strong>: 「+ 車両を追加」で車を登録します。</li>
-            <li><strong>情報を入力</strong>: 走行距離、燃費、ガソリン価格を入力します。</li>
-            <li><strong>経費を追加</strong>: 高速代などは「+ 経費を追加」に入力します。</li>
-            <li><strong>精算</strong>: 参加人数を入力し「精算を実行」で計算します。</li>
-        </ol>
-        <div style="margin-top: 8px; padding-top: 8px; border-top: 1px dashed var(--guide-border); font-size: 0.8rem;">
-            <strong>📡 リアルタイム共有:</strong> 入力内容は同じURLを開いている全員に即座に共有・保存されます。
-        </div>
-    </div>
-
-    <div class="card" style="padding-bottom: 10px;">
-        <h2>🚗 車両情報の登録</h2>
-        <div id="carList"></div>
-        <button class="btn btn-outline" onclick="handleAddCarBtn()">+ 車両を追加</button>
+    <div class="card" style="background: var(--primary-light); border-color: transparent;">
+        <h3 style="margin:0 0 10px 0; font-size:0.95rem; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+            <i class='bx bx-info-circle'></i> 使い方
+        </h3>
+        <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-sub);">
+            <li>参加人数、車出ししてくれた方の情報を入力します。</li>
+            <li>「精算を実行」を押すと1人あたりの支払額が計算されます。</li>
+            <li>URLを共有すれば、メンバー全員がこの結果を見られます。</li>
+        </ul>
     </div>
 
     <div class="card">
-        <h2>👥 精算の設定</h2>
+        <h2><i class='bx bxs-car'></i> 車両情報の登録</h2>
+        <div id="carList"></div>
+        <button class="btn btn-outline" onclick="handleAddCarBtn()">
+            <i class='bx bx-plus'></i> 車両を追加
+        </button>
+    </div>
+
+    <div class="card">
+        <h2><i class='bx bxs-cog'></i> 精算の設定</h2>
         
         <div class="input-group">
             <label>端数処理（切り上げ単位）</label>
@@ -292,77 +282,92 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         </div>
 
         <div class="input-group">
-            <label>今回の企画の参加人数(企画者含む)</label>
-            <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()">
+            <label>企画の参加人数 (企画者含む)</label>
+            <div style="position: relative;">
+                <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 40px;">
+                <i class='bx bxs-user-detail' style="position: absolute; left: 12px; top: 13px; color: var(--text-sub);"></i>
+            </div>
         </div>
         
-        <label class="checkbox-card" style="margin-bottom: 15px;">
+        <label class="checkbox-card">
             <span>企画者はガソリン代を支払わない</span>
             <input type="checkbox" id="organizerFree" onchange="pushData()">
             <div class="toggle-switch"></div>
         </label>
     </div>
 
-    <button class="btn btn-primary" onclick="calculate()">🚀 精算を実行する</button>
+    <button class="btn btn-primary" onclick="calculate()">
+        <i class='bx bxs-calculator'></i> 精算を実行する
+    </button>
 
     <div id="resultArea">
-        <div class="card" style="border-top: 6px solid var(--primary); margin-top:30px;">
-            <div class="result-header">
-                <label>1人あたりの徴収額（ガソリン代）</label>
-                <span class="price-tag" id="resPerPerson">0円</span>
-                <small id="resTargetDetail" style="color:var(--text-sub)"></small>
+        <div class="card result-card" style="margin-top: 30px;">
+            <div class="total-payment-box">
+                <span class="total-payment-label">1人あたりの徴収額（ガソリン代）</span>
+                <span class="total-payment-amount" id="resPerPerson">0<small style="font-size:1rem; font-weight:normal;">円</small></span>
+                <div class="payment-detail-note" id="resTargetDetail">--</div>
             </div>
 
-            <div class="res-section">
-                <label style="margin-bottom:10px; display:block;">🚗 ドライバーへの支払い内訳</label>
+            <div style="margin-bottom: 20px;">
+                <label style="margin-bottom:12px; display:flex; align-items:center; gap:6px;">
+                    <i class='bx bxs-wallet-alt'></i> ドライバーへの支払い
+                </label>
                 <div id="resDriverList"></div>
             </div>
 
-            <div class="res-section" style="margin-top:20px; padding-top:15px; border-top: 1px dashed var(--input-border);">
-                <label>💰 サークル会計からの支出</label>
-                <div style="font-size:0.9rem; display: flex; justify-content: space-between; margin-top:5px;">
+            <div class="accounting-summary">
+                <label style="margin-bottom:10px; display:block; font-size:0.85rem; font-weight:bold; color:var(--text-sub);">
+                    <i class='bx bxs-bank'></i> サークル会計情報
+                </label>
+                <div class="summary-row">
                     <span>経費・調整費の合計</span>
                     <span id="resCircleExpense">0円</span>
                 </div>
-                <div style="font-size:0.9rem; display: flex; justify-content: space-between; color: var(--primary);">
-                    <span>端数充当額（参加者からの余剰金）</span>
+                <div class="summary-row" style="color: var(--primary);">
+                    <span>端数調整の余り（サークル費へ）</span>
                     <span id="resGasSurplus">0円</span>
                 </div>
-                
-                <div class="withdraw-box">
+                <div class="summary-row highlight">
                     <span>会計からの実支出</span>
                     <span id="resWithdraw">0円</span>
                 </div>
             </div>
         </div>
 
-        <div class="card" style="background: #263238; color: white;">
-            <h2 style="color: white; border-color: #546e7a;">📱 LINE送信用メッセージ</h2>
-            <div class="copy-box">
-                <textarea id="copyTextarea" readonly></textarea>
-                <div style="display: flex; gap: 10px;">
-                    <button class="btn-copy" onclick="copyToClipboard()">📋 テキストをコピー</button>
-                    <a id="btnLineShare" href="#" target="_blank" class="btn btn-line" style="display:none; width:100%;">💬 LINEで送る</a>
-                </div>
+        <div class="copy-area">
+            <h3 style="margin:0 0 10px 0; font-size:1rem; display:flex; align-items:center; gap:8px;">
+                <i class='bx bxl-whatsapp'></i> メッセージ用テキスト
+            </h3>
+            <textarea id="copyTextarea" readonly></textarea>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-copy" onclick="copyToClipboard()">
+                    <i class='bx bx-copy'></i> コピー
+                </button>
+                <a id="btnLineShare" href="#" target="_blank" class="btn" style="background: #06c755; color: white; display: none;">
+                    <i class='bx bxl-line' style="font-size:1.2rem;"></i> LINEで送る
+                </a>
             </div>
         </div>
     </div>
 
-    <div style="margin-top: 30px; border-top: 1px solid var(--input-border); padding-top: 20px;">
+    <div class="history-container">
         <details>
-            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold;">📂 履歴</summary>
+            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none;">
+                <i class='bx bx-history'></i> 計算履歴 (保存済み)
+            </summary>
             <div style="margin-top: 15px;">
-                <button class="btn btn-history" onclick="saveToHistory()">💾 現在の入力を履歴に保存</button>
-                <ul id="historyList" class="history-list">
-                    <li style="text-align:center; color:var(--text-sub); padding:10px;">履歴はありません</li>
+                <ul id="historyList" style="list-style: none; padding: 0;">
+                    <li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.85rem;">履歴はありません</li>
                 </ul>
+                <button class="btn btn-outline btn-sm" style="width:100%; margin-top:10px; font-weight:normal;" onclick="resetRoom()">
+                    <i class='bx bx-trash'></i> 入力を全てクリア
+                </button>
             </div>
         </details>
-        <button class="btn btn-reset" onclick="resetRoom()">⚠️ 入力を全てクリア (全員の画面から消去)</button>
     </div>
 </div>
 
-<div id="toast"></div>
+<div id="toast"><i class='bx bx-check-circle'></i> <span>メッセージ</span></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -381,6 +386,7 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 
+// URLからルームID取得
 let roomId = new URLSearchParams(window.location.search).get("room");
 if (!roomId) {
     roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -391,15 +397,17 @@ document.getElementById('dispRoomId').textContent = roomId;
 
 const roomRef = ref(db, 'sessions/' + roomId);
 
+// グローバル関数への紐付け
 window.pushData = debounce(pushDataToFirebase, 500);
 window.handleAddCarBtn = handleAddCarBtn;
 window.resetRoom = resetRoom;
-window.saveToHistory = saveToHistory;
 window.loadFromHistory = loadFromHistory;
 window.deleteHistory = deleteHistory;
 
+// 初期ロード時に履歴表示
 renderHistoryList();
 
+// Firebase同期
 onValue(roomRef, (snapshot) => {
     const data = snapshot.val();
     const syncText = document.getElementById("syncText");
@@ -422,7 +430,6 @@ function renderForm(data) {
 
     const carList = document.getElementById('carList');
     const remoteCars = data.cars || [];
-    
     const currentCards = carList.getElementsByClassName('car-card');
     
     while(currentCards.length < remoteCars.length) {
@@ -449,7 +456,7 @@ function renderForm(data) {
         
         const title = card.querySelector('.car-title-text');
         const dName = cData.name || `車両 ${i + 1}`;
-        title.textContent = `🚙 ${dName}`;
+        title.innerHTML = `<i class='bx bxs-car'></i> ${dName}`;
 
         const extrasBox = card.querySelector('.extra-section div[id^="extras-"]');
         if(!extrasBox) return;
@@ -530,39 +537,44 @@ function getFormData() {
 }
 
 function resetRoom() {
-    if(confirm("ルームの入力を初期化します。\n（他の参加者の画面からも消えます）")) {
+    if(confirm("全ての入力をリセットしますか？\n（他のメンバーの画面からも消えます）")) {
         set(roomRef, null).then(() => {
             window.location.reload();
         });
     }
 }
 
+// 履歴保存機能
 function saveToHistory() {
     const data = getFormData();
-    if(!data.total && data.cars.length === 1 && !data.cars[0].dist) {
-        showToast("⚠️ 空のデータは保存できません");
-        return;
-    }
+    // 最低限の入力チェック
+    if(!data.total && data.cars.length === 1 && !data.cars[0].dist) return;
     
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
+    
+    // 直近の履歴と同じなら保存しない
+    if(history.length > 0) {
+        const last = history[0].data;
+        if(JSON.stringify(last) === JSON.stringify(data)) return; 
+    }
+
     const summary = `${data.total || "?"}名 / 車${data.cars.length}台`;
     history.unshift({ 
-        date: new Date().toLocaleString(), 
+        date: new Date().toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }), 
         summary: summary,
         data: data 
     });
     
-    localStorage.setItem('sanpo_history_v4', JSON.stringify(history.slice(0, 5)));
+    localStorage.setItem('sanpo_history_v5', JSON.stringify(history.slice(0, 10)));
     renderHistoryList();
-    showToast("💾 履歴に保存しました");
 }
 
 function renderHistoryList() {
     const list = document.getElementById('historyList');
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
     
     if (history.length === 0) {
-        list.innerHTML = `<li style="text-align:center; color:var(--text-sub); padding:10px;">履歴はありません</li>`;
+        list.innerHTML = `<li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.8rem;">履歴はありません</li>`;
         return;
     }
 
@@ -571,13 +583,13 @@ function renderHistoryList() {
         const li = document.createElement('li');
         li.className = 'history-item';
         li.innerHTML = `
-            <div class="history-info">
-                <span class="history-date">${item.date}</span>
-                <span>${item.summary}</span>
-            </div>
             <div>
-                <button class="btn-del-hist" onclick="deleteHistory(${index})">🗑️</button>
-                <button class="btn-load" onclick="loadFromHistory(${index})">復元</button>
+                <span class="history-meta">${item.date}</span>
+                <div style="font-weight:600; font-size:0.9rem;">${item.summary}</div>
+            </div>
+            <div style="display:flex; gap:8px;">
+                <button class="btn-restore" onclick="loadFromHistory(${index})">復元</button>
+                <button class="btn-icon-only" style="color:var(--text-sub); font-size:1rem;" onclick="deleteHistory(${index})"><i class='bx bx-x'></i></button>
             </div>
         `;
         list.appendChild(li);
@@ -585,23 +597,21 @@ function renderHistoryList() {
 }
 
 function loadFromHistory(index) {
-    if(!confirm("現在の入力を上書きして、履歴から復元しますか？\n（ルーム内の全員に反映されます）")) return;
-
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    if(!confirm("現在の入力を上書きして復元しますか？")) return;
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
     const item = history[index];
     if(item && item.data) {
         set(roomRef, item.data).then(() => {
             showToast("📂 履歴から復元しました");
-            document.querySelector('details').open = false;
         });
     }
 }
 
 function deleteHistory(index) {
     if(!confirm("この履歴を削除しますか？")) return;
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v4') || "[]");
+    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
     history.splice(index, 1);
-    localStorage.setItem('sanpo_history_v4', JSON.stringify(history));
+    localStorage.setItem('sanpo_history_v5', JSON.stringify(history));
     renderHistoryList();
 }
 
@@ -623,28 +633,35 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
     const onInput = `oninput="window.pushData()"`;
     const extrasId = `extras-${Date.now()}-${Math.random().toString(36).substr(2,5)}`;
 
+    /* 修正箇所: プレースホルダーを具体的な数値例に変更
+    */
     div.innerHTML = `
         <div class="car-header" onclick="this.parentElement.classList.toggle('open')">
-            <span class="car-title-text">🚙 車両 ${idx + 1}</span>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <button class="remove-btn" onclick="removeCar(event, this)" title="削除">🗑️</button>
-                <span class="toggle-icon">▼</span>
+            <span class="car-title-text"><i class='bx bxs-car'></i> 車両 ${idx + 1}</span>
+            <div style="display:flex; align-items:center; gap:8px;">
+                <button class="btn-icon-only" onclick="removeCar(event, this)" title="削除"><i class='bx bx-trash'></i></button>
+                <i class='bx bx-chevron-down toggle-icon'></i>
             </div>
         </div>
         <div class="car-body">
             <div class="input-group">
                 <label>ドライバー名（任意）</label>
-                <input type="text" class="inp-name" placeholder="氏名" ${onInput}>
+                <div style="position:relative;">
+                    <i class='bx bx-user' style="position:absolute; left:12px; top:13px; color:var(--text-sub);"></i>
+                    <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:36px;">
+                </div>
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離<small style="font-size:0.75em; font-weight:normal; margin-left:2px">(km)</small><span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="例: 250" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>燃費<small style="font-size:0.75em; font-weight:normal; margin-left:2px">(km/L)</small><span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>ガソリン価格<small style="font-size:0.75em; font-weight:normal; margin-left:2px">(円)</small><span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 170" inputmode="numeric" ${onInput}></div>
+                <div class="input-group"><label>距離 (km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>燃費 (km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15.0" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>価格 (円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 175" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.8rem;">➕ 諸費用（高速・駐車場代など）</label>
+                <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場代など）</label>
                 <div id="${extrasId}"></div>
-                <button class="btn-reset" style="padding:0; margin:10px 0 0 0; text-align:left; font-size:0.8rem;" onclick="handleAddExtra(this)">+ 経費を追加</button>
+                <button class="btn-reset" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
+                    + 経費を追加
+                </button>
             </div>
         </div>
     `;
@@ -653,7 +670,7 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
 
 window.removeCar = function(e, btn){ 
     e.stopPropagation(); 
-    if(confirm("この車両情報を削除しますか？")) { 
+    if(confirm("この車両を削除しますか？")) { 
         btn.closest('.car-card').remove(); 
         pushDataToFirebase();
     } 
@@ -669,9 +686,9 @@ function addExtraToDOM(container, name="", amount="") {
     const div = document.createElement('div');
     div.className = 'extra-item';
     div.innerHTML = `
-        <input type="text" class="ex-name" placeholder="名目" value="${name}" style="flex:2; padding:10px;" oninput="window.pushData()">
-        <input type="number" class="ex-amount" placeholder="金額" value="${amount}" style="flex:1; padding:10px;" inputmode="numeric" oninput="window.pushData()">
-        <button class="remove-btn" style="width:35px; border-radius:4px; font-size:1.2rem; padding:0;" onclick="this.parentElement.remove(); window.pushData();">×</button>
+        <input type="text" class="ex-name" placeholder="項目" value="${name}" style="flex:2; padding:10px;" oninput="window.pushData()">
+        <input type="number" class="ex-amount" placeholder="円" value="${amount}" style="flex:1; padding:10px;" inputmode="numeric" oninput="window.pushData()">
+        <button class="btn-icon-only" style="color:var(--text-sub);" onclick="this.parentElement.remove(); window.pushData();"><i class='bx bx-x'></i></button>
     `;
     container.appendChild(div);
 }
@@ -682,17 +699,17 @@ window.calculate = function() {
     const isOrgFree = data.org;
     
     let errorMsgs = [];
-    if (!totalPeople || totalPeople <= 0) errorMsgs.push("・参加人数を入力してください");
-    if (data.cars.length === 0) errorMsgs.push("・車両が1台も登録されていません");
+    if (!totalPeople || totalPeople <= 0) errorMsgs.push("参加人数を入力してください");
+    if (data.cars.length === 0) errorMsgs.push("車両が1台も登録されていません");
 
     data.cars.forEach((c, index) => {
         const dName = c.name || `車両 ${index + 1}`;
-        if(!c.dist) errorMsgs.push(`・${dName}: 走行距離が未入力です`);
-        if(!c.eco) errorMsgs.push(`・${dName}: 燃費が未入力です`);
-        if(!c.price) errorMsgs.push(`・${dName}: ガソリン価格が未入力です`);
+        if(!c.dist) errorMsgs.push(`${dName}: 走行距離が未入力です`);
+        if(!c.eco) errorMsgs.push(`${dName}: 燃費が未入力です`);
+        if(!c.price) errorMsgs.push(`${dName}: ガソリン価格が未入力です`);
     });
 
-    if (errorMsgs.length > 0) { alert("⚠️ 入力エラーがあります:\n" + errorMsgs.join("\n")); return; }
+    if (errorMsgs.length > 0) { alert("⚠️ エラー:\n・" + errorMsgs.join("\n・")); return; }
 
     let totalGas = 0; let totalExtras = 0; let totalReward = 0;
     let driverResults = []; 
@@ -735,30 +752,29 @@ window.calculate = function() {
     const gasSurplus = collectedGasTotal - totalGas;
     const circleNeed = (totalExtras + totalReward) - gasSurplus;
 
-    document.getElementById('resPerPerson').textContent = perPersonGas.toLocaleString() + " 円";
-    document.getElementById('resTargetDetail').innerHTML = `徴収人数：${payers}名 ／ ガソリン代実費合計：${totalGas.toLocaleString()}円<br>（端数処理: ${roundUnit}円単位）`;
+    // --- 結果表示 (DOM更新) ---
+    document.getElementById('resPerPerson').innerHTML = perPersonGas.toLocaleString() + "<small style='font-size:1rem; font-weight:normal;'> 円</small>";
+    document.getElementById('resTargetDetail').innerHTML = `徴収対象：${payers}名 / 実費合計：${totalGas.toLocaleString()}円 (端数${roundUnit}円)`;
     
     const dList = document.getElementById('resDriverList'); 
     dList.innerHTML = "";
     driverResults.forEach(d => {
         const row = document.createElement('div'); 
-        row.className = 'driver-row';
+        row.className = 'driver-card';
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
-                extrasHtml += `<div class="detail-line"><span>${ex.name}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
+                extrasHtml += `<div class="detail-row sub"><span>${ex.name}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
             });
-            extrasHtml = `<div class="detail-group"><div class="detail-label">立替経費</div>${extrasHtml}</div>`;
+            extrasHtml = `<div style="margin-top:4px; padding-top:4px;">${extrasHtml}</div>`;
         }
         row.innerHTML = `
-            <div class="driver-main">
-                <span class="driver-name">${d.name} 様</span>
-                <span class="driver-total-price">${d.totalPay.toLocaleString()} 円</span>
+            <div class="driver-header">
+                <span class="driver-name"><i class='bx bxs-user-circle'></i> ${d.name} <small style="font-weight:normal; font-size:0.8rem; margin-left:4px;">さん</small></span>
+                <span class="driver-amount">${d.totalPay.toLocaleString()} 円</span>
             </div>
-            <div>
-                <div class="detail-line"><span>ガソリン代</span><span>${d.gasCost.toLocaleString()}円</span></div>
-                <div class="detail-line"><span>ドライバー調整費</span><span>${d.reward.toLocaleString()}円</span></div>
-            </div>
+            <div class="detail-row"><span>ガソリン代</span><span>${d.gasCost.toLocaleString()}円</span></div>
+            <div class="detail-row"><span>ドライバー調整費</span><span>${d.reward.toLocaleString()}円</span></div>
             ${extrasHtml}
         `;
         dList.appendChild(row);
@@ -767,11 +783,18 @@ window.calculate = function() {
     document.getElementById('resCircleExpense').textContent = (totalExtras + totalReward).toLocaleString() + " 円";
     document.getElementById('resGasSurplus').textContent = "-" + gasSurplus.toLocaleString() + " 円";
     document.getElementById('resWithdraw').textContent = circleNeed.toLocaleString() + " 円";
-    document.getElementById('resultArea').style.display = 'block';
     
-    document.getElementById('resultArea').scrollIntoView({ behavior: 'smooth' });
+    const resultArea = document.getElementById('resultArea');
+    resultArea.style.display = 'block';
+    
+    // スクロール
+    resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    let lineText = `【山歩会 精算報告 🚙】\n`;
+    // --- 自動保存を実行 ---
+    saveToHistory();
+
+    // --- LINE用テキスト生成 ---
+    let lineText = `【山歩会 精算報告 ⛰️】\n`;
     lineText += `■徴収額（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
     
@@ -792,12 +815,14 @@ window.calculate = function() {
     const lineBtn = document.getElementById('btnLineShare');
     lineBtn.href = `https://line.me/R/msg/text/?${encodedText}`;
     lineBtn.style.display = 'flex';
+
+    showToast("✅ 精算完了！履歴に保存しました");
 }
 
 window.copyRoomLink = function() {
     const url = window.location.href;
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => showToast("📋 共有URLをコピーしました！<br>仲間に送信してください。"));
+        navigator.clipboard.writeText(url).then(() => showToast("URLをコピーしました！"));
     } else {
         const ta = document.createElement("textarea");
         ta.value = url;
@@ -805,19 +830,19 @@ window.copyRoomLink = function() {
         ta.select();
         document.execCommand("copy");
         document.body.removeChild(ta);
-        showToast("📋 共有URLをコピーしました！");
+        showToast("URLをコピーしました！");
     }
 }
 
 window.copyToClipboard = function() {
     const textarea = document.getElementById('copyTextarea');
     textarea.select(); document.execCommand('copy');
-    showToast("✅ 結果テキストをコピーしました！");
+    showToast("テキストをコピーしました！");
 }
 
 function showToast(msg) {
     const toast = document.getElementById("toast");
-    toast.innerHTML = msg;
+    toast.innerHTML = `<i class='bx bx-check-circle'></i> <span>${msg}</span>`;
     toast.className = "show";
     setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
 }
