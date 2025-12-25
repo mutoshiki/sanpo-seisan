@@ -365,6 +365,17 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
             </div>
         </details>
     </div>
+<div style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
+        <button class="btn btn-sm" style="background: #718096; color: white; width: auto; margin: 0 auto;" onclick="fillTestData()">
+            <i class='bx bx-test-tube'></i> デバッグ用データを投入
+        </button>
+        <p style="font-size: 0.7rem; color: var(--text-sub); margin-top: 8px;">
+            ※既存の入力は全て上書きされます
+        </p>
+    </div>
+
+</div>
+
 </div>
 
 <div id="toast"><i class='bx bx-check-circle'></i> <span>メッセージ</span></div>
@@ -403,6 +414,7 @@ window.handleAddCarBtn = handleAddCarBtn;
 window.resetRoom = resetRoom;
 window.loadFromHistory = loadFromHistory;
 window.deleteHistory = deleteHistory;
+window.fillTestData = fillTestData;
 
 // 初期ロード時に履歴表示
 renderHistoryList();
@@ -542,6 +554,64 @@ function resetRoom() {
             window.location.reload();
         });
     }
+}
+
+// ... 既存の紐付けコードの下に追加 ...
+window.deleteHistory = deleteHistory;
+window.fillTestData = fillTestData; // ★これを追加
+
+// ... (中略) ...
+
+// ★この関数をブロック内の適当な場所（resetRoom関数の下など）に追加してください
+function fillTestData() {
+    if(!confirm("現在の入力をクリアし、テストデータを投入しますか？")) return;
+
+    // 1. 既存の車両をクリア
+    document.getElementById('carList').innerHTML = "";
+
+    // 2. 基本設定の入力
+    const totalPeople = 11; // 企画者1 + 10人
+    document.getElementById('totalPeople').value = totalPeople;
+    document.getElementById('roundingUnit').value = "100";
+    document.getElementById('organizerFree').checked = true;
+
+    // 3. テストデータ定義
+    const testData = [
+        { name: "山田太郎", dist: [180, 220], eco: [12, 16], price: [165, 175], extras: [["高速代", 4500], ["駐車場", 1000]] },
+        { name: "鈴木一郎", dist: [180, 220], eco: [20, 25], price: [160, 170], extras: [["高速代", 3800], ["アイス代", 800]] },
+        { name: "佐藤花子", dist: [190, 230], eco: [15, 19], price: [168, 178], extras: [["有料道路", 1200], ["温泉代", 2400]] }
+    ];
+
+    // ランダム数値生成ヘルパー
+    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+    // 4. 車両データの生成とDOM投入
+    testData.forEach((d, i) => {
+        // 車両カードを追加（強制オープン）
+        addCarToDOM(null, -1, true);
+        
+        // 追加されたカードを取得
+        const card = document.getElementById('carList').lastElementChild;
+        
+        // 基本情報の入力
+        card.querySelector('.inp-name').value = d.name;
+        card.querySelector('.inp-dist').value = rand(d.dist[0], d.dist[1]);
+        card.querySelector('.inp-eco').value  = rand(d.eco[0], d.eco[1]);
+        card.querySelector('.inp-price').value = rand(d.price[0], d.price[1]);
+
+        // 諸経費の入力
+        const extraBox = card.querySelector('.extra-section > div'); // ID付きのdivを取得
+        d.extras.forEach(ex => {
+            addExtraToDOM(extraBox, ex[0], ex[1]);
+        });
+    });
+
+    // 5. データを保存して通知
+    pushDataToFirebase();
+    showToast("🧪 テストデータを投入しました");
+    
+    // 計算結果エリアが開いていたら閉じておく（再計算を促すため）
+    document.getElementById('resultArea').style.display = 'none';
 }
 
 // 履歴保存機能
@@ -761,13 +831,16 @@ window.calculate = function() {
     driverResults.forEach(d => {
         const row = document.createElement('div'); 
         row.className = 'driver-card';
+        
+        // ★修正箇所: 諸経費をインデントせず、同列の行として生成する
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
-                extrasHtml += `<div class="detail-row sub"><span>${ex.name}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
+                // class="detail-row sub" ではなく class="detail-row" に統一
+                extrasHtml += `<div class="detail-row"><span>${ex.name}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
             });
-            extrasHtml = `<div style="margin-top:4px; padding-top:4px;">${extrasHtml}</div>`;
         }
+
         row.innerHTML = `
             <div class="driver-header">
                 <span class="driver-name"><i class='bx bxs-user-circle'></i> ${d.name} <small style="font-weight:normal; font-size:0.8rem; margin-left:4px;">さん</small></span>
