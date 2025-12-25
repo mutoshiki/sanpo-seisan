@@ -256,7 +256,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-sub);">
             <li>参加人数、車出ししてくれた方の情報を入力します。</li>
             <li>「精算を実行」を押すと1人あたりの支払額が計算されます。</li>
-            <li>URLを共有すれば、メンバー全員がこの結果を見られます。</li>
+            <li>URLを共有すれば、複数人で共同編集出来ます。</li>
         </ul>
     </div>
 
@@ -653,8 +653,8 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
             </div>
             <div class="flex-row">
                 <div class="input-group"><label>距離 (km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>燃費 (km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15.0" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>価格 (円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 175" inputmode="numeric" ${onInput}></div>
+                <div class="input-group"><label>燃費 (km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>価格 (円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場代など）</label>
