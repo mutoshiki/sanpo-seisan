@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>山歩会会計精算ツール v5.3</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-<link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
     /* カラーパレット: 落ち着いたモダンな配色 */
@@ -239,15 +239,15 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 <div class="container">
     <header>
-        <h1><i class='bx bxs-landscape'></i> 山歩会 精算ツール<span>v5.3</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.3</span></h1>
         
         <div class="room-badge" onclick="copyRoomLink()">
-            <i class='bx bx-id-card'></i>
+            <i class='fa-solid fa-id-card'></i>
             <div class="room-badge-text">
                 <span class="room-badge-label">Room ID</span>
                 <span id="dispRoomId">...</span>
             </div>
-            <i class='bx bx-copy' style="font-size: 0.9rem; opacity: 0.5; margin-left: 4px;"></i>
+            <i class='fa-solid fa-copy' style="font-size: 0.9rem; opacity: 0.5; margin-left: 4px;"></i>
         </div>
 
         <div class="sync-status">
@@ -258,7 +258,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
     <div class="card" style="background: var(--primary-light); border-color: transparent;">
         <h3 style="margin:0 0 10px 0; font-size:0.95rem; color: var(--primary); display: flex; align-items: center; gap: 6px;">
-            <i class='bx bx-info-circle'></i> 使い方
+            <i class='fa-solid fa-circle-info'></i> 使い方
         </h3>
         <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-sub);">
             <li>参加人数、車出ししてくれた方の情報を入力します。</li>
@@ -269,15 +269,15 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     </div>
 
     <div class="card">
-        <h2><i class='bx bxs-car'></i> 車両情報の登録</h2>
+        <h2><i class='fa-solid fa-car'></i> 車両情報の登録</h2>
         <div id="carList"></div>
         <button class="btn btn-outline" onclick="handleAddCarBtn()">
-            <i class='bx bx-plus'></i> 車両を追加
+            <i class='fa-solid fa-plus'></i> 車両を追加
         </button>
     </div>
 
     <div class="card">
-        <h2><i class='bx bxs-cog'></i> 精算の設定</h2>
+        <h2><i class='fa-solid fa-gear'></i> 精算の設定</h2>
         
         <div class="input-group">
             <label>端数処理（切り上げ単位）</label>
@@ -293,7 +293,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
             <label>企画の参加人数 (企画者含む)</label>
             <div style="position: relative;">
                 <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 40px;">
-                <i class='bx bxs-user-detail' style="position: absolute; left: 12px; top: 13px; color: var(--text-sub);"></i>
+                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 13px; color: var(--text-sub);"></i>
             </div>
         </div>
         
@@ -305,7 +305,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     </div>
 
     <button class="btn btn-primary" onclick="calculate()">
-        <i class='bx bxs-calculator'></i> 精算を実行する
+        <i class='fa-solid fa-calculator'></i> 精算を実行する
     </button>
 
     <div id="resultArea">
@@ -318,14 +318,14 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
             <div style="margin-bottom: 20px;">
                 <label style="margin-bottom:12px; display:flex; align-items:center; gap:6px;">
-                    <i class='bx bxs-wallet-alt'></i> ドライバーへの支払い
+                    <i class='fa-solid fa-wallet'></i> ドライバーへの支払い
                 </label>
                 <div id="resDriverList"></div>
             </div>
 
             <div class="accounting-summary">
                 <label style="margin-bottom:10px; display:block; font-size:0.85rem; font-weight:bold; color:var(--text-sub);">
-                    <i class='bx bxs-bank'></i> サークル会計情報
+                    <i class='fa-solid fa-building-columns'></i> サークル会計情報
                 </label>
                 <div class="summary-row">
                     <span>部費負担分の経費合計</span>
@@ -344,15 +344,15 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
         <div class="copy-area">
             <h3 style="margin:0 0 10px 0; font-size:1rem; display:flex; align-items:center; gap:8px;">
-                <i class='bx bxl-whatsapp'></i> 結果の共有
+                <i class='fa-solid fa-share-nodes'></i> 結果の共有
             </h3>
             <textarea id="copyTextarea" readonly></textarea>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-copy" onclick="copyToClipboard()">
-                    <i class='bx bx-copy'></i> テキストをコピー
+                    <i class='fa-solid fa-copy'></i> テキストをコピー
                 </button>
                 <button class="btn" style="background: #e53e3e; color: white; font-size:0.9rem;" onclick="downloadResultImage()">
-                    <i class='bx bxs-image'></i> 画像として保存
+                    <i class='fa-solid fa-image'></i> 画像として保存
                 </button>
             </div>
         </div>
@@ -361,21 +361,21 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     <div class="history-container">
         <details>
             <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none;">
-                <i class='bx bx-history'></i> 計算履歴 (保存済み)
+                <i class='fa-solid fa-clock-rotate-left'></i> 計算履歴 (保存済み)
             </summary>
             <div style="margin-top: 15px;">
                 <ul id="historyList" style="list-style: none; padding: 0;">
                     <li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.85rem;">履歴はありません</li>
                 </ul>
                 <button class="btn btn-outline btn-sm" style="width:100%; margin-top:10px; font-weight:normal;" onclick="resetRoom()">
-                    <i class='bx bx-trash'></i> 入力を全てクリア
+                    <i class='fa-solid fa-trash'></i> 入力を全てクリア
                 </button>
             </div>
         </details>
     </div>
 <div style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
         <button class="btn btn-sm" style="background: #718096; color: white; width: auto; margin: 0 auto;" onclick="fillTestData()">
-            <i class='bx bx-test-tube'></i> デバッグ用データを投入
+            <i class='fa-solid fa-flask'></i> デバッグ用データを投入
         </button>
         <p style="font-size: 0.7rem; color: var(--text-sub); margin-top: 8px;">
             ※既存の入力は全て上書きされます
@@ -386,7 +386,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 </div>
 
-<div id="toast"><i class='bx bx-check-circle'></i> <span>メッセージ</span></div>
+<div id="toast"><i class='fa-solid fa-circle-check'></i> <span>メッセージ</span></div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -499,7 +499,7 @@ function renderForm(data) {
         
         const title = card.querySelector('.car-title-text');
         const dName = cData.name || `車両 ${i + 1}`;
-        title.innerHTML = `<i class='bx bxs-car'></i> ${dName}`;
+        title.innerHTML = `<i class='fa-solid fa-car'></i> ${dName}`;
 
         const extrasBox = card.querySelector('.extra-section div[id^="extras-"]');
         if(!extrasBox) return;
@@ -692,7 +692,7 @@ function renderHistoryList() {
             </div>
             <div style="display:flex; gap:8px;">
                 <button class="btn-restore" onclick="loadFromHistory(${index})">復元</button>
-                <button class="btn-icon-only" style="color:var(--text-sub); font-size:1rem;" onclick="deleteHistory(${index})"><i class='bx bx-x'></i></button>
+                <button class="btn-icon-only" style="color:var(--text-sub); font-size:1rem;" onclick="deleteHistory(${index})"><i class='fa-solid fa-xmark'></i></button>
             </div>
         `;
         list.appendChild(li);
@@ -738,17 +738,17 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
 
     div.innerHTML = `
         <div class="car-header" onclick="this.parentElement.classList.toggle('open')">
-            <span class="car-title-text"><i class='bx bxs-car'></i> 車両 ${idx + 1}</span>
+            <span class="car-title-text"><i class='fa-solid fa-car'></i> 車両 ${idx + 1}</span>
             <div style="display:flex; align-items:center; gap:8px;">
-                <button class="btn-icon-only" onclick="removeCar(event, this)" title="削除"><i class='bx bx-trash'></i></button>
-                <i class='bx bx-chevron-down toggle-icon'></i>
+                <button class="btn-icon-only" onclick="removeCar(event, this)" title="削除"><i class='fa-solid fa-trash'></i></button>
+                <i class='fa-solid fa-chevron-down toggle-icon'></i>
             </div>
         </div>
         <div class="car-body">
             <div class="input-group">
                 <label>ドライバー名（任意）</label>
                 <div style="position:relative;">
-                    <i class='bx bx-user' style="position:absolute; left:12px; top:13px; color:var(--text-sub);"></i>
+                    <i class='fa-solid fa-user' style="position:absolute; left:12px; top:13px; color:var(--text-sub);"></i>
                     <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:36px;">
                 </div>
             </div>
@@ -799,7 +799,7 @@ function addExtraToDOM(container, name="", amount="", type="club") {
             <option value="club" ${isClub}>部費</option>
             <option value="split" ${isSplit}>割勘</option>
         </select>
-        <button class="btn-icon-only" style="color:var(--text-sub);" onclick="this.parentElement.remove(); window.pushData();"><i class='bx bx-x'></i></button>
+        <button class="btn-icon-only" style="color:var(--text-sub);" onclick="this.parentElement.remove(); window.pushData();"><i class='fa-solid fa-xmark'></i></button>
     `;
     container.appendChild(div);
 }
@@ -916,7 +916,7 @@ window.calculate = function() {
 
         row.innerHTML = `
             <div class="driver-header">
-                <span class="driver-name"><i class='bx bxs-user-circle'></i> ${d.name} <small style="font-weight:normal; font-size:0.8rem; margin-left:4px;">さん</small></span>
+                <span class="driver-name"><i class='fa-solid fa-circle-user'></i> ${d.name} <small style="font-weight:normal; font-size:0.8rem; margin-left:4px;">さん</small></span>
                 <span class="driver-amount">${d.totalPay.toLocaleString()} 円</span>
             </div>
             <div class="detail-row"><span>ガソリン代</span><span>${d.gasCost.toLocaleString()}円</span></div>
@@ -991,7 +991,7 @@ window.copyToClipboard = function() {
 
 function showToast(msg) {
     const toast = document.getElementById("toast");
-    toast.innerHTML = `<i class='bx bx-check-circle'></i> <span>${msg}</span>`;
+    toast.innerHTML = `<i class='fa-solid fa-circle-check'></i> <span>${msg}</span>`;
     toast.className = "show";
     setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
 }
