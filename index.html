@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v5.1</title>
+<title>山歩会会計精算ツール v5.3</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
 <style>
 :root {
@@ -21,7 +22,7 @@
     --radius: 12px;
     --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
     
-    /* LINEカラー */
+    /* LINEカラー (今回は画像保存ボタンに使用するため少し調整しますが変数は残します) */
     --line-color: #06c755;
 }
 
@@ -150,7 +151,11 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     background: var(--bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
     border: 1px dashed var(--border); 
 }
-.extra-item { display: flex; gap: 8px; margin-bottom: 8px; align-items: center;}
+/* Flex調整: 名前, 金額, 区分, 削除 */
+.extra-item { display: flex; gap: 6px; margin-bottom: 8px; align-items: center;}
+.extra-item .ex-name { flex: 1.5; }
+.extra-item .ex-amount { flex: 1; }
+.extra-item .ex-type { flex: 0.8; font-size: 0.8rem; padding: 10px 4px; }
 
 /* ボタン類 */
 .btn {
@@ -192,7 +197,9 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .driver-name { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 6px; }
 .driver-amount { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
 .detail-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 4px; }
-.detail-row.sub { padding-left: 10px; border-left: 2px solid var(--border); margin-top: 4px; }
+.detail-tag { font-size: 0.7rem; padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid var(--border);}
+.tag-split { background: #ebf8ff; color: #2b6cb0; border-color: #bee3f8; }
+.tag-club { background: #edf2f7; color: #4a5568; }
 
 /* 会計サマリー */
 .accounting-summary {
@@ -232,7 +239,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 <div class="container">
     <header>
-        <h1><i class='bx bxs-landscape'></i> 山歩会 精算ツール<span>v5.1</span></h1>
+        <h1><i class='bx bxs-landscape'></i> 山歩会 精算ツール<span>v5.3</span></h1>
         
         <div class="room-badge" onclick="copyRoomLink()">
             <i class='bx bx-id-card'></i>
@@ -256,6 +263,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-sub);">
             <li>参加人数、車出ししてくれた方の情報を入力します。</li>
             <li>「精算を実行」を押すと1人あたりの支払額が計算されます。</li>
+            <li><strong>諸経費</strong>は「割り勘(参加者負担)」か「部費(サークル負担)」かを選択できます。</li>
             <li>URLを共有すれば、複数人で共同編集出来ます。</li>
         </ul>
     </div>
@@ -301,9 +309,9 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     </button>
 
     <div id="resultArea">
-        <div class="card result-card" style="margin-top: 30px;">
+        <div class="card result-card" id="captureTarget" style="margin-top: 30px;">
             <div class="total-payment-box">
-                <span class="total-payment-label">1人あたりの徴収額（ガソリン代）</span>
+                <span class="total-payment-label">1人あたりの徴収額（ガソリン＋割勘分）</span>
                 <span class="total-payment-amount" id="resPerPerson">0<small style="font-size:1rem; font-weight:normal;">円</small></span>
                 <div class="payment-detail-note" id="resTargetDetail">--</div>
             </div>
@@ -320,7 +328,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
                     <i class='bx bxs-bank'></i> サークル会計情報
                 </label>
                 <div class="summary-row">
-                    <span>経費・調整費の合計</span>
+                    <span>部費負担分の経費合計</span>
                     <span id="resCircleExpense">0円</span>
                 </div>
                 <div class="summary-row" style="color: var(--primary);">
@@ -336,16 +344,16 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
         <div class="copy-area">
             <h3 style="margin:0 0 10px 0; font-size:1rem; display:flex; align-items:center; gap:8px;">
-                <i class='bx bxl-whatsapp'></i> メッセージ用テキスト
+                <i class='bx bxl-whatsapp'></i> 結果の共有
             </h3>
             <textarea id="copyTextarea" readonly></textarea>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-copy" onclick="copyToClipboard()">
-                    <i class='bx bx-copy'></i> コピー
+                    <i class='bx bx-copy'></i> テキストをコピー
                 </button>
-                <a id="btnLineShare" href="#" target="_blank" class="btn" style="background: #06c755; color: white; display: none;">
-                    <i class='bx bxl-line' style="font-size:1.2rem;"></i> LINEで送る
-                </a>
+                <button class="btn" style="background: #e53e3e; color: white; font-size:0.9rem;" onclick="downloadResultImage()">
+                    <i class='bx bxs-image'></i> 画像として保存
+                </button>
             </div>
         </div>
     </div>
@@ -416,6 +424,29 @@ window.loadFromHistory = loadFromHistory;
 window.deleteHistory = deleteHistory;
 window.fillTestData = fillTestData;
 
+// 画像保存用関数を追加
+window.downloadResultImage = function() {
+    const target = document.getElementById('captureTarget');
+    showToast("画像を生成中...");
+    
+    // 背景色などを正しく反映させる設定
+    const bgColor = window.getComputedStyle(document.body).getPropertyValue('--card-bg').trim();
+    
+    html2canvas(target, {
+        backgroundColor: bgColor || "#ffffff",
+        scale: 2 // 高解像度
+    }).then(canvas => {
+        const link = document.createElement('a');
+        link.download = `seisan_result_${roomId}.png`;
+        link.href = canvas.toDataURL();
+        link.click();
+        showToast("✅ 画像を保存しました");
+    }).catch(err => {
+        console.error(err);
+        showToast("エラーが発生しました");
+    });
+}
+
 // 初期ロード時に履歴表示
 renderHistoryList();
 
@@ -477,7 +508,7 @@ function renderForm(data) {
         const currentExtras = extrasBox.getElementsByClassName('extra-item');
 
         while(currentExtras.length < remoteExtras.length) {
-            addExtraToDOM(extrasBox, "", "");
+            addExtraToDOM(extrasBox, "", "", "club");
         }
         while(currentExtras.length > remoteExtras.length) {
             extrasBox.removeChild(extrasBox.lastChild);
@@ -487,9 +518,11 @@ function renderForm(data) {
             const exData = remoteExtras[j];
             const nameInp = row.querySelector('.ex-name');
             const amtInp = row.querySelector('.ex-amount');
+            const typeSel = row.querySelector('.ex-type');
             
             if(document.activeElement !== nameInp) nameInp.value = exData.name || "";
             if(document.activeElement !== amtInp) amtInp.value = exData.amount || "";
+            if(document.activeElement !== typeSel) typeSel.value = exData.type || "club";
         });
     });
 }
@@ -536,7 +569,8 @@ function getFormData() {
         price: card.querySelector('.inp-price').value,
         extras: Array.from(card.querySelectorAll('.extra-item')).map(row => ({ 
             name: row.querySelector('.ex-name').value, 
-            amount: row.querySelector('.ex-amount').value 
+            amount: row.querySelector('.ex-amount').value,
+            type: row.querySelector('.ex-type').value 
         }))
     }));
     return {
@@ -556,13 +590,6 @@ function resetRoom() {
     }
 }
 
-// ... 既存の紐付けコードの下に追加 ...
-window.deleteHistory = deleteHistory;
-window.fillTestData = fillTestData; // ★これを追加
-
-// ... (中略) ...
-
-// ★この関数をブロック内の適当な場所（resetRoom関数の下など）に追加してください
 function fillTestData() {
     if(!confirm("現在の入力をクリアし、テストデータを投入しますか？")) return;
 
@@ -575,54 +602,60 @@ function fillTestData() {
     document.getElementById('roundingUnit').value = "100";
     document.getElementById('organizerFree').checked = true;
 
-    // 3. テストデータ定義
+    // 3. テストデータ定義 (種別: typeを追加)
     const testData = [
-        { name: "山田太郎", dist: [180, 220], eco: [12, 16], price: [165, 175], extras: [["高速代", 4500], ["駐車場", 1000]] },
-        { name: "鈴木一郎", dist: [180, 220], eco: [20, 25], price: [160, 170], extras: [["高速代", 3800], ["アイス代", 800]] },
-        { name: "佐藤花子", dist: [190, 230], eco: [15, 19], price: [168, 178], extras: [["有料道路", 1200], ["温泉代", 2400]] }
+        { 
+            name: "レンタカーA", dist: [200, 240], eco: [12, 16], price: [165, 175], 
+            extras: [
+                ["高速代", 4500, "split"],   // 割り勘
+                ["レンタカー代", 8000, "club"], // 部費
+                ["駐車場", 1200, "split"]   // 割り勘
+            ] 
+        },
+        { 
+            name: "鈴木一郎", dist: [180, 220], eco: [20, 25], price: [160, 170], 
+            extras: [
+                ["アイス代", 800, "club"] // 部費（おごり的な）
+            ] 
+        },
+        { 
+            name: "佐藤花子", dist: [190, 230], eco: [15, 19], price: [168, 178], 
+            extras: [
+                ["有料道路", 1200, "split"], // 割り勘
+                ["温泉代立替", 5000, "club"] // 部費から
+            ] 
+        }
     ];
 
-    // ランダム数値生成ヘルパー
     const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
-    // 4. 車両データの生成とDOM投入
     testData.forEach((d, i) => {
-        // 車両カードを追加（強制オープン）
         addCarToDOM(null, -1, true);
-        
-        // 追加されたカードを取得
         const card = document.getElementById('carList').lastElementChild;
         
-        // 基本情報の入力
         card.querySelector('.inp-name').value = d.name;
         card.querySelector('.inp-dist').value = rand(d.dist[0], d.dist[1]);
         card.querySelector('.inp-eco').value  = rand(d.eco[0], d.eco[1]);
         card.querySelector('.inp-price').value = rand(d.price[0], d.price[1]);
 
-        // 諸経費の入力
-        const extraBox = card.querySelector('.extra-section > div'); // ID付きのdivを取得
+        const extraBox = card.querySelector('.extra-section > div');
         d.extras.forEach(ex => {
-            addExtraToDOM(extraBox, ex[0], ex[1]);
+            // 第3引数(amount), 第4引数(type)
+            addExtraToDOM(extraBox, ex[0], ex[1], ex[2]);
         });
     });
 
-    // 5. データを保存して通知
     pushDataToFirebase();
-    showToast("🧪 テストデータを投入しました");
-    
-    // 計算結果エリアが開いていたら閉じておく（再計算を促すため）
+    showToast("🧪 テストデータ(混在)を投入しました");
     document.getElementById('resultArea').style.display = 'none';
 }
 
-// 履歴保存機能
 function saveToHistory() {
     const data = getFormData();
-    // 最低限の入力チェック
     if(!data.total && data.cars.length === 1 && !data.cars[0].dist) return;
     
     const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
     
-    // 直近の履歴と同じなら保存しない
     if(history.length > 0) {
         const last = history[0].data;
         if(JSON.stringify(last) === JSON.stringify(data)) return; 
@@ -703,8 +736,6 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
     const onInput = `oninput="window.pushData()"`;
     const extrasId = `extras-${Date.now()}-${Math.random().toString(36).substr(2,5)}`;
 
-    /* 修正箇所: プレースホルダーを具体的な数値例に変更
-    */
     div.innerHTML = `
         <div class="car-header" onclick="this.parentElement.classList.toggle('open')">
             <span class="car-title-text"><i class='bx bxs-car'></i> 車両 ${idx + 1}</span>
@@ -727,7 +758,7 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
                 <div class="input-group"><label>価格 (円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場代など）</label>
+                <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場・レンタカー代など）</label>
                 <div id="${extrasId}"></div>
                 <button class="btn-reset" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
                     + 経費を追加
@@ -752,12 +783,22 @@ window.handleAddExtra = function(btn) {
     pushDataToFirebase();
 }
 
-function addExtraToDOM(container, name="", amount="") {
+// 諸経費追加のDOM生成（種別selectを追加）
+function addExtraToDOM(container, name="", amount="", type="club") {
     const div = document.createElement('div');
     div.className = 'extra-item';
+    
+    // Selectの初期値設定
+    const isSplit = (type === 'split') ? 'selected' : '';
+    const isClub = (type === 'club') ? 'selected' : '';
+
     div.innerHTML = `
-        <input type="text" class="ex-name" placeholder="項目" value="${name}" style="flex:2; padding:10px;" oninput="window.pushData()">
-        <input type="number" class="ex-amount" placeholder="円" value="${amount}" style="flex:1; padding:10px;" inputmode="numeric" oninput="window.pushData()">
+        <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
+        <input type="number" class="ex-amount" placeholder="円" value="${amount}" inputmode="numeric" oninput="window.pushData()">
+        <select class="ex-type" onchange="window.pushData()">
+            <option value="club" ${isClub}>部費</option>
+            <option value="split" ${isSplit}>割勘</option>
+        </select>
         <button class="btn-icon-only" style="color:var(--text-sub);" onclick="this.parentElement.remove(); window.pushData();"><i class='bx bx-x'></i></button>
     `;
     container.appendChild(div);
@@ -781,7 +822,12 @@ window.calculate = function() {
 
     if (errorMsgs.length > 0) { alert("⚠️ エラー:\n・" + errorMsgs.join("\n・")); return; }
 
-    let totalGas = 0; let totalExtras = 0; let totalReward = 0;
+    // 集計用変数
+    let totalGas = 0; 
+    let totalExtrasSplit = 0; // 割り勘にする経費合計
+    let totalExtrasClub = 0;  // 部費で払う経費合計
+    let totalReward = 0;
+
     let driverResults = []; 
 
     data.cars.forEach((c) => {
@@ -791,40 +837,65 @@ window.calculate = function() {
         const price = parseFloat(c.price) || 0;
         const gasCost = Math.round((dist / eco) * price);
         
-        let extrasTotal = 0; 
+        let driverExtrasTotal = 0; 
         let exs = [];
+
         c.extras.forEach(ex => {
             const val = parseInt(ex.amount) || 0;
             const nm = ex.name || "諸経費";
-            if(val > 0) { extrasTotal += val; exs.push({name: nm, amount: val}); }
+            const tp = ex.type || "club"; // デフォルトは部費
+
+            if(val > 0) { 
+                driverExtrasTotal += val; 
+                exs.push({name: nm, amount: val, type: tp});
+                
+                // 支払い元ごとの集計
+                if(tp === 'split') {
+                    totalExtrasSplit += val;
+                } else {
+                    totalExtrasClub += val;
+                }
+            }
         });
 
         const reward = 1000; 
         totalGas += gasCost; 
-        totalExtras += extrasTotal; 
         totalReward += reward;
 
         driverResults.push({
             name,
-            totalPay: gasCost + extrasTotal + reward,
+            totalPay: gasCost + driverExtrasTotal + reward, // ドライバーが受け取る総額
             gasCost,
             reward,
             extras: exs,
-            extrasTotal
+            extrasTotal: driverExtrasTotal
         });
     });
 
+    // 割り勘の対象総額 = ガス代合計 + 割り勘指定された経費
+    const totalCollectionTarget = totalGas + totalExtrasSplit;
+
     const payers = isOrgFree ? (totalPeople - 1) : totalPeople;
     const roundUnit = parseInt(data.rounding);
-    const perPersonGas = payers > 0 ? Math.ceil((totalGas / payers) / roundUnit) * roundUnit : 0;
     
-    const collectedGasTotal = perPersonGas * payers;
-    const gasSurplus = collectedGasTotal - totalGas;
-    const circleNeed = (totalExtras + totalReward) - gasSurplus;
+    // 1人あたりの徴収額 (端数切り上げ)
+    const perPersonPay = payers > 0 ? Math.ceil((totalCollectionTarget / payers) / roundUnit) * roundUnit : 0;
+    
+    const totalCollected = perPersonPay * payers;
+    
+    // 割り勘計算による余剰金（切り上げ分）
+    const surplus = totalCollected - totalCollectionTarget;
+
+    // 部費からの支出 = (部費負担経費 + ドライバー報酬) - 余剰金
+    const circleNeed = (totalExtrasClub + totalReward) - surplus;
+
 
     // --- 結果表示 (DOM更新) ---
-    document.getElementById('resPerPerson').innerHTML = perPersonGas.toLocaleString() + "<small style='font-size:1rem; font-weight:normal;'> 円</small>";
-    document.getElementById('resTargetDetail').innerHTML = `徴収対象：${payers}名 / 実費合計：${totalGas.toLocaleString()}円 (端数${roundUnit}円)`;
+    document.getElementById('resPerPerson').innerHTML = perPersonPay.toLocaleString() + "<small style='font-size:1rem; font-weight:normal;'> 円</small>";
+    
+    // 詳細表示の更新
+    let detailText = `対象：${payers}名 / 実費計：${totalCollectionTarget.toLocaleString()}円 (内:諸経費${totalExtrasSplit.toLocaleString()})`;
+    document.getElementById('resTargetDetail').innerHTML = detailText;
     
     const dList = document.getElementById('resDriverList'); 
     dList.innerHTML = "";
@@ -832,12 +903,14 @@ window.calculate = function() {
         const row = document.createElement('div'); 
         row.className = 'driver-card';
         
-        // ★修正箇所: 諸経費をインデントせず、同列の行として生成する
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
-                // class="detail-row sub" ではなく class="detail-row" に統一
-                extrasHtml += `<div class="detail-row"><span>${ex.name}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
+                const badge = ex.type === 'split' 
+                    ? `<span class="detail-tag tag-split">割勘</span>`
+                    : `<span class="detail-tag tag-club">部費</span>`;
+                
+                extrasHtml += `<div class="detail-row"><span>${ex.name}${badge}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
             });
         }
 
@@ -853,42 +926,45 @@ window.calculate = function() {
         dList.appendChild(row);
     });
 
-    document.getElementById('resCircleExpense').textContent = (totalExtras + totalReward).toLocaleString() + " 円";
-    document.getElementById('resGasSurplus').textContent = "-" + gasSurplus.toLocaleString() + " 円";
+    document.getElementById('resCircleExpense').textContent = (totalExtrasClub + totalReward).toLocaleString() + " 円";
+    document.getElementById('resGasSurplus').textContent = "-" + surplus.toLocaleString() + " 円";
     document.getElementById('resWithdraw').textContent = circleNeed.toLocaleString() + " 円";
     
     const resultArea = document.getElementById('resultArea');
     resultArea.style.display = 'block';
-    
-    // スクロール
     resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    // --- 自動保存を実行 ---
     saveToHistory();
 
-    // --- LINE用テキスト生成 ---
+    // --- LINE用テキスト生成 (コピー用には残す) ---
     let lineText = `【山歩会 精算報告 ⛰️】\n`;
-    lineText += `■徴収額（ガソリン代）\n1人：${perPersonGas.toLocaleString()}円\n`;
+    lineText += `■徴収額（1人あたり）\n`;
+    lineText += `${perPersonPay.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
     
     lineText += `\n■ドライバーへの支払額\n`;
     driverResults.forEach(d => {
         lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
-        lineText += `  (ガス:${d.gasCost.toLocaleString()} / 調整:${d.reward.toLocaleString()}`;
-        if (d.extrasTotal > 0) lineText += ` / 立替:${d.extrasTotal.toLocaleString()}`;
-        lineText += `)\n`;
+        // 詳細内訳
+        let details = [`ガス:${d.gasCost}`];
+        const splitEx = d.extras.filter(e => e.type === 'split').reduce((s,e)=>s+e.amount,0);
+        const clubEx  = d.extras.filter(e => e.type !== 'split').reduce((s,e)=>s+e.amount,0);
+        
+        if(splitEx > 0) details.push(`割勘経費:${splitEx}`);
+        if(clubEx > 0) details.push(`部費経費:${clubEx}`);
+        details.push(`調整:${d.reward}`);
+        
+        lineText += `  (${details.join('/')})\n`;
     });
     
-    lineText += `\n■サークル会計からの支出\n計：${circleNeed.toLocaleString()}円\n\nお疲れ様でした！`;
+    lineText += `\n■サークル会計からの支出\n計：${circleNeed.toLocaleString()}円\n`;
+    if(surplus > 0) lineText += `(端数余剰 ${surplus}円充当済み)\n`;
+
     lineText += `\n\n▼計算・編集URL\n${window.location.href}`;
 
     document.getElementById('copyTextarea').value = lineText;
 
-    const encodedText = encodeURIComponent(lineText);
-    const lineBtn = document.getElementById('btnLineShare');
-    lineBtn.href = `https://line.me/R/msg/text/?${encodedText}`;
-    lineBtn.style.display = 'flex';
-
+    // ボタン切り替えによりLINEリンクは削除
     showToast("✅ 精算完了！履歴に保存しました");
 }
 
