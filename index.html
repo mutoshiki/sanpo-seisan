@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v5.3</title>
+<title>山歩会会計精算ツール v5.4</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -193,38 +193,95 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 .btn-outline:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
 .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
 
-/* 結果表示エリア */
+/* --- レシート風デザイン (Receipt Style) --- */
 #resultArea { display: none; }
-.result-card { border-top: 5px solid var(--primary); }
 
-.total-payment-box {
-    text-align: center; padding: 20px 0; border-bottom: 1px solid var(--border); margin-bottom: 20px;
+.receipt-wrapper {
+    /* 画像保存用に余白を確保するためのラッパー */
+    padding: 20px; 
+    margin: 20px -20px; /* 親のpaddingを相殺して画面幅広く */
 }
-.total-payment-label { font-size: 0.85rem; color: var(--text-sub); margin-bottom: 8px; display: block; }
-.total-payment-amount { 
-    font-size: 2.5rem; font-weight: 800; color: var(--primary); line-height: 1; letter-spacing: -1px;
-}
-.payment-detail-note { font-size: 0.75rem; color: var(--text-sub); margin-top: 8px; }
 
-/* ドライバー支払いカード */
-.driver-card {
-    background: var(--input-bg); border-radius: 8px; padding: 15px; margin-bottom: 12px;
-    border-left: 4px solid var(--text-sub); border: 1px solid var(--border); border-left-width: 4px;
+.receipt-paper {
+    background: #fff;
+    color: #2c2c2c;
+    font-family: 'Courier New', Courier, "OCR-B", monospace; /* レシートっぽいフォント */
+    padding: 30px 25px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    max-width: 380px;
+    margin: 0 auto;
+    
+    /* ギザギザの縁取り (擬似要素で実装) */
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
-.driver-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
-.driver-name { font-weight: 700; font-size: 1.05rem; display: flex; align-items: center; gap: 6px; color: var(--text-main); }
-.driver-amount { font-size: 1.2rem; font-weight: 800; color: var(--text-main); }
-.detail-row { display: flex; justify-content: space-between; font-size: 0.85rem; color: var(--text-sub); margin-bottom: 4px; }
-.detail-tag { font-size: 0.7rem; padding: 1px 6px; border-radius: 4px; margin-left: 6px; border: 1px solid var(--border);}
-.tag-split { background: var(--card-bg); color: var(--text-sub); }
-.tag-club { background: var(--primary-light); color: var(--primary); border-color: var(--primary); }
 
-/* 会計サマリー */
-.accounting-summary {
-    margin-top: 24px; padding-top: 16px; border-top: 2px dashed var(--border);
+.receipt-paper::before, .receipt-paper::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-size: 20px 20px;
+    background-repeat: repeat-x;
 }
-.summary-row { display: flex; justify-content: space-between; font-size: 0.9rem; margin-bottom: 6px; }
-.summary-row.highlight { color: var(--danger); font-weight: bold; font-size: 1rem; margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--border); }
+
+/* 上部のギザギザ */
+.receipt-paper::before {
+    top: -10px;
+    background-image: linear-gradient(135deg, transparent 50%, #fff 50%), linear-gradient(-135deg, transparent 50%, #fff 50%);
+    background-position: top left, top left;
+}
+
+/* 下部のギザギザ */
+.receipt-paper::after {
+    bottom: -10px;
+    background-image: linear-gradient(-45deg, transparent 50%, #fff 50%), linear-gradient(45deg, transparent 50%, #fff 50%);
+    background-position: bottom left, bottom left;
+}
+
+.receipt-header {
+    text-align: center;
+    border-bottom: 2px dashed #444;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+}
+.receipt-logo { font-size: 2.5rem; color: #333; margin-bottom: 5px; }
+.receipt-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+.receipt-meta { font-size: 0.7rem; color: #666; margin-top: 5px; }
+
+.receipt-total-section {
+    text-align: center;
+    padding: 15px 0;
+    border-bottom: 2px dashed #444;
+}
+.receipt-label-main { font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px; }
+.receipt-amount-main { font-size: 2.4rem; font-weight: 900; line-height: 1; display: block; }
+.receipt-note { font-size: 0.7rem; color: #666; margin-top: 5px; display: block;}
+
+.receipt-section {
+    padding: 15px 0;
+    border-bottom: 1px dashed #bbb;
+}
+.receipt-section-title {
+    font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
+    text-transform: uppercase; letter-spacing: 1px;
+}
+
+.receipt-row {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-size: 0.9rem; margin-bottom: 6px;
+    line-height: 1.4;
+}
+.receipt-row.bold { font-weight: 800; font-size: 0.95rem; }
+.receipt-row span:last-child { white-space: nowrap; margin-left: 10px; }
+.receipt-detail { font-size: 0.7rem; color: #666; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
+
+.receipt-footer {
+    text-align: center; margin-top: 20px; font-size: 0.7rem; opacity: 0.7;
+    font-weight: bold;
+}
 
 /* コピーエリア */
 .copy-area {
@@ -258,7 +315,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.3</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.4</span></h1>
         
         <div class="room-badge" onclick="copyRoomLink()">
             <i class='fa-solid fa-id-card'></i>
@@ -327,36 +384,45 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         <i class='fa-solid fa-calculator'></i> 精算を実行する
     </button>
 
-    <div id="resultArea">
-        <div class="card result-card" id="captureTarget" style="margin-top: 30px;">
-            <div class="total-payment-box">
-                <span class="total-payment-label">1人あたりの徴収額（ガソリン＋割勘分）</span>
-                <span class="total-payment-amount" id="resPerPerson">0<small style="font-size:1rem; font-weight:normal;">円</small></span>
-                <div class="payment-detail-note" id="resTargetDetail">--</div>
-            </div>
-
-            <div style="margin-bottom: 20px;">
-                <label style="margin-bottom:12px; display:flex; align-items:center; gap:6px;">
-                    <i class='fa-solid fa-wallet'></i> ドライバーへの支払い
-                </label>
-                <div id="resDriverList"></div>
-            </div>
-
-            <div class="accounting-summary">
-                <label style="margin-bottom:10px; display:block; font-size:0.85rem; font-weight:bold; color:var(--text-sub);">
-                    <i class='fa-solid fa-building-columns'></i> サークル会計情報
-                </label>
-                <div class="summary-row">
-                    <span>部費負担分の経費合計</span>
-                    <span id="resCircleExpense">0円</span>
+   <div id="resultArea">
+        <div id="captureTarget" class="receipt-wrapper">
+            <div class="receipt-paper">
+                <div class="receipt-header">
+                    <div class="receipt-logo"><i class='fa-solid fa-mountain-sun'></i></div>
+                    <h3 class="receipt-title">ガソリン代精算書</h3>
+                    <div class="receipt-meta" id="receiptDate">2024.01.01 12:00</div>
                 </div>
-                <div class="summary-row" style="color: var(--primary);">
-                    <span>端数調整の余り（サークル費へ）</span>
-                    <span id="resGasSurplus">0円</span>
+
+                <div class="receipt-total-section">
+                    <span class="receipt-label-main">1人あたりの徴収額</span>
+                    <span class="receipt-amount-main" id="resPerPerson">0</span>
+                    <span class="receipt-note" id="resTargetDetail">--</span>
                 </div>
-                <div class="summary-row highlight">
-                    <span>会計からの実支出</span>
-                    <span id="resWithdraw">0円</span>
+
+                <div class="receipt-section">
+                    <span class="receipt-section-title">ドライバーへの支払い</span>
+                    <div id="resDriverList"></div>
+                </div>
+
+                <div class="receipt-section">
+                    <span class="receipt-section-title">サークル会計情報</span>
+                    <div class="receipt-row">
+                        <span>部費負担分の経費合計</span>
+                        <span id="resCircleExpense">0</span>
+                    </div>
+                    <div class="receipt-row">
+                        <span>端数調整の余り (サークル費へ)</span>
+                        <span id="resGasSurplus">0</span>
+                    </div>
+                    <div class="receipt-row bold">
+                        <span>会計からの実支出</span>
+                        <span id="resWithdraw">0</span>
+                    </div>
+                </div>
+
+                <div class="receipt-footer">
+                    お疲れ様でした！<br>
+                    山歩会
                 </div>
             </div>
         </div>
@@ -370,8 +436,8 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
                 <button class="btn-copy" onclick="copyToClipboard()">
                     <i class='fa-solid fa-copy'></i> テキストをコピー
                 </button>
-                <button class="btn" style="background: var(--danger); color: white; font-size:0.9rem; border: none; border-radius: 6px; width: 100%; margin-top:10px;" onclick="downloadResultImage()">
-                    <i class='fa-solid fa-image'></i> 画像として保存
+                <button class="btn" style="background: var(--text-main); color: var(--primary-light); font-size:0.9rem; border: none; border-radius: 6px; width: 100%; margin-top:10px;" onclick="downloadResultImage()">
+                    <i class='fa-solid fa-download'></i> 画像を保存
                 </button>
             </div>
         </div>
@@ -409,6 +475,22 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
+// --- Global Assignments (Ensure these run first via hoisting) ---
+// Using assignments here ensures functions are available on window even if initialization fails below
+window.pushData = debounce(pushDataToFirebase, 500);
+window.handleAddCarBtn = handleAddCarBtn;
+window.resetRoom = resetRoom;
+window.loadFromHistory = loadFromHistory;
+window.deleteHistory = deleteHistory;
+window.fillTestData = fillTestData;
+window.downloadResultImage = downloadResultImage;
+window.addCarToDOM = addCarToDOM;
+window.removeCar = removeCar;
+window.handleAddExtra = handleAddExtra;
+window.calculate = calculate;
+window.copyRoomLink = copyRoomLink;
+window.copyToClipboard = copyToClipboard;
+
 const firebaseConfig = {
   apiKey: "AIzaSyAypqRPRn-YHWLwjT3lQ6pN6_bWBqzUvp4",
   authDomain: "sanpo-seisan.firebaseapp.com",
@@ -419,43 +501,68 @@ const firebaseConfig = {
   appId: "1:709215338656:web:c2b0dbc9aceb0fa60f89c5"
 };
 
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
+let app, db, roomRef, roomId;
 
-// URLからルームID取得
-let roomId = new URLSearchParams(window.location.search).get("room");
-if (!roomId) {
-    roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
-    const newUrl = window.location.pathname + "?room=" + roomId;
-    window.history.replaceState(null, null, newUrl);
+try {
+    app = initializeApp(firebaseConfig);
+    db = getDatabase(app);
+
+    // URLからルームID取得
+    roomId = new URLSearchParams(window.location.search).get("room");
+    if (!roomId) {
+        roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
+        const newUrl = window.location.pathname + "?room=" + roomId;
+        window.history.replaceState(null, null, newUrl);
+    }
+    const dispEl = document.getElementById('dispRoomId');
+    if(dispEl) dispEl.textContent = roomId;
+
+    roomRef = ref(db, 'sessions/' + roomId);
+
+    // Start sync and history load
+    renderHistoryList();
+    onValue(roomRef, (snapshot) => {
+        const data = snapshot.val();
+        const syncText = document.getElementById("syncText");
+        
+        if (data) {
+            if(syncText) syncText.textContent = "同期完了";
+            renderForm(data);
+        } else {
+            if(syncText) syncText.textContent = "新規ルーム";
+            const list = document.getElementById('carList');
+            if(list && list.children.length === 0) {
+                addCarToDOM(null, 0, true);
+            }
+        }
+    });
+
+} catch (e) {
+    console.error("Initialization Error:", e);
+    showToast("初期化エラーが発生しました");
 }
-document.getElementById('dispRoomId').textContent = roomId;
-
-const roomRef = ref(db, 'sessions/' + roomId);
-
-// グローバル関数への紐付け
-window.pushData = debounce(pushDataToFirebase, 500);
-window.handleAddCarBtn = handleAddCarBtn;
-window.resetRoom = resetRoom;
-window.loadFromHistory = loadFromHistory;
-window.deleteHistory = deleteHistory;
-window.fillTestData = fillTestData;
 
 // 画像保存用関数
-window.downloadResultImage = function() {
+function downloadResultImage() {
     const target = document.getElementById('captureTarget');
     showToast("画像を生成中...");
-    
-    // 背景色などを正しく反映させる設定
-    const bgColor = window.getComputedStyle(document.body).getPropertyValue('--card-bg').trim();
-    
-    html2canvas(target, {
-        backgroundColor: bgColor || "#fdfbf7",
-        scale: 2 // 高解像度
-    }).then(canvas => {
+
+    if (typeof html2canvas === 'undefined') {
+        alert("画像生成ライブラリの読み込みに失敗しました。");
+        return;
+    }
+
+    const options = {
+        scale: 2,
+        backgroundColor: null,
+        logging: false,
+        useCORS: true
+    };
+
+    html2canvas(target, options).then(canvas => {
         const link = document.createElement('a');
-        link.download = `seisan_result_${roomId}.png`;
-        link.href = canvas.toDataURL();
+        link.download = `receipt_${roomId}_${Date.now()}.png`;
+        link.href = canvas.toDataURL('image/png');
         link.click();
         showToast("✅ 画像を保存しました");
     }).catch(err => {
@@ -463,25 +570,6 @@ window.downloadResultImage = function() {
         showToast("エラーが発生しました");
     });
 }
-
-// 初期ロード時に履歴表示
-renderHistoryList();
-
-// Firebase同期
-onValue(roomRef, (snapshot) => {
-    const data = snapshot.val();
-    const syncText = document.getElementById("syncText");
-    
-    if (data) {
-        syncText.textContent = "同期完了";
-        renderForm(data);
-    } else {
-        syncText.textContent = "新規ルーム";
-        if(document.getElementById('carList').children.length === 0) {
-            addCarToDOM(null, 0, true);
-        }
-    }
-});
 
 function renderForm(data) {
     setValIfDiff('totalPeople', data.total);
@@ -558,12 +646,14 @@ function setCheckIfDiff(id, val) {
 }
 
 function pushDataToFirebase() {
+    if(!roomRef) return; // Guard against init failure
     const data = getFormData();
-    document.getElementById("syncText").textContent = "保存中...";
+    const syncText = document.getElementById("syncText");
+    if(syncText) syncText.textContent = "保存中...";
     set(roomRef, data).then(() => {
-        document.getElementById("syncText").textContent = "同期完了";
+        if(syncText) syncText.textContent = "同期完了";
     }).catch((e) => {
-        document.getElementById("syncText").textContent = "エラー";
+        if(syncText) syncText.textContent = "エラー";
         console.error(e);
     });
 }
@@ -600,6 +690,7 @@ function getFormData() {
 }
 
 function resetRoom() {
+    if(!roomRef) return;
     if(confirm("全ての入力をリセットしますか？\n（他のメンバーの画面からも消えます）")) {
         set(roomRef, null).then(() => {
             window.location.reload();
@@ -610,36 +701,33 @@ function resetRoom() {
 function fillTestData() {
     if(!confirm("現在の入力をクリアし、テストデータを投入しますか？")) return;
 
-    // 1. 既存の車両をクリア
     document.getElementById('carList').innerHTML = "";
 
-    // 2. 基本設定の入力
-    const totalPeople = 11; // 企画者1 + 10人
+    const totalPeople = 11;
     document.getElementById('totalPeople').value = totalPeople;
     document.getElementById('roundingUnit').value = "100";
     document.getElementById('organizerFree').checked = true;
 
-    // 3. テストデータ定義 (種別: typeを追加)
     const testData = [
         { 
             name: "レンタカーA", dist: [200, 240], eco: [12, 16], price: [165, 175], 
             extras: [
-                ["高速代", 4500, "split"],   // 割り勘
-                ["レンタカー代", 8000, "club"], // 部費
-                ["駐車場", 1200, "split"]   // 割り勘
+                ["高速代", 4500, "split"],
+                ["レンタカー代", 8000, "club"],
+                ["駐車場", 1200, "split"]
             ] 
         },
         { 
             name: "鈴木一郎", dist: [180, 220], eco: [20, 25], price: [160, 170], 
             extras: [
-                ["アイス代", 800, "club"] // 部費（おごり的な）
+                ["アイス代", 800, "club"]
             ] 
         },
         { 
             name: "佐藤花子", dist: [190, 230], eco: [15, 19], price: [168, 178], 
             extras: [
-                ["有料道路", 1200, "split"], // 割り勘
-                ["温泉代立替", 5000, "club"] // 部費から
+                ["有料道路", 1200, "split"],
+                ["温泉代立替", 5000, "club"]
             ] 
         }
     ];
@@ -657,7 +745,6 @@ function fillTestData() {
 
         const extraBox = card.querySelector('.extra-section > div');
         d.extras.forEach(ex => {
-            // 第3引数(amount), 第4引数(type)
             addExtraToDOM(extraBox, ex[0], ex[1], ex[2]);
         });
     });
@@ -671,27 +758,38 @@ function saveToHistory() {
     const data = getFormData();
     if(!data.total && data.cars.length === 1 && !data.cars[0].dist) return;
     
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
-    
-    if(history.length > 0) {
-        const last = history[0].data;
-        if(JSON.stringify(last) === JSON.stringify(data)) return; 
-    }
+    try {
+        const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
+        
+        if(history.length > 0) {
+            const last = history[0].data;
+            if(JSON.stringify(last) === JSON.stringify(data)) return; 
+        }
 
-    const summary = `${data.total || "?"}名 / 車${data.cars.length}台`;
-    history.unshift({ 
-        date: new Date().toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }), 
-        summary: summary,
-        data: data 
-    });
-    
-    localStorage.setItem('sanpo_history_v5', JSON.stringify(history.slice(0, 10)));
-    renderHistoryList();
+        const summary = `${data.total || "?"}名 / 車${data.cars.length}台`;
+        history.unshift({ 
+            date: new Date().toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }), 
+            summary: summary,
+            data: data 
+        });
+        
+        localStorage.setItem('sanpo_history_v5', JSON.stringify(history.slice(0, 10)));
+        renderHistoryList();
+    } catch(e) {
+        console.error("History Save Error:", e);
+    }
 }
 
 function renderHistoryList() {
     const list = document.getElementById('historyList');
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
+    if(!list) return;
+
+    let history = [];
+    try {
+        history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
+    } catch(e) {
+        console.error("History Load Error", e);
+    }
     
     if (history.length === 0) {
         list.innerHTML = `<li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.8rem;">履歴はありません</li>`;
@@ -717,32 +815,37 @@ function renderHistoryList() {
 }
 
 function loadFromHistory(index) {
+    if(!roomRef) return;
     if(!confirm("現在の入力を上書きして復元しますか？")) return;
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
-    const item = history[index];
-    if(item && item.data) {
-        set(roomRef, item.data).then(() => {
-            showToast("📂 履歴から復元しました");
-        });
-    }
+    try {
+        const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
+        const item = history[index];
+        if(item && item.data) {
+            set(roomRef, item.data).then(() => {
+                showToast("📂 履歴から復元しました");
+            });
+        }
+    } catch(e) { console.error(e); }
 }
 
 function deleteHistory(index) {
     if(!confirm("この履歴を削除しますか？")) return;
-    const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
-    history.splice(index, 1);
-    localStorage.setItem('sanpo_history_v5', JSON.stringify(history));
-    renderHistoryList();
+    try {
+        const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
+        history.splice(index, 1);
+        localStorage.setItem('sanpo_history_v5', JSON.stringify(history));
+        renderHistoryList();
+    } catch(e) { console.error(e); }
 }
-
 
 function handleAddCarBtn() {
     addCarToDOM();
     pushDataToFirebase();
 }
 
-window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
+function addCarToDOM(data = null, idx = -1, forceOpen = false) {
     const list = document.getElementById('carList');
+    if(!list) return;
     if (idx === -1) idx = list.children.length;
     
     if(list.children[idx]) return;
@@ -786,7 +889,7 @@ window.addCarToDOM = function(data = null, idx = -1, forceOpen = false) {
     list.appendChild(div);
 }
 
-window.removeCar = function(e, btn){ 
+function removeCar(e, btn){ 
     e.stopPropagation(); 
     if(confirm("この車両を削除しますか？")) { 
         btn.closest('.car-card').remove(); 
@@ -794,18 +897,16 @@ window.removeCar = function(e, btn){
     } 
 }
 
-window.handleAddExtra = function(btn) {
+function handleAddExtra(btn) {
     const box = btn.previousElementSibling;
     addExtraToDOM(box);
     pushDataToFirebase();
 }
 
-// 諸経費追加のDOM生成（種別selectを追加）
 function addExtraToDOM(container, name="", amount="", type="club") {
     const div = document.createElement('div');
     div.className = 'extra-item';
     
-    // Selectの初期値設定
     const isSplit = (type === 'split') ? 'selected' : '';
     const isClub = (type === 'club') ? 'selected' : '';
 
@@ -821,7 +922,7 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     container.appendChild(div);
 }
 
-window.calculate = function() {
+function calculate() {
     const data = getFormData();
     const totalPeople = parseInt(data.total);
     const isOrgFree = data.org;
@@ -839,10 +940,9 @@ window.calculate = function() {
 
     if (errorMsgs.length > 0) { alert("⚠️ エラー:\n・" + errorMsgs.join("\n・")); return; }
 
-    // 集計用変数
     let totalGas = 0; 
-    let totalExtrasSplit = 0; // 割り勘にする経費合計
-    let totalExtrasClub = 0;  // 部費で払う経費合計
+    let totalExtrasSplit = 0; 
+    let totalExtrasClub = 0; 
     let totalReward = 0;
 
     let driverResults = []; 
@@ -860,13 +960,12 @@ window.calculate = function() {
         c.extras.forEach(ex => {
             const val = parseInt(ex.amount) || 0;
             const nm = ex.name || "諸経費";
-            const tp = ex.type || "club"; // デフォルトは部費
+            const tp = ex.type || "club"; 
 
             if(val > 0) { 
                 driverExtrasTotal += val; 
                 exs.push({name: nm, amount: val, type: tp});
                 
-                // 支払い元ごとの集計
                 if(tp === 'split') {
                     totalExtrasSplit += val;
                 } else {
@@ -881,7 +980,7 @@ window.calculate = function() {
 
         driverResults.push({
             name,
-            totalPay: gasCost + driverExtrasTotal + reward, // ドライバーが受け取る総額
+            totalPay: gasCost + driverExtrasTotal + reward, 
             gasCost,
             reward,
             extras: exs,
@@ -889,63 +988,70 @@ window.calculate = function() {
         });
     });
 
-    // 割り勘の対象総額 = ガス代合計 + 割り勘指定された経費
     const totalCollectionTarget = totalGas + totalExtrasSplit;
 
     const payers = isOrgFree ? (totalPeople - 1) : totalPeople;
     const roundUnit = parseInt(data.rounding);
     
-    // 1人あたりの徴収額 (端数切り上げ)
     const perPersonPay = payers > 0 ? Math.ceil((totalCollectionTarget / payers) / roundUnit) * roundUnit : 0;
     
     const totalCollected = perPersonPay * payers;
     
-    // 割り勘計算による余剰金（切り上げ分）
     const surplus = totalCollected - totalCollectionTarget;
 
-    // 部費からの支出 = (部費負担経費 + ドライバー報酬) - 余剰金
     const circleNeed = (totalExtrasClub + totalReward) - surplus;
 
 
-    // --- 結果表示 (DOM更新) ---
-    document.getElementById('resPerPerson').innerHTML = perPersonPay.toLocaleString() + "<small style='font-size:1rem; font-weight:normal;'> 円</small>";
+    document.getElementById('receiptDate').textContent = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+
+    document.getElementById('resPerPerson').textContent = "¥ " + perPersonPay.toLocaleString();
     
-    // 詳細表示の更新
-    let detailText = `対象：${payers}名 / 実費計：${totalCollectionTarget.toLocaleString()}円 (内:諸経費${totalExtrasSplit.toLocaleString()})`;
-    document.getElementById('resTargetDetail').innerHTML = detailText;
+    // 変更: 日本語表記にし、必要なら諸経費の内訳も表示
+    let detailText = `対象: ${payers}名 / 実費計: ¥${totalCollectionTarget.toLocaleString()}`;
+    
+    // もし「(内:諸経費5,750)」のように内訳も出したい場合は以下の行を追加してください
+    if (totalExtrasSplit > 0) {
+        detailText += ` (内:諸経費${totalExtrasSplit.toLocaleString()})`;
+    }
+
+    document.getElementById('resTargetDetail').textContent = detailText;
+    
+    
     
     const dList = document.getElementById('resDriverList'); 
     dList.innerHTML = "";
     driverResults.forEach(d => {
         const row = document.createElement('div'); 
-        row.className = 'driver-card';
+        row.className = 'receipt-row';
         
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
-                const badge = ex.type === 'split' 
-                    ? `<span class="detail-tag tag-split">割勘</span>`
-                    : `<span class="detail-tag tag-club">部費</span>`;
-                
-                extrasHtml += `<div class="detail-row"><span>${ex.name}${badge}</span><span>${ex.amount.toLocaleString()}円</span></div>`;
+                // 変更箇所: 英語表記を日本語のバッジ風テキストに
+                const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
+                extrasHtml += `<span class="receipt-detail">- ${ex.name} ${mark}: ¥${ex.amount.toLocaleString()}</span>`;
             });
         }
 
         row.innerHTML = `
-            <div class="driver-header">
-                <span class="driver-name"><i class='fa-solid fa-circle-user'></i> ${d.name} <small style="font-weight:normal; font-size:0.8rem; margin-left:4px;">さん</small></span>
-                <span class="driver-amount">${d.totalPay.toLocaleString()} 円</span>
+            <div style="flex:1;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                    <span>${d.name} さん</span>
+                    <span>¥${d.totalPay.toLocaleString()}</span>
+                </div>
+                <span class="receipt-detail">- ガソリン代: ¥${d.gasCost.toLocaleString()}</span>
+                <span class="receipt-detail">- ドライバー調整費: ¥${d.reward.toLocaleString()}</span>
+                ${extrasHtml}
             </div>
-            <div class="detail-row"><span>ガソリン代</span><span>${d.gasCost.toLocaleString()}円</span></div>
-            <div class="detail-row"><span>ドライバー調整費</span><span>${d.reward.toLocaleString()}円</span></div>
-            ${extrasHtml}
         `;
         dList.appendChild(row);
     });
 
-    document.getElementById('resCircleExpense').textContent = (totalExtrasClub + totalReward).toLocaleString() + " 円";
-    document.getElementById('resGasSurplus').textContent = "-" + surplus.toLocaleString() + " 円";
-    document.getElementById('resWithdraw').textContent = circleNeed.toLocaleString() + " 円";
+
+
+    document.getElementById('resCircleExpense').textContent = "¥" + (totalExtrasClub + totalReward).toLocaleString();
+    document.getElementById('resGasSurplus').textContent = "-¥" + surplus.toLocaleString();
+    document.getElementById('resWithdraw').textContent = "¥" + circleNeed.toLocaleString();
     
     const resultArea = document.getElementById('resultArea');
     resultArea.style.display = 'block';
@@ -953,7 +1059,6 @@ window.calculate = function() {
 
     saveToHistory();
 
-    // --- LINE用テキスト生成 (コピー用には残す) ---
     let lineText = `【山歩会 精算報告 ⛰️】\n`;
     lineText += `■徴収額（1人あたり）\n`;
     lineText += `${perPersonPay.toLocaleString()}円\n`;
@@ -962,7 +1067,6 @@ window.calculate = function() {
     lineText += `\n■ドライバーへの支払額\n`;
     driverResults.forEach(d => {
         lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
-        // 詳細内訳
         let details = [`ガス:${d.gasCost}`];
         const splitEx = d.extras.filter(e => e.type === 'split').reduce((s,e)=>s+e.amount,0);
         const clubEx  = d.extras.filter(e => e.type !== 'split').reduce((s,e)=>s+e.amount,0);
@@ -981,11 +1085,10 @@ window.calculate = function() {
 
     document.getElementById('copyTextarea').value = lineText;
 
-    // ボタン切り替えによりLINEリンクは削除
     showToast("✅ 精算完了！履歴に保存しました");
 }
 
-window.copyRoomLink = function() {
+function copyRoomLink() {
     const url = window.location.href;
     if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(() => showToast("URLをコピーしました！"));
@@ -1000,7 +1103,7 @@ window.copyRoomLink = function() {
     }
 }
 
-window.copyToClipboard = function() {
+function copyToClipboard() {
     const textarea = document.getElementById('copyTextarea');
     textarea.select(); document.execCommand('copy');
     showToast("テキストをコピーしました！");
