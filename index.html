@@ -569,37 +569,35 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         </div>
         <div class="modal-body">
             
-            <div class="guide-step">
-                <h4><i class="fa-solid fa-1"></i> ルームを共有</h4>
-                <p>URLをメンバーに送ると、全員で同じ画面を見ながら入力できます。</p>
-                <div class="guide-img-box"><img src="guide_1.png" alt="ルーム共有"></div>
-            </div>
+           <div class="guide-step">
+    <h4><i class="fa-solid fa-1"></i> ルームを共有</h4>
+    <p>URLをメンバーに送ると、全員で同じ画面を見ながら入力できます。</p>
+    <div class="guide-img-box"><img id="img-guide-1" alt="ルーム共有"></div>
+</div>
 
-            <div class="guide-step">
-                <h4><i class="fa-solid fa-2"></i> 車両を追加・入力</h4>
-                <p>車を出した人は距離・燃費・ガソリン価格を入力します。「＋」ボタンで複数台登録も可能です。</p>
-                <div class="guide-img-box"><img src="guide_2.png" alt="車両入力"></div>
-            </div>
+<div class="guide-step">
+    <h4><i class="fa-solid fa-2"></i> 車両を追加・入力</h4>
+    <p>車を出した人は距離・燃費・ガソリン価格を入力します。「＋」ボタンで複数台登録も可能です。</p>
+    <div class="guide-img-box"><img id="img-guide-2" alt="車両入力"></div>
+</div>
 
-            <div class="guide-step">
-                <h4><i class="fa-solid fa-3"></i> 諸経費（部費・割勘）</h4>
-                <p>高速代や駐車場代などを追加します。<br>
-                <span style="font-weight:bold; color:var(--primary);">[部費]</span> 会計から全額出る費用（レンタカー代など）<br>
-                <span style="font-weight:bold; color:var(--accent);">[割勘]</span> 参加者で割る費用（高速代・駐車場代）</p>
-                <div class="guide-img-box"><img src="guide_3.png" alt="諸経費設定"></div>
-            </div>
+<div class="guide-step">
+    <h4><i class="fa-solid fa-3"></i> 諸経費（部費・割勘）</h4>
+    <p>高速代や駐車場代などを追加します。</p>
+    <div class="guide-img-box"><img id="img-guide-3" alt="諸経費設定"></div>
+</div>
 
-            <div class="guide-step">
-                <h4><i class="fa-solid fa-4"></i> 人数設定と計算</h4>
-                <p>参加人数を入力し、端数処理や企画者の免除設定を確認して「精算を実行」を押します。</p>
-                <div class="guide-img-box"><img src="guide_4.png" alt="計算設定"></div>
-            </div>
+<div class="guide-step">
+    <h4><i class="fa-solid fa-4"></i> 人数設定と計算</h4>
+    <p>参加人数を入力し、端数処理や企画者の免除設定を確認して「精算を実行」を押します。</p>
+    <div class="guide-img-box"><img id="img-guide-4" alt="計算設定"></div>
+</div>
 
-            <div class="guide-step">
-                <h4><i class="fa-solid fa-5"></i> 結果の保存</h4>
-                <p>精算レシートが表示されます。「画像を保存」でアルバムに残したり、テキストをLINEに貼って報告できます。</p>
-                <div class="guide-img-box"><img src="guide_5.png" alt="精算結果"></div>
-            </div>
+<div class="guide-step">
+    <h4><i class="fa-solid fa-5"></i> 結果の保存</h4>
+    <p>精算レシートが表示されます。</p>
+    <div class="guide-img-box"><img id="img-guide-5" alt="精算結果"></div>
+</div>
             
             <div style="text-align:center;">
                 <button class="btn btn-primary" onclick="closeGuide()">閉じる</button>
@@ -618,6 +616,176 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 </div>
 
 <div id="toast"><i class='fa-solid fa-circle-check'></i> <span>メッセージ</span></div>
+<div id="guideTemplates" style="position: absolute; left: -9999px; top: 0; width: 400px; pointer-events: none;">
+
+    <div id="tpl-guide-1" class="container" style="padding: 10px; background: var(--bg);">
+        <div class="room-invite-card" style="margin:0;">
+            <div class="room-id-section">
+                <div class="room-id-label">
+                    <div class="room-icon-box"><i class='fa-solid fa-users-rectangle'></i></div>
+                    <div class="room-code-group">
+                        <span class="room-label-tiny">ROOM ID</span>
+                        <span class="room-id-text">AB12</span>
+                    </div>
+                </div>
+                <button class="btn btn-sm" style="background:#fff; border:1px solid var(--border); color:var(--text-main);">
+                    <i class='fa-regular fa-copy'></i>
+                </button>
+            </div>
+            <div class="share-actions">
+                <button class="btn-share-sub"><i class='fa-brands fa-line' style="color:#06c755; font-size:1.1rem;"></i> LINE送信</button>
+                <button class="btn-share-sub"><i class='fa-solid fa-link'></i> URLコピー</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="tpl-guide-2" class="container" style="padding: 10px; background: var(--bg);">
+        <div class="card" style="margin:0;">
+            <h2><i class='fa-solid fa-car'></i> 車両リスト</h2>
+            <div class="car-card open">
+                <div class="car-header">
+                    <span class="car-title-text"><i class='fa-solid fa-car'></i> 織田信長</span>
+                    <i class='fa-solid fa-chevron-down toggle-icon' style="transform: rotate(180deg);"></i>
+                </div>
+                <div class="car-body" style="display:block;">
+                    <div class="input-group">
+                        <label>ドライバー名</label>
+                        <input type="text" value="織田信長">
+                    </div>
+                    <div class="flex-row">
+                        <div class="input-group"><label>距離 (km)</label><input type="text" value="240"></div>
+                        <div class="input-group"><label>燃費 (km/L)</label><input type="text" value="12"></div>
+                        <div class="input-group"><label>価格 (円)</label><input type="text" value="170"></div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-outline" style="margin-top:10px;">
+                <i class='fa-solid fa-plus'></i> 車両を追加
+            </button>
+        </div>
+    </div>
+
+    <div id="tpl-guide-3" class="container" style="padding: 10px; background: var(--bg);">
+        <div class="car-card open" style="margin:0;">
+            <div class="car-header">
+                <span class="car-title-text"><i class='fa-solid fa-car'></i> 坂本龍馬</span>
+                <i class='fa-solid fa-chevron-down toggle-icon' style="transform: rotate(180deg);"></i>
+            </div>
+            <div class="car-body" style="display:block;">
+                <div class="flex-row" style="opacity:0.6; margin-bottom:10px;">
+                    <div class="input-group"><label>距離</label><input type="text" value="180"></div>
+                    <div class="input-group"><label>燃費</label><input type="text" value="15"></div>
+                    <div class="input-group"><label>価格</label><input type="text" value="168"></div>
+                </div>
+
+                <div class="extra-section">
+                    <label style="margin-bottom:8px;">➕ 諸経費 (高速・駐車場など)</label>
+                    
+                    <div class="extra-item">
+                        <div style="flex:1;">
+                            <input type="text" value="高速代" class="ex-name" style="margin-bottom:4px;">
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" value="4500" class="ex-amount">
+                                <div class="type-selector">
+                                    <label>部費</label>
+                                    <label style="background:var(--card-bg); color:var(--text-main); box-shadow: 0 1px 2px rgba(0,0,0,0.1);">割勘</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="extra-item">
+                        <div style="flex:1;">
+                            <input type="text" value="レンタカー代" class="ex-name" style="margin-bottom:4px;">
+                            <div style="display:flex; gap:8px;">
+                                <input type="text" value="8000" class="ex-amount">
+                                <div class="type-selector">
+                                    <label style="background:var(--card-bg); color:var(--text-main); box-shadow: 0 1px 2px rgba(0,0,0,0.1);">部費</label>
+                                    <label>割勘</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-sm" style="background:#fff; color:var(--text-sub); border:1px solid var(--border); margin-top:8px;">
+                        追加
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="tpl-guide-4" class="container" style="padding: 10px; background: var(--bg);">
+        <div class="card" style="margin:0;">
+            <h2><i class='fa-solid fa-sliders'></i> 精算オプション</h2>
+            
+            <div class="input-group">
+                <label>端数処理 (切り上げ)</label>
+                <div style="width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); background: var(--input-bg); color: var(--text-main);">100円単位 (推奨)</div>
+            </div>
+
+            <div class="input-group">
+                <label>総参加人数 (企画者含む)</label>
+                <div style="position: relative;">
+                    <input type="text" value="4" style="padding-left: 40px;">
+                    <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 11px; color: var(--text-sub);"></i>
+                </div>
+            </div>
+            
+            <label class="checkbox-card">
+                <span style="font-weight:600; font-size:0.9rem;">企画者はガソリン代免除</span>
+                <div class="toggle-switch" style="background:var(--primary);"><div style="position:absolute; top:2px; left:2px; width:18px; height:18px; background:#fff; border-radius:2px; transform:translateX(18px);"></div></div>
+            </label>
+            
+            <button class="btn btn-primary">
+                <i class='fa-solid fa-calculator'></i> 精算を実行
+            </button>
+        </div>
+    </div>
+
+    <div id="tpl-guide-5" class="container" style="padding: 10px; background: var(--bg);">
+        <div class="receipt-paper" style="margin:0; max-width:100%;">
+            <div class="receipt-header">
+                <div class="receipt-logo"><i class='fa-solid fa-mountain'></i></div>
+                <h3 class="receipt-title">RECEIPT</h3>
+                <div class="receipt-meta">2024.05.01 15:30</div>
+            </div>
+
+            <div class="receipt-total-section">
+                <span class="receipt-label-main">PER PERSON</span>
+                <span class="receipt-amount-main">¥2,400</span>
+                <span class="receipt-note">4名 / 実費: ¥9,600</span>
+            </div>
+
+            <div class="receipt-section">
+                <span class="receipt-section-title">PAYMENT TO DRIVERS</span>
+                <div class="receipt-row">
+                    <div style="flex:1;">
+                        <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                            <span>織田信長</span>
+                            <span>¥4,400</span>
+                        </div>
+                        <span class="receipt-detail">- ガソリン: ¥3,400</span>
+                        <span class="receipt-detail">- 調整費: ¥1,000</span>
+                    </div>
+                </div>
+                <div class="receipt-row">
+                    <div style="flex:1;">
+                        <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                            <span>坂本龍馬</span>
+                            <span>¥4,200</span>
+                        </div>
+                        <span class="receipt-detail">- ガソリン: ¥3,200</span>
+                        <span class="receipt-detail">- 調整費: ¥1,000</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="receipt-footer">
+                THANK YOU FOR WALKING<br>SANPO-KAI
+            </div>
+        </div>
+    </div>
+
+</div>
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
@@ -1236,6 +1404,44 @@ function showToast(msg) {
     toast.innerHTML = `<i class='fa-solid fa-circle-check'></i> <span>${msg}</span>`;
     toast.className = "show";
     setTimeout(() => { toast.className = toast.className.replace("show", ""); }, 3000);
+}
+// --- 初期化処理の中に追記 ---
+// initializeApp の try-catch ブロックの最後、または onValue の外側あたりで実行
+// 画面描画が安定してから実行したいので、少し遅らせるか window.onload で実行します
+window.addEventListener('load', () => {
+    setTimeout(generateGuideImages, 1000); // フォント読み込み等を待つため1秒後に実行
+});
+
+
+// --- 関数定義 ---
+
+function generateGuideImages() {
+    if (typeof html2canvas === 'undefined') return;
+
+    const ids = [1, 2, 3, 4, 5];
+    
+    // ガイド用画像を一括生成
+    ids.forEach(num => {
+        const sourceId = `tpl-guide-${num}`;
+        const targetImgId = `img-guide-${num}`;
+        const sourceEl = document.getElementById(sourceId);
+        const targetImg = document.getElementById(targetImgId);
+
+        if (sourceEl && targetImg) {
+            html2canvas(sourceEl, {
+                backgroundColor: null, // 背景色をCSSに従わせる
+                scale: 2,              // 高解像度でキャプチャ（文字つぶれ防止）
+                logging: false,
+                onclone: (clonedDoc) => {
+                    // 念のためクローン側で強制表示（非表示要素対策）
+                    const el = clonedDoc.getElementById(sourceId);
+                    if(el) el.style.display = 'block';
+                }
+            }).then(canvas => {
+                targetImg.src = canvas.toDataURL('image/png');
+            }).catch(e => console.error("Guide Gen Error:", e));
+        }
+    });
 }
 </script>
 </body>
