@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v6.5</title>
+<title>山歩会会計精算ツール v6.3</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -208,7 +208,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 }
 .btn-icon-only:hover { color: var(--danger); }
 
-/* --- 諸経費セクション --- */
+/* --- 諸経費セクション (横並び修正版) --- */
 .extra-section { 
     background: var(--input-bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
     border: 1px dashed var(--border); 
@@ -218,26 +218,47 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     gap: 6px; 
     margin-bottom: 10px; 
     align-items: center; 
-    flex-wrap: nowrap; 
+    flex-wrap: nowrap; /* 強制的に1行にする */
     border-bottom:1px dashed rgba(0,0,0,0.05); 
     padding-bottom:8px; 
 }
 .extra-item:last-child { border-bottom: none; }
-.extra-item .ex-name { flex: 2; min-width: 0; }
-.extra-item .ex-amount { flex: 1.5; min-width: 0; }
+.extra-item .ex-name { 
+    flex: 2; /* 項目名は広めに */
+    min-width: 0; /* 縮小を許可 */
+}
+.extra-item .ex-amount { 
+    flex: 1.5; /* 金額は少し狭く */
+    min-width: 0; /* 縮小を許可 */
+}
 
-/* 部費/割勘 選択ボタン */
+/* 部費/割勘 選択ボタン（スリム化） */
 .type-selector {
-    display: flex; background: #e0e0e0; border-radius: 8px; padding: 2px;
-    width: 80px; flex-shrink: 0;
+    display: flex;
+    background: #e0e0e0;
+    border-radius: 8px;
+    padding: 2px;
+    width: 80px; /* さらに幅を狭く(元90px) */
+    flex-shrink: 0; /* 縮小禁止 */
 }
 .type-selector input { display: none; }
 .type-selector label {
-    flex: 1; text-align: center; padding: 6px 0; font-size: 0.7rem; cursor: pointer;
-    border-radius: 6px; color: var(--text-sub); transition: 0.2s; font-weight: 600; margin: 0; white-space: nowrap;
+    flex: 1;
+    text-align: center;
+    padding: 6px 0;
+    font-size: 0.7rem; /* 文字サイズ調整 */
+    cursor: pointer;
+    border-radius: 6px;
+    color: var(--text-sub);
+    transition: 0.2s;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
 }
 .type-selector input:checked + label {
-    background: #fff; color: var(--primary); box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    background: #fff;
+    color: var(--primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 @media (prefers-color-scheme: dark) {
     .type-selector { background: #333; }
@@ -264,64 +285,29 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 .btn-outline:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
 .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
 
-/* --- レシート風デザイン (テクスチャ全面適用版) --- */
+/* --- レシート風デザイン --- */
 #resultArea { display: none; }
+
 .receipt-wrapper { padding: 20px; margin: 20px -20px; }
-
 .receipt-paper {
-    background-color: #fff; 
-    
-    /* ▼ 画像ファイル名を確認してください ▼ */
-    background-image: url('paper.jpg'); 
-    background-size: cover;
-    background-position: center;
-    background-blend-mode: multiply;
-    
-    color: #2c2c2c; font-family: 'Courier New', Courier, "OCR-B", monospace;
-    padding: 30px 25px; 
-    position: relative; 
-    max-width: 380px; 
-    margin: 0 auto; margin-top: 10px; margin-bottom: 10px;
-
-    /* --- マスクによるギザギザ処理 (テクスチャを維持して切り抜く) --- */
-    --tooth-width: 20px;
-    --tooth-height: 10px;
-
-    /* マスク設定: 上下のギザギザ + 真ん中の四角形 */
-    -webkit-mask-image: 
-        conic-gradient(from 135deg at top, transparent, #000 1deg 89deg, transparent 90deg),
-        conic-gradient(from -45deg at bottom, transparent, #000 1deg 89deg, transparent 90deg),
-        linear-gradient(#000 0 0);
-    
-    mask-image: 
-        conic-gradient(from 135deg at top, transparent, #000 1deg 89deg, transparent 90deg),
-        conic-gradient(from -45deg at bottom, transparent, #000 1deg 89deg, transparent 90deg),
-        linear-gradient(#000 0 0);
-
-    -webkit-mask-size: 
-        var(--tooth-width) var(--tooth-height), 
-        var(--tooth-width) var(--tooth-height), 
-        100% calc(100% - var(--tooth-height) * 2);
-    
-    mask-size: 
-        var(--tooth-width) var(--tooth-height), 
-        var(--tooth-width) var(--tooth-height), 
-        100% calc(100% - var(--tooth-height) * 2);
-
-    -webkit-mask-position: top, bottom, center;
-    mask-position: top, bottom, center;
-
-    -webkit-mask-repeat: repeat-x, repeat-x, no-repeat;
-    mask-repeat: repeat-x, repeat-x, no-repeat;
-
-    /* ドロップシャドウ (マスクされた形状に影を落とす) */
-    filter: drop-shadow(0 5px 8px rgba(0,0,0,0.2));
-    /* 古いbox-shadowは削除 (マスクで消えてしまうため) */
-    box-shadow: none; 
+    background: #fff; color: #2c2c2c; font-family: 'Courier New', Courier, "OCR-B", monospace;
+    padding: 30px 25px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    max-width: 380px; margin: 0 auto; margin-top: 10px; margin-bottom: 10px;
 }
-
-/* 以前の pseudo-element (::before, ::after) は削除済み */
-
+.receipt-paper::before, .receipt-paper::after {
+    content: ""; position: absolute; left: 0; width: 100%; height: 10px;
+    background-size: 20px 20px; background-repeat: repeat-x;
+}
+.receipt-paper::before {
+    top: -10px;
+    background-image: linear-gradient(135deg, transparent 50%, #fff 50%), linear-gradient(-135deg, transparent 50%, #fff 50%);
+    background-position: top left, top left;
+}
+.receipt-paper::after {
+    bottom: -10px;
+    background-image: linear-gradient(-45deg, transparent 50%, #fff 50%), linear-gradient(45deg, transparent 50%, #fff 50%);
+    background-position: bottom left, bottom left;
+}
 .receipt-header { text-align: center; border-bottom: 2px dashed #444; padding-bottom: 15px; margin-bottom: 15px; }
 .receipt-logo { font-size: 2.5rem; color: #333; margin-bottom: 5px; }
 .receipt-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
@@ -405,7 +391,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     
     <header>
         <div class="app-brand">
-            <span class="app-version">v6.5</span>
+            <span class="app-version">v6.3</span>
             <div class="app-logo-area">
                 <div class="app-icon"><i class='fa-solid fa-mountain'></i></div>
                 <h1 class="app-title">山歩会 精算ツール</h1>
@@ -653,6 +639,7 @@ function updateRoomColor(id) {
 }
 
 
+// --- 画像保存ロジックの改善版 ---
 function downloadResultImage() {
     const target = document.getElementById('captureTarget');
     showToast("画像を生成中...");
@@ -671,15 +658,19 @@ function downloadResultImage() {
 
     html2canvas(target, options).then(canvas => {
         const dataUrl = canvas.toDataURL('image/png');
+        
+        // ユーザーエージェントでiOS判定
         const ua = navigator.userAgent;
         const isIOS = /iPhone|iPad|iPod/i.test(ua);
 
         if (isIOS) {
+            // iOSの場合はモーダルで表示して長押しさせる
             const img = document.getElementById('generatedImage');
             img.src = dataUrl;
             document.getElementById('imageModal').classList.add('active');
             showToast("画像を長押しして保存してください");
         } else {
+            // PC/Android等はダウンロードリンク発火
             const link = document.createElement('a');
             link.download = `receipt_${roomId}.png`;
             link.href = dataUrl;
