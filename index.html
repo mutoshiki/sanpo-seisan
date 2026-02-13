@@ -15,7 +15,6 @@
     
     --accent: #f9a825;        /* 強調：マスタードイエロー */
     --danger: #d32f2f;        /* 警告：落ち着いた赤 */
-    --danger-bg: #ffebee;
     
     --bg: #f2efe9;            /* 背景：ラテベージュ */
     --card-bg: #fdfbf7;       /* カード：クリームホワイト */
@@ -28,6 +27,11 @@
     
     --radius: 12px;
     --shadow: 0 4px 10px rgba(78, 52, 46, 0.08);
+
+    /* ルーム固有カラー（JSで動的に上書きされます） */
+    --room-hue: 120; 
+    --room-color: hsl(var(--room-hue), 60%, 45%);
+    --room-bg: hsl(var(--room-hue), 70%, 95%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -39,7 +43,6 @@
         
         --accent: #ffd54f;
         --danger: #e57373;
-        --danger-bg: #5d4037;
         
         --bg: #251d1a;            
         --card-bg: #3e2723;       
@@ -51,6 +54,9 @@
         --input-bg: #4e342e;
         
         --shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        
+        --room-color: hsl(var(--room-hue), 70%, 65%);
+        --room-bg: hsl(var(--room-hue), 30%, 25%);
     }
 }
 
@@ -64,63 +70,112 @@ body {
 
 .container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
 
-/* --- ヘッダー周り --- */
-header { text-align: center; margin-bottom: 24px; }
-h1 { 
-    font-size: 1.4rem; margin: 0; color: var(--text-main); 
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-weight: 800;
-}
-h1 i { font-size: 1.6rem; color: var(--primary); }
-h1 span { font-size: 0.8rem; color: var(--text-sub); font-weight: normal; margin-top: 4px; display: block;}
+/* --- 新しいヘッダーデザイン --- */
+header { margin-bottom: 24px; text-align: center; }
 
-/* 新しいシェア促進エリア */
-.share-invite-box {
-    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-    color: #fff;
-    border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 24px;
-    box-shadow: 0 4px 12px rgba(51, 105, 30, 0.3);
-    text-align: center;
+.app-brand {
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    background: var(--card-bg);
+    padding: 16px 30px;
+    border-radius: 20px;
+    box-shadow: 
+        0 6px 15px rgba(0,0,0,0.05), 
+        0 0 0 4px rgba(255,255,255,0.5); /* 二重線風の外枠 */
+    border: 1px solid var(--border);
+    position: relative;
+    margin-top: 10px;
 }
-.share-invite-title {
-    font-weight: bold; font-size: 1rem; margin-bottom: 10px;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-}
-.share-btn-group {
-    display: flex; gap: 10px; justify-content: center;
-}
-.btn-share-action {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.4);
-    color: #fff;
-    padding: 8px 16px;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    text-decoration: none;
-    display: flex; align-items: center; gap: 6px;
-    transition: background 0.2s;
-}
-.btn-share-action:hover { background: rgba(255,255,255,0.3); }
-.btn-share-action:active { transform: scale(0.96); }
 
-
-.room-badge {
-    background: var(--card-bg); color: var(--text-main);
-    padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.8rem;
-    margin: 8px auto 0; display: inline-flex; align-items: center; gap: 6px; 
-    border: 1px dashed var(--border); opacity: 0.8;
+.app-logo-area {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 4px;
+}
+.app-icon {
+    font-size: 1.8rem;
+    color: var(--primary);
+    background: var(--primary-light);
+    width: 44px; height: 44px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+}
+.app-title {
+    font-size: 1.3rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.05em;
+    margin: 0;
+}
+.app-version {
+    font-size: 0.7rem; color: var(--card-bg); background: var(--text-sub);
+    padding: 2px 8px; border-radius: 10px; font-weight: bold;
+    position: absolute; top: -8px; right: -8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .sync-status {
     font-size: 0.75rem; color: var(--primary); font-weight: 600;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
-    margin-top: 8px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    margin-top: 12px;
 }
 .sync-dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+
+/* --- 新しいシェア・ルームIDエリア --- */
+.room-invite-card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 0; /* paddingなしで中身を詰める */
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+}
+/* 左側に色付きバーを表示 */
+.room-invite-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
+    background: var(--room-color);
+}
+
+.room-id-section {
+    background: var(--room-bg); /* ルーム固有の淡い背景色 */
+    padding: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px dashed var(--border);
+}
+.room-id-label {
+    display: flex; align-items: center; gap: 10px;
+}
+.room-avatar {
+    width: 36px; height: 36px; 
+    background: var(--room-color); color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 1.1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.room-code-group {
+    display: flex; flex-direction: column;
+}
+.room-label-tiny { font-size: 0.7rem; color: var(--text-sub); font-weight: bold; }
+.room-id-text { 
+    font-family: "OCR-B", monospace; font-size: 1.2rem; font-weight: 700; 
+    color: var(--text-main); letter-spacing: 1px; 
+}
+
+.share-actions {
+    padding: 12px;
+    display: flex; gap: 10px;
+}
+.btn-share-sub {
+    flex: 1;
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-sub); padding: 8px; border-radius: 8px;
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: 0.2s;
+}
+.btn-share-sub:hover { background: var(--bg); color: var(--primary); border-color: var(--primary); }
+
 
 /* --- 共通コンポーネント --- */
 .card {
@@ -200,13 +255,13 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 .extra-item .ex-name { flex: 2; min-width: 120px; }
 .extra-item .ex-amount { flex: 1.5; min-width: 100px; }
 
-/* 部費/割勘 選択ボタン（Segmented Control風） */
+/* 部費/割勘 選択ボタン */
 .type-selector {
     display: flex;
     background: #e0e0e0;
     border-radius: 8px;
     padding: 3px;
-    width: 130px; /* 固定幅で押しやすく */
+    width: 130px;
     flex-shrink: 0;
 }
 .type-selector input { display: none; }
@@ -222,13 +277,11 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     font-weight: 600;
     margin: 0;
 }
-/* 選択された時のスタイル */
 .type-selector input:checked + label {
     background: #fff;
     color: var(--primary);
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
-/* ダークモード対応 */
 @media (prefers-color-scheme: dark) {
     .type-selector { background: #333; }
     .type-selector input:checked + label { background: #555; color: #fff; }
@@ -372,8 +425,15 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 <body>
 
 <div class="container">
+    
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v6.1</span></h1>
+        <div class="app-brand">
+            <span class="app-version">v6.1</span>
+            <div class="app-logo-area">
+                <div class="app-icon"><i class='fa-solid fa-mountain'></i></div>
+                <h1 class="app-title">山歩会 精算ツール</h1>
+            </div>
+        </div>
         
         <div class="sync-status">
             <span class="sync-dot"></span>
@@ -381,25 +441,28 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         </div>
     </header>
 
-    <div class="share-invite-box">
-        <div class="share-invite-title">
-            <i class='fa-solid fa-users'></i> メンバーを招待
-        </div>
-        <p style="margin: 0 0 16px 0; font-size: 0.85rem; opacity: 0.9;">
-            このURLをシェアするだけで、全員で共同編集できます。
-        </p>
-        <div class="share-btn-group">
-            <button class="btn-share-action" onclick="copyRoomLink()">
-                <i class='fa-regular fa-copy'></i> URLコピー
+    <div class="room-invite-card">
+        <div class="room-id-section">
+            <div class="room-id-label">
+                <div class="room-avatar" id="roomAvatarIcon">
+                    <i class='fa-solid fa-hashtag'></i>
+                </div>
+                <div class="room-code-group">
+                    <span class="room-label-tiny">Room ID</span>
+                    <span id="dispRoomId" class="room-id-text">...</span>
+                </div>
+            </div>
+            <button class="btn btn-outline btn-sm" style="border:1px solid var(--border); background:#fff; color:var(--text-sub);" onclick="copyRoomLink()">
+                <i class='fa-regular fa-copy'></i>
             </button>
-            <button class="btn-share-action" onclick="shareToLine()">
-                <i class='fa-brands fa-line'></i> LINEで送る
-            </button>
         </div>
-        
-        <div class="room-badge" onclick="copyRoomLink()">
-            <span class="room-badge-label">Room ID:</span>
-            <span id="dispRoomId">...</span>
+        <div class="share-actions">
+            <button class="btn-share-sub" onclick="shareToLine()">
+                <i class='fa-brands fa-line' style="color:#06c755; font-size:1.2rem;"></i> LINEで送る
+            </button>
+            <button class="btn-share-sub" onclick="copyRoomLink()">
+                <i class='fa-solid fa-link'></i> URLコピー
+            </button>
         </div>
     </div>
 
@@ -576,6 +639,9 @@ try {
     const dispEl = document.getElementById('dispRoomId');
     if(dispEl) dispEl.textContent = roomId;
 
+    // --- ここでIDに基づいて色を生成 ---
+    updateRoomColor(roomId);
+
     roomRef = ref(db, 'sessions/' + roomId);
 
     // Start sync and history load
@@ -600,6 +666,21 @@ try {
     console.error("Initialization Error:", e);
     showToast("初期化エラーが発生しました");
 }
+
+// --- IDから色を生成する関数 ---
+function updateRoomColor(id) {
+    // 文字列から数値を生成（ハッシュ化）
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+        hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    // 0〜360の色相(Hue)に変換
+    const hue = Math.abs(hash % 360);
+    
+    // CSS変数を更新
+    document.documentElement.style.setProperty('--room-hue', hue);
+}
+
 
 function downloadResultImage() {
     const target = document.getElementById('captureTarget');
