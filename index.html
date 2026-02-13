@@ -3,15 +3,15 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v6.1</title>
+<title>山歩会会計精算ツール v6.3</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-    /* --- カラーパレット: Cafe Theme (Light) --- */
-    --primary: #558b2f;       /* メイン：抹茶グリーン */
+    /* --- ベース変数 (初期値) --- */
+    --primary: #558b2f;       
     --primary-hover: #33691e;
-    --primary-light: #f1f8e9; /* 背景用：薄い抹茶 */
+    --primary-light: #f1f8e9; 
     
     --accent: #f9a825;        /* 強調：マスタードイエロー */
     --danger: #d32f2f;        /* 警告：落ち着いた赤 */
@@ -32,7 +32,7 @@
 
 @media (prefers-color-scheme: dark) {
     :root {
-        /* --- カラーパレット: Cafe Theme (Dark) --- */
+        /* ダークモードベース */
         --primary: #aed581;       
         --primary-hover: #7cb342;
         --primary-light: #33691e;
@@ -60,6 +60,7 @@ body {
     margin: 0; padding: 20px 12px;
     background: var(--bg); color: var(--text-main);
     line-height: 1.6; font-size: 15px;
+    transition: background 0.3s, color 0.3s;
 }
 
 .container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
@@ -71,7 +72,7 @@ h1 {
     display: flex; align-items: center; justify-content: center; gap: 8px;
     font-weight: 800;
 }
-h1 i { font-size: 1.6rem; color: var(--primary); }
+h1 i { font-size: 1.6rem; color: var(--primary); transition: color 0.3s; }
 h1 span { font-size: 0.8rem; color: var(--text-sub); font-weight: normal; margin-top: 4px; display: block;}
 
 /* 新しいシェア促進エリア */
@@ -81,8 +82,9 @@ h1 span { font-size: 0.8rem; color: var(--text-sub); font-weight: normal; margin
     border-radius: var(--radius);
     padding: 16px;
     margin-bottom: 24px;
-    box-shadow: 0 4px 12px rgba(51, 105, 30, 0.3);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     text-align: center;
+    transition: background 0.3s;
 }
 .share-invite-title {
     font-weight: bold; font-size: 1rem; margin-bottom: 10px;
@@ -133,7 +135,21 @@ h2 {
     display: flex; align-items: center; gap: 8px; 
     color: var(--text-main); border-bottom: 2px solid var(--border); padding-bottom: 10px;
 }
-h2 i { color: var(--primary); font-size: 1.3rem; }
+h2 i { color: var(--primary); font-size: 1.3rem; transition: color 0.3s; }
+
+/* カラーピッカー */
+.color-picker-container {
+    display: flex; gap: 12px; justify-content: center; margin-bottom: 20px;
+    background: var(--input-bg); padding: 10px; border-radius: 12px;
+}
+.color-dot {
+    width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+    border: 2px solid transparent; transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+}
+.color-dot:active { transform: scale(0.9); }
+.color-dot.active { border-color: var(--text-main); transform: scale(1.1); box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
 
 /* 入力フォーム */
 .input-group { margin-bottom: 16px; }
@@ -145,7 +161,7 @@ input[type="number"], input[type="text"], select {
     font-size: 16px; background: var(--input-bg); color: var(--text-main);
     transition: 0.2s;
 }
-input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(85, 139, 47, 0.2); }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(100, 100, 100, 0.1); }
 input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 .flex-row { display: flex; gap: 12px; }
@@ -177,6 +193,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     background: var(--primary-light); padding: 12px 16px;
     display: flex; justify-content: space-between; align-items: center;
     cursor: pointer; font-weight: 600; font-size: 1rem; color: var(--text-main);
+    transition: background 0.3s;
 }
 .car-header i { margin-right: 6px; color: var(--primary); }
 .car-body { padding: 16px; display: none; border-top: 1px solid var(--border); background: var(--card-bg); }
@@ -200,13 +217,13 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 .extra-item .ex-name { flex: 2; min-width: 120px; }
 .extra-item .ex-amount { flex: 1.5; min-width: 100px; }
 
-/* 部費/割勘 選択ボタン（Segmented Control風） */
+/* 部費/割勘 選択ボタン */
 .type-selector {
     display: flex;
     background: #e0e0e0;
     border-radius: 8px;
     padding: 3px;
-    width: 130px; /* 固定幅で押しやすく */
+    width: 130px; 
     flex-shrink: 0;
 }
 .type-selector input { display: none; }
@@ -243,7 +260,8 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 }
 .btn-primary { 
     background: var(--primary); color: #fff; margin-top: 10px; 
-    box-shadow: 0 4px 10px rgba(85, 139, 47, 0.3);
+    box-shadow: 0 4px 10px rgba(0,0,0,0.15);
+    transition: background 0.3s;
 }
 .btn-primary:hover { background: var(--primary-hover); }
 .btn-primary:active { transform: scale(0.98); }
@@ -373,7 +391,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v6.1</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v6.3</span></h1>
         
         <div class="sync-status">
             <span class="sync-dot"></span>
@@ -412,7 +430,11 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     </div>
 
     <div class="card">
-        <h2><i class='fa-solid fa-gear'></i> 精算の設定</h2>
+        <h2><i class='fa-solid fa-gear'></i> 設定・テーマ</h2>
+
+        <label>テーマカラー</label>
+        <div class="color-picker-container" id="themeSelector">
+            </div>
         
         <div class="input-group">
             <label>端数処理（切り上げ単位）</label>
@@ -521,9 +543,6 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         <button class="btn btn-sm" style="background: var(--text-sub); color: var(--card-bg); width: auto; margin: 0 auto;" onclick="fillTestData()">
             <i class='fa-solid fa-flask'></i> デバッグ用データを投入
         </button>
-        <p style="font-size: 0.7rem; color: var(--text-sub); margin-top: 8px;">
-            ※既存の入力は全て上書きされます
-        </p>
     </div>
 
 </div>
@@ -533,6 +552,39 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
+
+// --- COLOR THEMES CONFIGURATION ---
+const THEMES = {
+    'green': {
+        name: '抹茶', color: '#558b2f',
+        light: { p: '#558b2f', ph: '#33691e', pl: '#f1f8e9' },
+        dark:  { p: '#aed581', ph: '#7cb342', pl: '#33691e' }
+    },
+    'blue': {
+        name: '海', color: '#0277bd',
+        light: { p: '#0277bd', ph: '#01579b', pl: '#e1f5fe' },
+        dark:  { p: '#4fc3f7', ph: '#29b6f6', pl: '#01579b' }
+    },
+    'orange': {
+        name: '紅葉', color: '#ef6c00',
+        light: { p: '#ef6c00', ph: '#e65100', pl: '#fff3e0' },
+        dark:  { p: '#ffb74d', ph: '#ffa726', pl: '#e65100' }
+    },
+    'pink': {
+        name: '桜', color: '#c2185b',
+        light: { p: '#c2185b', ph: '#880e4f', pl: '#fce4ec' },
+        dark:  { p: '#f06292', ph: '#ec407a', pl: '#880e4f' }
+    },
+    'purple': {
+        name: '藤', color: '#7b1fa2',
+        light: { p: '#7b1fa2', ph: '#4a148c', pl: '#f3e5f5' },
+        dark:  { p: '#ba68c8', ph: '#ab47bc', pl: '#4a148c' }
+    }
+};
+
+// 初期化時にランダムなテーマを選択
+const themeKeys = Object.keys(THEMES);
+let currentThemeId = themeKeys[Math.floor(Math.random() * themeKeys.length)];
 
 // --- Global Assignments ---
 window.pushData = debounce(pushDataToFirebase, 500);
@@ -549,6 +601,7 @@ window.calculate = calculate;
 window.copyRoomLink = copyRoomLink;
 window.shareToLine = shareToLine;
 window.copyToClipboard = copyToClipboard;
+window.selectTheme = selectTheme;
 
 const firebaseConfig = {
   apiKey: "AIzaSyAypqRPRn-YHWLwjT3lQ6pN6_bWBqzUvp4",
@@ -566,7 +619,6 @@ try {
     app = initializeApp(firebaseConfig);
     db = getDatabase(app);
 
-    // URLからルームID取得
     roomId = new URLSearchParams(window.location.search).get("room");
     if (!roomId) {
         roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
@@ -577,18 +629,33 @@ try {
     if(dispEl) dispEl.textContent = roomId;
 
     roomRef = ref(db, 'sessions/' + roomId);
+    
+    // 初期表示でランダムテーマを適用
+    applyTheme(currentThemeId);
+    initThemeSelector();
+    
+    // システムのテーマ変更を監視
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        applyTheme(currentThemeId); 
+    });
 
-    // Start sync and history load
     renderHistoryList();
+    
     onValue(roomRef, (snapshot) => {
         const data = snapshot.val();
         const syncText = document.getElementById("syncText");
         
         if (data) {
             if(syncText) syncText.textContent = "同期完了";
+            // 保存されたテーマがあればそれを優先して適用
+            if(data.theme) {
+                applyTheme(data.theme);
+            }
             renderForm(data);
         } else {
             if(syncText) syncText.textContent = "新規ルーム";
+            // データがない場合（新規）はランダムテーマのまま
+            // ただし、この時点でFirebaseにテーマを保存しにいかない（入力があった時に保存する）
             const list = document.getElementById('carList');
             if(list && list.children.length === 0) {
                 addCarToDOM(null, 0, true);
@@ -601,31 +668,46 @@ try {
     showToast("初期化エラーが発生しました");
 }
 
-function downloadResultImage() {
-    const target = document.getElementById('captureTarget');
-    showToast("画像を生成中...");
+function initThemeSelector() {
+    const container = document.getElementById('themeSelector');
+    if(!container) return;
+    container.innerHTML = '';
+    Object.keys(THEMES).forEach(key => {
+        const t = THEMES[key];
+        const dot = document.createElement('div');
+        dot.className = 'color-dot';
+        dot.style.backgroundColor = t.color;
+        dot.title = t.name;
+        dot.onclick = () => selectTheme(key);
+        if(key === currentThemeId) dot.classList.add('active');
+        dot.dataset.id = key;
+        container.appendChild(dot);
+    });
+}
 
-    if (typeof html2canvas === 'undefined') {
-        alert("画像生成ライブラリの読み込みに失敗しました。");
-        return;
-    }
+function selectTheme(themeId) {
+    applyTheme(themeId);
+    pushDataToFirebase();
+}
 
-    const options = {
-        scale: 2,
-        backgroundColor: null,
-        logging: false,
-        useCORS: true
-    };
+function applyTheme(themeId) {
+    if(!THEMES[themeId]) themeId = themeKeys[0]; // fallback
+    currentThemeId = themeId;
+    
+    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const t = THEMES[themeId];
+    const palette = isDark ? t.dark : t.light;
+    
+    const root = document.documentElement;
+    root.style.setProperty('--primary', palette.p);
+    root.style.setProperty('--primary-hover', palette.ph);
+    root.style.setProperty('--primary-light', palette.pl);
 
-    html2canvas(target, options).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `receipt_${roomId}_${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        showToast("✅ 画像を保存しました");
-    }).catch(err => {
-        console.error(err);
-        showToast("エラーが発生しました");
+    // UI Update
+    const dots = document.querySelectorAll('.color-dot');
+    dots.forEach(d => {
+        if(d.dataset.id === themeId) d.classList.add('active');
+        else d.classList.remove('active');
     });
 }
 
@@ -685,7 +767,6 @@ function renderForm(data) {
             if(document.activeElement !== nameInp) nameInp.value = exData.name || "";
             if(document.activeElement !== amtInp) amtInp.value = exData.amount || "";
             
-            // ラジオボタンの値を反映
             const typeVal = exData.type || "club";
             const radio = row.querySelector(`input[type="radio"][value="${typeVal}"]`);
             if(radio && !radio.checked) {
@@ -738,7 +819,6 @@ function getFormData() {
         eco: card.querySelector('.inp-eco').value, 
         price: card.querySelector('.inp-price').value,
         extras: Array.from(card.querySelectorAll('.extra-item')).map(row => {
-            // ラジオボタンから値を取得
             const checkedRadio = row.querySelector('input[type="radio"]:checked');
             return { 
                 name: row.querySelector('.ex-name').value, 
@@ -748,6 +828,7 @@ function getFormData() {
         })
     }));
     return {
+        theme: currentThemeId,
         total: document.getElementById('totalPeople').value,
         org: document.getElementById('organizerFree').checked,
         rounding: document.getElementById('roundingUnit').value,
@@ -977,11 +1058,8 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     
     const isSplit = (type === 'split') ? 'checked' : '';
     const isClub = (type === 'club') ? 'checked' : '';
-    
-    // ラジオボタンのname属性を一意にするためのID
     const uniqueName = "type-" + Date.now() + Math.random().toString(36).substr(2,5);
 
-    // セレクトボックスを廃止し、ボタン式ラジオボタンに変更
     div.innerHTML = `
         <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
         <input type="text" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
@@ -1129,7 +1207,6 @@ function calculate() {
 
     saveToHistory();
 
-    // LINE共有テキストの生成ロジック変更
     let lineText = `【精算報告 ⛰️】\n`;
     lineText += `■徴収額（1人あたり）\n`;
     lineText += `${perPersonPay.toLocaleString()}円\n`;
@@ -1138,10 +1215,7 @@ function calculate() {
     lineText += `\n■ドライバーへの支払額\n`;
     driverResults.forEach(d => {
         lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
-        
-        // 内訳を詳細表示
         lineText += `  - ガソリン代: ${d.gasCost.toLocaleString()}\n`;
-        
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
                 const typeStr = ex.type === 'split' ? '(割勘)' : '(部費)';
@@ -1149,7 +1223,6 @@ function calculate() {
                 lineText += `  - ${exName}${typeStr}: ${parseInt(ex.amount).toLocaleString()}\n`;
             });
         }
-        
         lineText += `  - 調整費: ${d.reward.toLocaleString()}\n`;
     });
     
