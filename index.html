@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v7.1</title>
+<title>山歩会会計精算ツール v7.2</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -248,14 +248,14 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 #resultArea { display: none; }
 .receipt-wrapper { padding: 20px; margin: 20px -16px; }
 .receipt-paper {
-    background: #fff; color: #222; font-family: 'Courier New', Courier, monospace;
+    background: #fff; color: #222; font-family: 'Courier New', Courier, "Hiragino Sans", monospace;
     padding: 25px 20px; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
     max-width: 400px; margin: 0 auto; border-top: 4px solid #333;
 }
 .receipt-paper::after { content: ""; display: block; height: 1px; border-bottom: 2px dashed #ccc; margin-top: 20px; }
 .receipt-header { text-align: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
 .receipt-logo { font-size: 2rem; color: #333; margin-bottom: 5px; }
-.receipt-title { font-size: 1.2rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+.receipt-title { font-size: 1.2rem; font-weight: 900; letter-spacing: 1px; margin: 0; }
 .receipt-meta { font-size: 0.75rem; color: #555; margin-top: 5px; }
 .receipt-total-section { text-align: right; padding: 15px 0; border-bottom: 2px solid #333; }
 .receipt-label-main { font-size: 0.85rem; font-weight: bold; display: block; margin-bottom: 4px; }
@@ -264,7 +264,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .receipt-section { padding: 12px 0; border-bottom: 1px dashed #aaa; }
 .receipt-section-title {
     font-size: 0.75rem; font-weight: bold; margin-bottom: 6px; display: block; text-align: left;
-    text-transform: uppercase; background: #eee; display:inline-block; padding: 2px 4px;
+    background: #eee; display:inline-block; padding: 2px 4px;
 }
 .receipt-row {
     display: flex; justify-content: space-between; align-items: baseline;
@@ -272,7 +272,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 }
 .receipt-row.bold { font-weight: 800; font-size: 0.95rem; }
 .receipt-detail { font-size: 0.75rem; color: #666; margin-left: 12px; display: block; }
-.receipt-footer { text-align: center; margin-top: 20px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;}
+.receipt-footer { text-align: center; margin-top: 20px; font-size: 0.8rem; font-weight: bold; }
 
 .copy-area { background: var(--text-main); color: var(--card-bg); padding: 15px; border-radius: var(--radius); margin-top: 20px; }
 #copyTextarea { width: 100%; background: transparent; border: none; color: inherit; font-family: monospace; height: 100px; resize: none; font-size: 0.8rem; outline: none; opacity: 0.8; }
@@ -362,7 +362,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         <div class="brand-logo"><i class='fa-solid fa-mountain'></i></div>
         <div class="brand-text">
             <h1 class="app-title">山歩会会計</h1>
-            <span class="app-version">v7.1</span>
+            <span class="app-version">v7.2</span>
         </div>
     </div>
     <div class="header-actions">
@@ -454,23 +454,23 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
             <div class="receipt-paper">
                 <div class="receipt-header">
                     <div class="receipt-logo"><i class='fa-solid fa-mountain'></i></div>
-                    <h3 class="receipt-title">GASOLINE RECEIPT</h3>
+                    <h3 class="receipt-title">精算レシート</h3>
                     <div class="receipt-meta" id="receiptDate">2024.01.01 12:00</div>
                 </div>
 
                 <div class="receipt-total-section">
-                    <span class="receipt-label-main">PER PERSON</span>
+                    <span class="receipt-label-main">1人あたり</span>
                     <span class="receipt-amount-main" id="resPerPerson">0</span>
                     <span class="receipt-note" id="resTargetDetail">--</span>
                 </div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title">PAYMENT TO DRIVERS</span>
+                    <span class="receipt-section-title">ドライバーへの支払</span>
                     <div id="resDriverList"></div>
                 </div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title">CLUB ACCOUNT</span>
+                    <span class="receipt-section-title">会計・部費精算</span>
                     <div class="receipt-row">
                         <span>部費負担分</span>
                         <span id="resCircleExpense">0</span>
@@ -486,23 +486,23 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
                 </div>
 
                 <div class="receipt-footer">
-                    THANK YOU FOR WALKING<br>
-                    SANPO-KAI
+                    お疲れ様でした！<br>
+                    山歩会
                 </div>
             </div>
         </div>
 
         <div class="copy-area">
             <h3 style="margin:0 0 10px 0; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.7);">
-                <i class='fa-solid fa-share-from-square'></i> Share Result
+                <i class='fa-solid fa-share-from-square'></i> 結果を共有
             </h3>
             <textarea id="copyTextarea" readonly></textarea>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-copy" onclick="copyToClipboard()">
-                    <i class='fa-solid fa-copy'></i> COPY TEXT
+                    <i class='fa-solid fa-copy'></i> テキストをコピー
                 </button>
                 <button class="btn" style="background: #fff; color: var(--text-main); font-size:0.9rem; border: none; border-radius: var(--radius); width: 100%; margin-top:10px;" onclick="downloadResultImage()">
-                    <i class='fa-solid fa-download'></i> SAVE IMAGE
+                    <i class='fa-solid fa-download'></i> 画像を保存
                 </button>
             </div>
         </div>
@@ -598,10 +598,10 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
         <div id="tpl-step5" class="tpl-wrapper">
             <div class="receipt-paper" style="padding:15px; border-top:3px solid #333; max-width:100%;">
                 <div class="receipt-header" style="margin-bottom:10px; padding-bottom:10px;">
-                    <h3 class="receipt-title" style="font-size:1rem;">RECEIPT</h3>
+                    <h3 class="receipt-title" style="font-size:1rem;">精算レシート</h3>
                 </div>
                 <div class="receipt-total-section" style="padding:10px 0;">
-                    <span class="receipt-label-main">PER PERSON</span>
+                    <span class="receipt-label-main">1人あたり</span>
                     <span class="receipt-amount-main" style="font-size:1.8rem;">¥3,500</span>
                 </div>
                 <div class="receipt-section">
