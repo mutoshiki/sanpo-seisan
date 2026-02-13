@@ -2,8 +2,8 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v5.6</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>山歩会会計精算ツール v6.0</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -27,25 +27,25 @@
     --input-bg: #faf8f5;      /* 入力欄背景 */
     
     --radius: 12px;
-    --shadow: 0 4px 10px rgba(78, 52, 46, 0.08); /* 影：茶色ベースで柔らかく */
+    --shadow: 0 4px 10px rgba(78, 52, 46, 0.08);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
         /* --- カラーパレット: Cafe Theme (Dark) --- */
-        --primary: #aed581;       /* メイン：ライトグリーン */
+        --primary: #aed581;       
         --primary-hover: #7cb342;
-        --primary-light: #33691e; /* 背景用：濃い抹茶 */
+        --primary-light: #33691e;
         
         --accent: #ffd54f;
         --danger: #e57373;
         --danger-bg: #5d4037;
         
-        --bg: #251d1a;            /* 背景：ダークコーヒー */
-        --card-bg: #3e2723;       /* カード：ダークロースト */
+        --bg: #251d1a;            
+        --card-bg: #3e2723;       
         
-        --text-main: #d7ccc8;     /* 文字：ミルクティー */
-        --text-sub: #a1887f;      /* サブ文字：グレイッシュブラウン */
+        --text-main: #d7ccc8;     
+        --text-sub: #a1887f;      
         
         --border: #5d4037;
         --input-bg: #4e342e;
@@ -60,7 +60,6 @@ body {
     margin: 0; padding: 20px 12px;
     background: var(--bg); color: var(--text-main);
     line-height: 1.6; font-size: 15px;
-    transition: background-color 0.3s, color 0.3s;
 }
 
 .container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
@@ -198,7 +197,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 }
 .extra-item { display: flex; gap: 6px; margin-bottom: 8px; align-items: center;}
 .extra-item .ex-name { flex: 1.5; }
-.extra-item .ex-amount { flex: 1; min-width: 0; /* iPhoneでの幅縮小対策 */ }
+.extra-item .ex-amount { flex: 1; min-width: 0; }
 .extra-item .ex-type { flex: 0.8; font-size: 0.8rem; padding: 10px 4px; }
 
 /* ボタン類 */
@@ -225,22 +224,20 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 #resultArea { display: none; }
 
 .receipt-wrapper {
-    /* 画像保存用に余白を確保するためのラッパー */
     padding: 20px; 
-    margin: 20px -20px; /* 親のpaddingを相殺して画面幅広く */
+    margin: 20px -20px; 
 }
 
 .receipt-paper {
     background: #fff;
     color: #2c2c2c;
-    font-family: 'Courier New', Courier, "OCR-B", monospace; /* レシートっぽいフォント */
+    font-family: 'Courier New', Courier, "OCR-B", monospace;
     padding: 30px 25px;
     position: relative;
     box-shadow: 0 5px 15px rgba(0,0,0,0.15);
     max-width: 380px;
     margin: 0 auto;
     
-    /* ギザギザの縁取り (擬似要素で実装) */
     margin-top: 10px;
     margin-bottom: 10px;
 }
@@ -255,14 +252,12 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     background-repeat: repeat-x;
 }
 
-/* 上部のギザギザ */
 .receipt-paper::before {
     top: -10px;
     background-image: linear-gradient(135deg, transparent 50%, #fff 50%), linear-gradient(-135deg, transparent 50%, #fff 50%);
     background-position: top left, top left;
 }
 
-/* 下部のギザギザ */
 .receipt-paper::after {
     bottom: -10px;
     background-image: linear-gradient(-45deg, transparent 50%, #fff 50%), linear-gradient(45deg, transparent 50%, #fff 50%);
@@ -343,7 +338,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.6</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v6.0</span></h1>
         
         <div class="sync-status">
             <span class="sync-dot"></span>
@@ -353,14 +348,14 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
     <div class="share-invite-box">
         <div class="share-invite-title">
-            <i class='fa-solid fa-users'></i> メンバーを招待して共同編集
+            <i class='fa-solid fa-users'></i> メンバーを招待
         </div>
         <p style="margin: 0 0 16px 0; font-size: 0.85rem; opacity: 0.9;">
-            このURLをシェアすると、全員でリアルタイムに入力・編集ができます。
+            このURLをシェアするだけで、全員で共同編集できます。
         </p>
         <div class="share-btn-group">
             <button class="btn-share-action" onclick="copyRoomLink()">
-                <i class='fa-regular fa-copy'></i> リンクをコピー
+                <i class='fa-regular fa-copy'></i> URLコピー
             </button>
             <button class="btn-share-action" onclick="shareToLine()">
                 <i class='fa-brands fa-line'></i> LINEで送る
@@ -371,17 +366,6 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
             <span class="room-badge-label">Room ID:</span>
             <span id="dispRoomId">...</span>
         </div>
-    </div>
-
-    <div class="card" style="background: var(--primary-light); border-color: var(--primary);">
-        <h3 style="margin:0 0 10px 0; font-size:0.95rem; color: var(--primary); display: flex; align-items: center; gap: 6px;">
-            <i class='fa-solid fa-circle-info'></i> 使い方
-        </h3>
-        <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-main);">
-            <li>参加人数、車出ししてくれた方の情報を入力します。</li>
-            <li><strong>諸経費</strong>には高速代などを入力します。マイナス（例: -500）を入力すると、返金や割引として計算されます。</li>
-            <li>「精算を実行」を押すと1人あたりの支払額が計算されます。</li>
-        </ul>
     </div>
 
     <div class="card">
@@ -398,7 +382,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         <div class="input-group">
             <label>端数処理（切り上げ単位）</label>
             <select id="roundingUnit" onchange="pushData()">
-                <option value="100" selected>100円</option>
+                <option value="100" selected>100円 (推奨)</option>
                 <option value="50">50円</option>
                 <option value="10">10円</option>
                 <option value="1">1円</option>
@@ -515,8 +499,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-// --- Global Assignments (Ensure these run first via hoisting) ---
-// Using assignments here ensures functions are available on window even if initialization fails below
+// --- Global Assignments ---
 window.pushData = debounce(pushDataToFirebase, 500);
 window.handleAddCarBtn = handleAddCarBtn;
 window.resetRoom = resetRoom;
@@ -583,7 +566,6 @@ try {
     showToast("初期化エラーが発生しました");
 }
 
-// 画像保存用関数
 function downloadResultImage() {
     const target = document.getElementById('captureTarget');
     showToast("画像を生成中...");
@@ -687,7 +669,7 @@ function setCheckIfDiff(id, val) {
 }
 
 function pushDataToFirebase() {
-    if(!roomRef) return; // Guard against init failure
+    if(!roomRef) return; 
     const data = getFormData();
     const syncText = document.getElementById("syncText");
     if(syncText) syncText.textContent = "保存中...";
@@ -952,8 +934,6 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     const isSplit = (type === 'split') ? 'selected' : '';
     const isClub = (type === 'club') ? 'selected' : '';
 
-    // 【修正】type="text" にして標準キーボードを表示させる（iPhoneでマイナスを打ちやすくするため）
-    // placeholderも短縮して見切れ防止
     div.innerHTML = `
         <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
         <input type="text" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
@@ -1006,7 +986,6 @@ function calculate() {
             const nm = ex.name || "諸経費";
             const tp = ex.type || "club"; 
 
-            // 0以外なら計算対象とする (マイナス対応)
             if(val !== 0) { 
                 driverExtrasTotal += val; 
                 exs.push({name: nm, amount: val, type: tp});
@@ -1051,7 +1030,6 @@ function calculate() {
 
     document.getElementById('resPerPerson').textContent = "¥ " + perPersonPay.toLocaleString();
     
-    // 日本語表記にし、必要なら諸経費の内訳も表示
     let detailText = `対象: ${payers}名 / 実費計: ¥${totalCollectionTarget.toLocaleString()}`;
     
     if (totalExtrasSplit > 0) {
@@ -1059,8 +1037,6 @@ function calculate() {
     }
 
     document.getElementById('resTargetDetail').textContent = detailText;
-    
-    
     
     const dList = document.getElementById('resDriverList'); 
     dList.innerHTML = "";
@@ -1089,8 +1065,6 @@ function calculate() {
         `;
         dList.appendChild(row);
     });
-
-
 
     document.getElementById('resCircleExpense').textContent = "¥" + (totalExtrasClub + totalReward).toLocaleString();
     document.getElementById('resGasSurplus').textContent = "-¥" + surplus.toLocaleString();
