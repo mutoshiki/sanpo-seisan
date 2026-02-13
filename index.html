@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v6.4</title>
+<title>山歩会会計精算ツール v6.5</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -264,40 +264,64 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 .btn-outline:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
 .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
 
-/* --- レシート風デザイン (テクスチャ対応版) --- */
+/* --- レシート風デザイン (テクスチャ全面適用版) --- */
 #resultArea { display: none; }
 .receipt-wrapper { padding: 20px; margin: 20px -20px; }
 
 .receipt-paper {
     background-color: #fff; 
     
-    /* ▼▼▼ テクスチャ設定 ▼▼▼ */
-    /* ここにアップロードしたファイル名を入れてください */
+    /* ▼ 画像ファイル名を確認してください ▼ */
     background-image: url('paper.jpg'); 
-    background-size: cover;       /* 画像を全体に引き伸ばす */
-    background-position: center;  /* 中央寄せ */
-    background-repeat: no-repeat;
-    background-blend-mode: multiply; /* テクスチャと背景色(白)をなじませる */
-    /* ▲▲▲▲▲▲▲▲▲▲▲▲▲▲▲ */
-
+    background-size: cover;
+    background-position: center;
+    background-blend-mode: multiply;
+    
     color: #2c2c2c; font-family: 'Courier New', Courier, "OCR-B", monospace;
-    padding: 30px 25px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    max-width: 380px; margin: 0 auto; margin-top: 10px; margin-bottom: 10px;
+    padding: 30px 25px; 
+    position: relative; 
+    max-width: 380px; 
+    margin: 0 auto; margin-top: 10px; margin-bottom: 10px;
+
+    /* --- マスクによるギザギザ処理 (テクスチャを維持して切り抜く) --- */
+    --tooth-width: 20px;
+    --tooth-height: 10px;
+
+    /* マスク設定: 上下のギザギザ + 真ん中の四角形 */
+    -webkit-mask-image: 
+        conic-gradient(from 135deg at top, transparent, #000 1deg 89deg, transparent 90deg),
+        conic-gradient(from -45deg at bottom, transparent, #000 1deg 89deg, transparent 90deg),
+        linear-gradient(#000 0 0);
+    
+    mask-image: 
+        conic-gradient(from 135deg at top, transparent, #000 1deg 89deg, transparent 90deg),
+        conic-gradient(from -45deg at bottom, transparent, #000 1deg 89deg, transparent 90deg),
+        linear-gradient(#000 0 0);
+
+    -webkit-mask-size: 
+        var(--tooth-width) var(--tooth-height), 
+        var(--tooth-width) var(--tooth-height), 
+        100% calc(100% - var(--tooth-height) * 2);
+    
+    mask-size: 
+        var(--tooth-width) var(--tooth-height), 
+        var(--tooth-width) var(--tooth-height), 
+        100% calc(100% - var(--tooth-height) * 2);
+
+    -webkit-mask-position: top, bottom, center;
+    mask-position: top, bottom, center;
+
+    -webkit-mask-repeat: repeat-x, repeat-x, no-repeat;
+    mask-repeat: repeat-x, repeat-x, no-repeat;
+
+    /* ドロップシャドウ (マスクされた形状に影を落とす) */
+    filter: drop-shadow(0 5px 8px rgba(0,0,0,0.2));
+    /* 古いbox-shadowは削除 (マスクで消えてしまうため) */
+    box-shadow: none; 
 }
-.receipt-paper::before, .receipt-paper::after {
-    content: ""; position: absolute; left: 0; width: 100%; height: 10px;
-    background-size: 20px 20px; background-repeat: repeat-x;
-}
-.receipt-paper::before {
-    top: -10px;
-    background-image: linear-gradient(135deg, transparent 50%, #fff 50%), linear-gradient(-135deg, transparent 50%, #fff 50%);
-    background-position: top left, top left;
-}
-.receipt-paper::after {
-    bottom: -10px;
-    background-image: linear-gradient(-45deg, transparent 50%, #fff 50%), linear-gradient(45deg, transparent 50%, #fff 50%);
-    background-position: bottom left, bottom left;
-}
+
+/* 以前の pseudo-element (::before, ::after) は削除済み */
+
 .receipt-header { text-align: center; border-bottom: 2px dashed #444; padding-bottom: 15px; margin-bottom: 15px; }
 .receipt-logo { font-size: 2.5rem; color: #333; margin-bottom: 5px; }
 .receipt-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
@@ -381,7 +405,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     
     <header>
         <div class="app-brand">
-            <span class="app-version">v6.4</span>
+            <span class="app-version">v6.5</span>
             <div class="app-logo-area">
                 <div class="app-icon"><i class='fa-solid fa-mountain'></i></div>
                 <h1 class="app-title">山歩会 精算ツール</h1>
