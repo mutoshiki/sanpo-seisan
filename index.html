@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v5.4</title>
+<title>山歩会会計精算ツール v5.5</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -75,17 +75,45 @@ h1 {
 h1 i { font-size: 1.6rem; color: var(--primary); }
 h1 span { font-size: 0.8rem; color: var(--text-sub); font-weight: normal; margin-top: 4px; display: block;}
 
-.room-badge {
-    background: var(--text-main); color: var(--card-bg);
-    padding: 8px 16px; border-radius: 30px; font-family: monospace; font-size: 1rem;
-    margin: 16px auto; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;
-    box-shadow: var(--shadow); transition: transform 0.1s;
-    border: 1px solid var(--border);
+/* 新しいシェア促進エリア */
+.share-invite-box {
+    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
+    color: #fff;
+    border-radius: var(--radius);
+    padding: 16px;
+    margin-bottom: 24px;
+    box-shadow: 0 4px 12px rgba(51, 105, 30, 0.3);
+    text-align: center;
 }
-.room-badge:active { transform: scale(0.96); }
-.room-badge i { font-size: 1.2rem; }
-.room-badge-text { display: flex; flex-direction: column; line-height: 1.1; text-align: left; }
-.room-badge-label { font-size: 0.65rem; opacity: 0.8; font-family: sans-serif; }
+.share-invite-title {
+    font-weight: bold; font-size: 1rem; margin-bottom: 10px;
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.share-btn-group {
+    display: flex; gap: 10px; justify-content: center;
+}
+.btn-share-action {
+    background: rgba(255,255,255,0.2);
+    border: 1px solid rgba(255,255,255,0.4);
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: flex; align-items: center; gap: 6px;
+    transition: background 0.2s;
+}
+.btn-share-action:hover { background: rgba(255,255,255,0.3); }
+.btn-share-action:active { transform: scale(0.96); }
+
+
+.room-badge {
+    background: var(--card-bg); color: var(--text-main);
+    padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.8rem;
+    margin: 8px auto 0; display: inline-flex; align-items: center; gap: 6px; 
+    border: 1px dashed var(--border); opacity: 0.8;
+}
 
 .sync-status {
     font-size: 0.75rem; color: var(--primary); font-weight: 600;
@@ -315,22 +343,35 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.4</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.5</span></h1>
         
-        <div class="room-badge" onclick="copyRoomLink()">
-            <i class='fa-solid fa-id-card'></i>
-            <div class="room-badge-text">
-                <span class="room-badge-label">Room ID</span>
-                <span id="dispRoomId">...</span>
-            </div>
-            <i class='fa-solid fa-copy' style="font-size: 0.9rem; opacity: 0.7; margin-left: 4px;"></i>
-        </div>
-
         <div class="sync-status">
             <span class="sync-dot"></span>
             <span id="syncText">同期中...</span>
         </div>
     </header>
+
+    <div class="share-invite-box">
+        <div class="share-invite-title">
+            <i class='fa-solid fa-users'></i> メンバーを招待して共同編集
+        </div>
+        <p style="margin: 0 0 16px 0; font-size: 0.85rem; opacity: 0.9;">
+            このURLをシェアすると、全員でリアルタイムに入力・編集ができます。
+        </p>
+        <div class="share-btn-group">
+            <button class="btn-share-action" onclick="copyRoomLink()">
+                <i class='fa-regular fa-copy'></i> リンクをコピー
+            </button>
+            <button class="btn-share-action" onclick="shareToLine()">
+                <i class='fa-brands fa-line'></i> LINEで送る
+            </button>
+        </div>
+        
+        <div class="room-badge" onclick="copyRoomLink()">
+            <span class="room-badge-label">Room ID:</span>
+            <span id="dispRoomId">...</span>
+        </div>
+    </div>
 
     <div class="card" style="background: var(--primary-light); border-color: var(--primary);">
         <h3 style="margin:0 0 10px 0; font-size:0.95rem; color: var(--primary); display: flex; align-items: center; gap: 6px;">
@@ -338,9 +379,8 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         </h3>
         <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-main);">
             <li>参加人数、車出ししてくれた方の情報を入力します。</li>
+            <li><strong>諸経費</strong>には高速代などを入力します。マイナス（例: -500）を入力すると、返金や割引として計算されます。</li>
             <li>「精算を実行」を押すと1人あたりの支払額が計算されます。</li>
-            <li><strong>諸経費</strong>は「割り勘(参加者負担)」か「部費(サークル負担)」かを選択できます。</li>
-            <li>URLを共有すれば、複数人で共同編集出来ます。</li>
         </ul>
     </div>
 
@@ -489,6 +529,7 @@ window.removeCar = removeCar;
 window.handleAddExtra = handleAddExtra;
 window.calculate = calculate;
 window.copyRoomLink = copyRoomLink;
+window.shareToLine = shareToLine;
 window.copyToClipboard = copyToClipboard;
 
 const firebaseConfig = {
@@ -720,7 +761,8 @@ function fillTestData() {
         { 
             name: "鈴木一郎", dist: [180, 220], eco: [20, 25], price: [160, 170], 
             extras: [
-                ["アイス代", 800, "club"]
+                ["アイス代", 800, "club"],
+                ["クーポン割引", -500, "club"] 
             ] 
         },
         { 
@@ -878,7 +920,7 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
                 <div class="input-group"><label>価格 (円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場・レンタカー代など）</label>
+                <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場・割引など）</label>
                 <div id="${extrasId}"></div>
                 <button class="btn-reset" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
                     + 経費を追加
@@ -910,9 +952,10 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     const isSplit = (type === 'split') ? 'selected' : '';
     const isClub = (type === 'club') ? 'selected' : '';
 
+    // inputmodeをdecimalに設定（マイナスを入力しやすくするため）
     div.innerHTML = `
         <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
-        <input type="number" class="ex-amount" placeholder="円" value="${amount}" inputmode="numeric" oninput="window.pushData()">
+        <input type="number" class="ex-amount" placeholder="円 (マイナスも可)" value="${amount}" inputmode="decimal" oninput="window.pushData()">
         <select class="ex-type" onchange="window.pushData()">
             <option value="club" ${isClub}>部費</option>
             <option value="split" ${isSplit}>割勘</option>
@@ -962,7 +1005,8 @@ function calculate() {
             const nm = ex.name || "諸経費";
             const tp = ex.type || "club"; 
 
-            if(val > 0) { 
+            // 修正: 0以外なら計算対象とする (マイナス対応)
+            if(val !== 0) { 
                 driverExtrasTotal += val; 
                 exs.push({name: nm, amount: val, type: tp});
                 
@@ -1009,7 +1053,6 @@ function calculate() {
     // 変更: 日本語表記にし、必要なら諸経費の内訳も表示
     let detailText = `対象: ${payers}名 / 実費計: ¥${totalCollectionTarget.toLocaleString()}`;
     
-    // もし「(内:諸経費5,750)」のように内訳も出したい場合は以下の行を追加してください
     if (totalExtrasSplit > 0) {
         detailText += ` (内:諸経費${totalExtrasSplit.toLocaleString()})`;
     }
@@ -1027,7 +1070,6 @@ function calculate() {
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
-                // 変更箇所: 英語表記を日本語のバッジ風テキストに
                 const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
                 extrasHtml += `<span class="receipt-detail">- ${ex.name} ${mark}: ¥${ex.amount.toLocaleString()}</span>`;
             });
@@ -1071,8 +1113,8 @@ function calculate() {
         const splitEx = d.extras.filter(e => e.type === 'split').reduce((s,e)=>s+e.amount,0);
         const clubEx  = d.extras.filter(e => e.type !== 'split').reduce((s,e)=>s+e.amount,0);
         
-        if(splitEx > 0) details.push(`割勘経費:${splitEx}`);
-        if(clubEx > 0) details.push(`部費経費:${clubEx}`);
+        if(splitEx !== 0) details.push(`割勘経費:${splitEx}`);
+        if(clubEx !== 0) details.push(`部費経費:${clubEx}`);
         details.push(`調整:${d.reward}`);
         
         lineText += `  (${details.join('/')})\n`;
@@ -1101,6 +1143,12 @@ function copyRoomLink() {
         document.body.removeChild(ta);
         showToast("URLをコピーしました！");
     }
+}
+
+function shareToLine() {
+    const url = window.location.href;
+    const text = "精算ツールのリンクです。入力をお願いします！";
+    window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text + "\n" + url)}`, '_blank');
 }
 
 function copyToClipboard() {
