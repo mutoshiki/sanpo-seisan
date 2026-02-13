@@ -2,93 +2,87 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-<title>山歩会会計精算ツール v6.1</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>山歩会会計精算ツール v6.2</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-    /* --- カラーパレット: Modern Cafe Theme --- */
+    /* --- カラーパレット: Cafe Theme (Light) --- */
     --primary: #558b2f;       /* メイン：抹茶グリーン */
     --primary-hover: #33691e;
-    --primary-bg: #f1f8e9;    /* 背景用：薄い抹茶 */
+    --primary-light: #f1f8e9; /* 背景用：薄い抹茶 */
     
-    --accent: #f9a825;        /* 強調：イエロー */
-    --danger: #e53935;        /* 警告：赤 */
+    --accent: #f9a825;        /* 強調：マスタードイエロー */
+    --danger: #d32f2f;        /* 警告：落ち着いた赤 */
     
-    --bg-body: #f4f1ea;       /* 全体背景：ラテベージュ */
-    --bg-card: #ffffff;       /* カード背景：白 */
-    --bg-input: #f7f7f5;      /* 入力欄背景：ごく薄いグレー */
+    --bg: #f2efe9;            /* 背景：ラテベージュ */
+    --card-bg: #fdfbf7;       /* カード：クリームホワイト */
     
-    --text-main: #3e2723;     /* 文字：ダークブラウン */
-    --text-sub: #795548;      /* サブ文字：ミルクチョコ */
+    --text-main: #4e342e;     /* 文字：エスプレッソ */
+    --text-sub: #8d6e63;      /* サブ文字：ココアブラウン */
     
-    --border: #e0dbd6;        /* 枠線 */
+    --border: #d7ccc8;        /* 枠線：ミルクココア */
+    --input-bg: #faf8f5;      /* 入力欄背景 */
     
-    --radius-l: 16px;         /* カードの角丸 */
-    --radius-s: 8px;          /* ボタン等の角丸 */
-    
-    /* スマホ向けに少し強めの影を設定し、浮き上がり感を出す */
-    --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.06);
-    --shadow-float: 0 4px 12px rgba(85, 139, 47, 0.25);
+    --radius: 12px;
+    --shadow: 0 4px 10px rgba(78, 52, 46, 0.08);
 
-    /* ルーム固有カラー（JSで動的に上書き） */
+    /* ルーム固有カラー（JSで動的に上書きされます） */
     --room-hue: 120; 
     --room-color: hsl(var(--room-hue), 60%, 45%);
-    --room-bg: hsl(var(--room-hue), 70%, 96%);
+    --room-bg: hsl(var(--room-hue), 70%, 95%);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
+        /* --- カラーパレット: Cafe Theme (Dark) --- */
         --primary: #aed581;       
         --primary-hover: #7cb342;
-        --primary-bg: #2e362a;
+        --primary-light: #33691e;
         
-        --bg-body: #1a1a1a;            
-        --bg-card: #2c2c2c;       
-        --bg-input: #363636;
+        --accent: #ffd54f;
+        --danger: #e57373;
         
-        --text-main: #e0e0e0;     
-        --text-sub: #a0a0a0;      
+        --bg: #251d1a;            
+        --card-bg: #3e2723;       
         
-        --border: #444;
+        --text-main: #d7ccc8;     
+        --text-sub: #a1887f;      
         
-        --shadow-card: 0 4px 10px rgba(0, 0, 0, 0.3);
+        --border: #5d4037;
+        --input-bg: #4e342e;
         
-        --room-color: hsl(var(--room-hue), 60%, 65%);
+        --shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        
+        --room-color: hsl(var(--room-hue), 70%, 65%);
         --room-bg: hsl(var(--room-hue), 30%, 25%);
     }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    margin: 0; 
-    padding: 20px 16px 80px 16px; /* 下部に余裕を持たせる */
-    background: var(--bg-body); 
-    color: var(--text-main);
-    line-height: 1.5; 
-    font-size: 15px;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0; padding: 20px 12px;
+    background: var(--bg); color: var(--text-main);
+    line-height: 1.6; font-size: 15px;
 }
 
-.container { max-width: 600px; margin: 0 auto; }
+.container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
 
-/* --- ヘッダー --- */
-header { 
-    margin-bottom: 24px; 
-    text-align: center; 
-    display: flex; flex-direction: column; align-items: center;
-}
+/* --- 新しいヘッダーデザイン --- */
+header { margin-bottom: 24px; text-align: center; }
 
 .app-brand {
     display: inline-flex;
     flex-direction: column;
     align-items: center;
-    background: var(--bg-card);
-    padding: 12px 24px;
-    border-radius: 24px;
-    box-shadow: var(--shadow-card);
+    background: var(--card-bg);
+    padding: 16px 30px;
+    border-radius: 20px;
+    box-shadow: 
+        0 6px 15px rgba(0,0,0,0.05), 
+        0 0 0 4px rgba(255,255,255,0.5); /* 二重線風の外枠 */
     border: 1px solid var(--border);
     position: relative;
     margin-top: 10px;
@@ -96,332 +90,351 @@ header {
 
 .app-logo-area {
     display: flex; align-items: center; gap: 10px;
+    margin-bottom: 4px;
 }
 .app-icon {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     color: var(--primary);
-    background: var(--primary-bg);
-    width: 40px; height: 40px;
+    background: var(--primary-light);
+    width: 44px; height: 44px;
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%;
 }
 .app-title {
-    font-size: 1.1rem; font-weight: 800; 
-    color: var(--text-main); letter-spacing: 0.02em;
+    font-size: 1.3rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.05em;
     margin: 0;
 }
 .app-version {
-    font-size: 0.65rem; color: #fff; background: var(--text-sub);
+    font-size: 0.7rem; color: var(--card-bg); background: var(--text-sub);
     padding: 2px 8px; border-radius: 10px; font-weight: bold;
-    position: absolute; top: -6px; right: -6px;
+    position: absolute; top: -8px; right: -8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 
 .sync-status {
     font-size: 0.75rem; color: var(--primary); font-weight: 600;
     display: flex; align-items: center; justify-content: center; gap: 6px;
-    margin-top: 10px; opacity: 0.9;
+    margin-top: 12px;
 }
 .sync-dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
-/* --- ルームIDカード --- */
+/* --- 新しいシェア・ルームIDエリア --- */
 .room-invite-card {
-    background: var(--bg-card);
-    border-radius: var(--radius-l);
-    margin-bottom: 20px;
-    box-shadow: var(--shadow-card);
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 0; /* paddingなしで中身を詰める */
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
     border: 1px solid var(--border);
     overflow: hidden;
-}
-
-.room-id-section {
-    background: var(--room-bg);
-    padding: 16px 20px;
-    display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px dashed var(--border);
     position: relative;
 }
-/* 左端のカラーバー */
-.room-id-section::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px;
+/* 左側に色付きバーを表示 */
+.room-invite-card::before {
+    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px;
     background: var(--room-color);
 }
 
-.room-id-label { display: flex; align-items: center; gap: 12px; }
-
-.room-avatar {
-    width: 40px; height: 40px; 
-    background: var(--room-color); color: #fff;
-    border-radius: 12px; /* 少し四角くモダンに */
-    display: flex; align-items: center; justify-content: center;
-    font-weight: bold; font-size: 1.2rem;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.room-id-section {
+    background: var(--room-bg); /* ルーム固有の淡い背景色 */
+    padding: 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px dashed var(--border);
 }
-.room-code-group { display: flex; flex-direction: column; justify-content: center; }
-.room-label-tiny { font-size: 0.65rem; color: var(--text-sub); font-weight: bold; text-transform: uppercase; opacity: 0.8; }
+.room-id-label {
+    display: flex; align-items: center; gap: 10px;
+}
+.room-avatar {
+    width: 36px; height: 36px; 
+    background: var(--room-color); color: #fff;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-weight: bold; font-size: 1.1rem;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+.room-code-group {
+    display: flex; flex-direction: column;
+}
+.room-label-tiny { font-size: 0.7rem; color: var(--text-sub); font-weight: bold; }
 .room-id-text { 
-    font-family: monospace; font-size: 1.3rem; font-weight: 700; 
-    color: var(--text-main); letter-spacing: 1px; line-height: 1.2;
+    font-family: "OCR-B", monospace; font-size: 1.2rem; font-weight: 700; 
+    color: var(--text-main); letter-spacing: 1px; 
 }
 
 .share-actions {
-    padding: 10px;
+    padding: 12px;
     display: flex; gap: 10px;
 }
 .btn-share-sub {
     flex: 1;
     background: transparent; border: 1px solid var(--border);
-    color: var(--text-sub); padding: 10px; border-radius: var(--radius-s);
+    color: var(--text-sub); padding: 8px; border-radius: 8px;
     font-size: 0.85rem; font-weight: 600; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    transition: all 0.2s;
-    min-height: 44px; /* スマホで押しやすい高さ */
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    transition: 0.2s;
 }
-.btn-share-sub:active { background: var(--bg-input); transform: scale(0.98); }
+.btn-share-sub:hover { background: var(--bg); color: var(--primary); border-color: var(--primary); }
 
-/* --- 共通カード --- */
+
+/* --- 共通コンポーネント --- */
 .card {
-    background: var(--bg-card); padding: 20px; border-radius: var(--radius-l);
-    box-shadow: var(--shadow-card); margin-bottom: 20px; border: 1px solid var(--border);
+    background: var(--card-bg); padding: 20px; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border);
 }
 
 h2 { 
-    font-size: 1rem; margin: 0 0 16px 0; 
-    display: flex; align-items: center; gap: 10px; 
-    color: var(--text-main); 
-    padding-bottom: 8px;
-    font-weight: 700;
+    font-size: 1.1rem; margin: 0 0 16px 0; 
+    display: flex; align-items: center; gap: 8px; 
+    color: var(--text-main); border-bottom: 2px solid var(--border); padding-bottom: 10px;
 }
-h2 i { color: var(--primary); font-size: 1.2rem; }
+h2 i { color: var(--primary); font-size: 1.3rem; }
 
-/* --- フォーム要素（スマホ最適化） --- */
-.input-group { margin-bottom: 18px; }
-label { 
-    display: block; font-size: 0.85rem; font-weight: 600; 
-    margin-bottom: 6px; color: var(--text-sub); 
-}
+/* 入力フォーム */
+.input-group { margin-bottom: 16px; }
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
 
-/* スマホでの自動ズーム防止のためfont-size:16px、高さ確保 */
 input[type="number"], input[type="text"], select {
-    width: 100%; padding: 0 12px; height: 46px;
-    border: 1px solid var(--border); border-radius: var(--radius-s); 
-    font-size: 16px; background: var(--bg-input); color: var(--text-main);
-    transition: 0.2s; -webkit-appearance: none;
+    width: 100%; padding: 12px; 
+    border: 1px solid var(--border); border-radius: 8px; 
+    font-size: 16px; background: var(--input-bg); color: var(--text-main);
+    transition: 0.2s;
 }
-input:focus, select:focus { 
-    outline: none; border-color: var(--primary); background: #fff;
-    box-shadow: 0 0 0 3px rgba(85, 139, 47, 0.15); 
-}
-input::placeholder { color: var(--text-sub); opacity: 0.4; }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(85, 139, 47, 0.2); }
+input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
-.flex-row { display: flex; gap: 10px; }
+.flex-row { display: flex; gap: 12px; }
 .flex-row > div { flex: 1; }
 
 /* トグルスイッチ */
 .checkbox-card {
     display: flex; align-items: center; justify-content: space-between;
-    background: var(--bg-input); padding: 12px 16px; border-radius: var(--radius-s); 
+    background: var(--input-bg); padding: 12px 16px; border-radius: 8px; 
     cursor: pointer; user-select: none; border: 1px solid var(--border);
-    min-height: 50px; /* タップエリア確保 */
 }
 .checkbox-card input { display: none; }
 .toggle-switch {
-    width: 46px; height: 26px; background: var(--border); 
-    border-radius: 20px; position: relative; transition: 0.3s;
+    width: 44px; height: 24px; background: var(--border); border-radius: 20px; position: relative; transition: 0.3s;
 }
 .toggle-switch::after {
-    content: ''; position: absolute; top: 3px; left: 3px; width: 20px; height: 20px;
-    background: #fff; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+    background: var(--card-bg); border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .checkbox-card input:checked + .toggle-switch { background: var(--primary); }
 .checkbox-card input:checked + .toggle-switch::after { transform: translateX(20px); }
 
-/* --- 車両カード --- */
+/* 車両カード */
 .car-card {
-    border: 1px solid var(--border); border-radius: var(--radius-s); margin-bottom: 14px;
-    background: var(--bg-card); overflow: hidden; 
-    transition: box-shadow 0.2s;
+    border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px;
+    background: var(--card-bg); overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
 }
-.car-card.open { box-shadow: 0 4px 12px rgba(0,0,0,0.05); border-color: var(--primary); }
-
 .car-header {
-    background: var(--primary-bg); padding: 14px 16px;
+    background: var(--primary-light); padding: 12px 16px;
     display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-main);
-    min-height: 50px;
+    cursor: pointer; font-weight: 600; font-size: 1rem; color: var(--text-main);
 }
-.car-header i { margin-right: 8px; color: var(--primary); }
-.car-body { padding: 16px; display: none; border-top: 1px solid var(--border); background: var(--bg-card); }
-.car-card.open .car-body { display: block; animation: slideDown 0.2s ease-out; }
-@keyframes slideDown { from {opacity:0; transform:translateY(-5px);} to {opacity:1; transform:translateY(0);} }
-
-.toggle-icon { transition: transform 0.3s; font-size: 1rem; color: var(--text-sub); }
+.car-header i { margin-right: 6px; color: var(--primary); }
+.car-body { padding: 16px; display: none; border-top: 1px solid var(--border); background: var(--card-bg); }
+.car-card.open .car-body { display: block; }
+.toggle-icon { transition: transform 0.3s; font-size: 1.1rem; color: var(--text-sub); }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
-/* アイコンボタン（削除など）のタップエリア拡大 */
 .btn-icon-only {
     background: none; border: none; color: var(--text-sub); font-size: 1.1rem; 
-    cursor: pointer; width: 40px; height: 40px; 
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%; transition: background 0.2s;
+    cursor: pointer; padding: 6px; display: flex; align-items: center; transition: color 0.2s;
+    flex-shrink: 0;
 }
-.btn-icon-only:hover { color: var(--danger); background: rgba(0,0,0,0.05); }
+.btn-icon-only:hover { color: var(--danger); }
 
 /* 諸経費セクション */
 .extra-section { 
-    background: var(--bg-input); padding: 14px; border-radius: var(--radius-s); margin-top: 16px; 
+    background: var(--input-bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
     border: 1px dashed var(--border); 
 }
 .extra-item { 
-    display: flex; gap: 8px; margin-bottom: 12px; align-items: center; 
-    border-bottom: 1px dashed rgba(0,0,0,0.05); padding-bottom: 10px; 
+    display: flex; 
+    gap: 6px; /* ギャップを少し狭める */
+    margin-bottom: 10px; 
+    align-items: center; 
+    flex-wrap: nowrap; /* 改行を禁止する */
+    border-bottom:1px dashed rgba(0,0,0,0.05); 
+    padding-bottom:8px; 
 }
-.extra-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-.extra-item .ex-name { flex: 1.5; min-width: 100px; }
-.extra-item .ex-amount { flex: 1; min-width: 80px; }
+.extra-item:last-child { border-bottom: none; }
+.extra-item .ex-name { 
+    flex: 2; 
+    min-width: 0; /* フレックスアイテムが縮小できるようにする */
+}
+.extra-item .ex-amount { 
+    flex: 1.5; 
+    min-width: 0; /* フレックスアイテムが縮小できるようにする */
+}
 
-/* 部費/割勘 選択ボタン（スマホ最適化） */
+/* 部費/割勘 選択ボタン */
 .type-selector {
-    display: flex; background: #e0e0e0; border-radius: 8px; padding: 2px;
-    flex-shrink: 0; height: 46px; align-items: center;
+    display: flex;
+    background: #e0e0e0;
+    border-radius: 8px;
+    padding: 3px;
+    width: 90px; /* 幅をスリム化 (元130px) */
+    flex-shrink: 0; /* これ以上縮めない */
 }
 .type-selector input { display: none; }
 .type-selector label {
-    padding: 0 10px; height: 42px; line-height: 42px;
-    font-size: 0.75rem; cursor: pointer; border-radius: 6px;
-    color: var(--text-sub); font-weight: 600; text-align: center;
-    width: 50px; transition: 0.2s; margin: 0;
+    flex: 1;
+    text-align: center;
+    padding: 6px 0; /* 上下パディングを調整 */
+    font-size: 0.75rem; /* フォントを少し小さく */
+    cursor: pointer;
+    border-radius: 6px;
+    color: var(--text-sub);
+    transition: 0.2s;
+    font-weight: 600;
+    margin: 0;
+    white-space: nowrap;
 }
 .type-selector input:checked + label {
-    background: #fff; color: var(--primary);
+    background: #fff;
+    color: var(--primary);
     box-shadow: 0 1px 3px rgba(0,0,0,0.15);
 }
 @media (prefers-color-scheme: dark) {
-    .type-selector { background: #444; }
+    .type-selector { background: #333; }
     .type-selector input:checked + label { background: #555; color: #fff; }
 }
 
-/* メインボタン */
+
+/* ボタン類 */
 .btn {
     width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: 700;
-    padding: 16px; cursor: pointer; transition: all 0.2s; 
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    text-decoration: none; position: relative; overflow: hidden;
+    padding: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    text-decoration: none;
 }
-.btn:active { transform: scale(0.98); }
-
 .btn-primary { 
     background: var(--primary); color: #fff; margin-top: 10px; 
-    box-shadow: var(--shadow-float);
+    box-shadow: 0 4px 10px rgba(85, 139, 47, 0.3);
 }
 .btn-primary:hover { background: var(--primary-hover); }
+.btn-primary:active { transform: scale(0.98); }
 
 .btn-outline { 
     background: transparent; border: 2px dashed var(--border); color: var(--text-main); 
-    padding: 12px; font-weight: 600; font-size: 0.95rem;
+    padding: 12px; font-weight: 600;
 }
-.btn-outline:active { background: var(--bg-input); border-color: var(--primary); color: var(--primary); }
+.btn-outline:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
+.btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
 
-.btn-sm { padding: 8px 16px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
+/* --- レシート風デザイン (Receipt Style) --- */
+#resultArea { display: none; }
 
-/* --- レシート風デザイン --- */
-#resultArea { display: none; animation: fadeIn 0.5s; }
-@keyframes fadeIn { from{opacity:0;} to{opacity:1;} }
-
-.receipt-wrapper { margin: 20px -10px; padding: 10px; }
+.receipt-wrapper {
+    padding: 20px; 
+    margin: 20px -20px; 
+}
 
 .receipt-paper {
-    background: #fff; color: #333;
-    font-family: 'Courier New', Courier, monospace; /* 等幅フォント */
-    padding: 30px 20px;
+    background: #fff;
+    color: #2c2c2c;
+    font-family: 'Courier New', Courier, "OCR-B", monospace;
+    padding: 30px 25px;
     position: relative;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    max-width: 400px; margin: 0 auto;
-    margin-bottom: 20px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
+    max-width: 380px;
+    margin: 0 auto;
+    
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
-/* ギザギザ装飾 */
+
 .receipt-paper::before, .receipt-paper::after {
-    content: ""; position: absolute; left: 0; width: 100%; height: 6px;
-    background-size: 12px 12px; background-repeat: repeat-x;
+    content: "";
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 10px;
+    background-size: 20px 20px;
+    background-repeat: repeat-x;
 }
+
 .receipt-paper::before {
-    top: -6px;
+    top: -10px;
     background-image: linear-gradient(135deg, transparent 50%, #fff 50%), linear-gradient(-135deg, transparent 50%, #fff 50%);
-    background-position: top left;
+    background-position: top left, top left;
 }
+
 .receipt-paper::after {
-    bottom: -6px;
+    bottom: -10px;
     background-image: linear-gradient(-45deg, transparent 50%, #fff 50%), linear-gradient(45deg, transparent 50%, #fff 50%);
-    background-position: bottom left;
+    background-position: bottom left, bottom left;
 }
 
 .receipt-header {
-    text-align: center; border-bottom: 2px dashed #444; padding-bottom: 15px; margin-bottom: 15px;
+    text-align: center;
+    border-bottom: 2px dashed #444;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
 }
-.receipt-logo { font-size: 2rem; color: #333; margin-bottom: 5px; }
-.receipt-title { font-size: 1rem; font-weight: 900; letter-spacing: 1px; margin: 0; }
+.receipt-logo { font-size: 2.5rem; color: #333; margin-bottom: 5px; }
+.receipt-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
 .receipt-meta { font-size: 0.7rem; color: #666; margin-top: 5px; }
 
 .receipt-total-section {
-    text-align: center; padding: 15px 0; border-bottom: 2px dashed #444;
+    text-align: center;
+    padding: 15px 0;
+    border-bottom: 2px dashed #444;
 }
 .receipt-label-main { font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px; }
-.receipt-amount-main { font-size: 2.2rem; font-weight: 900; line-height: 1; display: block; }
+.receipt-amount-main { font-size: 2.4rem; font-weight: 900; line-height: 1; display: block; }
 .receipt-note { font-size: 0.7rem; color: #666; margin-top: 5px; display: block;}
 
-.receipt-section { padding: 15px 0; border-bottom: 1px dashed #bbb; }
+.receipt-section {
+    padding: 15px 0;
+    border-bottom: 1px dashed #bbb;
+}
 .receipt-section-title {
-    font-size: 0.75rem; font-weight: bold; margin-bottom: 8px; display: block; 
+    font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
     text-transform: uppercase; letter-spacing: 1px;
 }
+
 .receipt-row {
     display: flex; justify-content: space-between; align-items: baseline;
-    font-size: 0.9rem; margin-bottom: 6px; line-height: 1.4;
+    font-size: 0.9rem; margin-bottom: 6px;
+    line-height: 1.4;
 }
-.receipt-row.bold { font-weight: 800; }
-.receipt-detail { font-size: 0.75rem; color: #666; margin-left: 10px; margin-bottom: 4px; display: block; }
+.receipt-row.bold { font-weight: 800; font-size: 0.95rem; }
+.receipt-row span:last-child { white-space: nowrap; margin-left: 10px; }
+.receipt-detail { font-size: 0.7rem; color: #666; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
 
-.receipt-footer { text-align: center; margin-top: 20px; font-size: 0.7rem; opacity: 0.6; font-weight: bold; }
+.receipt-footer {
+    text-align: center; margin-top: 20px; font-size: 0.7rem; opacity: 0.7;
+    font-weight: bold;
+}
 
 /* コピーエリア */
 .copy-area {
-    background: var(--text-main); color: #fff; padding: 20px; border-radius: var(--radius-l); margin-top: 20px;
+    background: var(--text-main); color: var(--card-bg); padding: 15px; border-radius: 8px; margin-top: 20px;
 }
-#copyTextarea { 
-    width: 100%; background: rgba(255,255,255,0.1); border: none; 
-    color: #fff; font-family: monospace; height: 100px; padding: 10px; border-radius: 8px;
-    resize: none; font-size: 0.8rem; outline: none; margin-bottom: 12px;
-}
-.btn-copy { 
-    background: rgba(255,255,255,0.2); color: #fff; padding: 12px; width: 100%; 
-    border: none; border-radius: var(--radius-s); font-weight: bold; cursor: pointer; 
-    display: flex; align-items: center; justify-content: center; gap: 8px; 
-}
+#copyTextarea { width: 100%; background: transparent; border: none; color: inherit; font-family: monospace; height: 120px; resize: none; font-size: 0.8rem; outline: none; opacity: 0.9; }
+.btn-copy { background: rgba(255,255,255,0.1); color: inherit; padding: 10px; width: 100%; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
+.btn-copy:hover { background: rgba(255,255,255,0.2); }
 
 /* 履歴リスト */
-.history-container { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
+.history-container { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
 .history-item { 
-    background: var(--bg-card); padding: 14px; border-radius: var(--radius-s); margin-bottom: 10px;
+    background: var(--card-bg); padding: 12px 14px; border-radius: 8px; margin-bottom: 8px;
     display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border);
 }
 .history-meta { font-size: 0.75rem; color: var(--text-sub); }
-.btn-restore { background: var(--primary); color: #fff; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+.btn-restore { background: var(--primary); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
 
 /* トースト通知 */
 #toast {
-    visibility: hidden; min-width: 260px; 
-    background-color: rgba(50,50,50, 0.95); color: #fff; text-align: center;
-    border-radius: 50px; padding: 14px 20px; 
-    position: fixed; z-index: 999; left: 50%; bottom: 40px;
-    transform: translateX(-50%) translateY(20px); 
-    font-size: 0.9rem; font-weight: 600; opacity: 0; 
-    transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    display: flex; align-items: center; justify-content: center; gap: 10px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    backdrop-filter: blur(4px);
+    visibility: hidden; min-width: 250px; background-color: var(--text-main); color: var(--card-bg); text-align: center;
+    border-radius: 50px; padding: 14px; position: fixed; z-index: 100; left: 50%; bottom: 30px;
+    transform: translateX(-50%); font-size: 0.9rem; opacity: 0; transition: opacity 0.3s, bottom 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
-#toast.show { visibility: visible; opacity: 1; transform: translateX(-50%) translateY(0); }
+#toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
 </style>
 </head>
@@ -431,7 +444,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.4; }
     
     <header>
         <div class="app-brand">
-            <span class="app-version">v6.1</span>
+            <span class="app-version">v6.2</span>
             <div class="app-logo-area">
                 <div class="app-icon"><i class='fa-solid fa-mountain'></i></div>
                 <h1 class="app-title">山歩会 精算ツール</h1>
@@ -455,7 +468,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.4; }
                     <span id="dispRoomId" class="room-id-text">...</span>
                 </div>
             </div>
-            <button class="btn btn-outline btn-sm" style="border:1px solid var(--border); background:#fff; color:var(--text-sub); min-height:36px;" onclick="copyRoomLink()">
+            <button class="btn btn-outline btn-sm" style="border:1px solid var(--border); background:#fff; color:var(--text-sub);" onclick="copyRoomLink()">
                 <i class='fa-regular fa-copy'></i>
             </button>
         </div>
@@ -493,8 +506,8 @@ input::placeholder { color: var(--text-sub); opacity: 0.4; }
         <div class="input-group">
             <label>企画の参加人数 (企画者含む)</label>
             <div style="position: relative;">
-                <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 44px;">
-                <i class='fa-solid fa-users' style="position: absolute; left: 14px; top: 14px; color: var(--text-sub); font-size:1.1rem;"></i>
+                <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 40px;">
+                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 13px; color: var(--text-sub);"></i>
             </div>
         </div>
         
@@ -559,10 +572,10 @@ input::placeholder { color: var(--text-sub); opacity: 0.4; }
             <textarea id="copyTextarea" readonly></textarea>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-copy" onclick="copyToClipboard()">
-                    <i class='fa-solid fa-copy'></i> コピー
+                    <i class='fa-solid fa-copy'></i> テキストをコピー
                 </button>
-                <button class="btn" style="background: #fff; color: var(--text-main); font-size:0.9rem; border: none; border-radius: var(--radius-s); width: 100%; font-weight:bold; display:flex; align-items:center; justify-content:center; gap:8px;" onclick="downloadResultImage()">
-                    <i class='fa-solid fa-download'></i> 画像保存
+                <button class="btn" style="background: var(--text-main); color: var(--primary-light); font-size:0.9rem; border: none; border-radius: 6px; width: 100%; margin-top:10px;" onclick="downloadResultImage()">
+                    <i class='fa-solid fa-download'></i> 画像を保存
                 </button>
             </div>
         </div>
@@ -570,7 +583,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.4; }
 
     <div class="history-container">
         <details>
-            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none; font-size:0.9rem;">
+            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none;">
                 <i class='fa-solid fa-clock-rotate-left'></i> 計算履歴 (保存済み)
             </summary>
             <div style="margin-top: 15px;">
@@ -584,9 +597,12 @@ input::placeholder { color: var(--text-sub); opacity: 0.4; }
         </details>
     </div>
     <div style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
-        <button class="btn btn-sm" style="background: transparent; color: var(--text-sub); width: auto; margin: 0 auto; border:none; text-decoration:underline; font-size:0.8rem;" onclick="fillTestData()">
+        <button class="btn btn-sm" style="background: var(--text-sub); color: var(--card-bg); width: auto; margin: 0 auto;" onclick="fillTestData()">
             <i class='fa-solid fa-flask'></i> デバッグ用データを投入
         </button>
+        <p style="font-size: 0.7rem; color: var(--text-sub); margin-top: 8px;">
+            ※既存の入力は全て上書きされます
+        </p>
     </div>
 
 </div>
@@ -699,11 +715,41 @@ function downloadResultImage() {
     };
 
     html2canvas(target, options).then(canvas => {
-        const link = document.createElement('a');
-        link.download = `receipt_${roomId}_${Date.now()}.png`;
-        link.href = canvas.toDataURL('image/png');
-        link.click();
-        showToast("✅ 画像を保存しました");
+        // Blobに変換
+        canvas.toBlob(async (blob) => {
+            if (!blob) {
+                showToast("画像の生成に失敗しました");
+                return;
+            }
+
+            const fileName = `receipt_${roomId}_${Date.now()}.png`;
+
+            // Web Share API (File Sharing) が使えるかチェック（主にiOS/Android用）
+            // files配列を含めてcanShareで確認するのが確実
+            const file = new File([blob], fileName, { type: "image/png" });
+            const shareData = {
+                files: [file],
+                title: '精算結果',
+                text: '精算結果の画像です'
+            };
+
+            if (navigator.canShare && navigator.canShare(shareData)) {
+                try {
+                    await navigator.share(shareData);
+                    // 共有（保存）が完了、またはキャンセルされた
+                } catch (err) {
+                    console.error("Share failed", err);
+                    // キャンセルなどの場合もここに来るが、特に対処不要
+                }
+            } else {
+                // PCや非対応ブラウザの場合は従来のダウンロード
+                const link = document.createElement('a');
+                link.download = fileName;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showToast("✅ 画像を保存しました");
+            }
+        }, 'image/png');
     }).catch(err => {
         console.error(err);
         showToast("エラーが発生しました");
