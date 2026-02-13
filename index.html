@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v5.5</title>
+<title>山歩会会計精算ツール v5.6</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -198,7 +198,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 }
 .extra-item { display: flex; gap: 6px; margin-bottom: 8px; align-items: center;}
 .extra-item .ex-name { flex: 1.5; }
-.extra-item .ex-amount { flex: 1; }
+.extra-item .ex-amount { flex: 1; min-width: 0; /* iPhoneでの幅縮小対策 */ }
 .extra-item .ex-type { flex: 0.8; font-size: 0.8rem; padding: 10px 4px; }
 
 /* ボタン類 */
@@ -343,7 +343,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.5</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.6</span></h1>
         
         <div class="sync-status">
             <span class="sync-dot"></span>
@@ -952,10 +952,11 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     const isSplit = (type === 'split') ? 'selected' : '';
     const isClub = (type === 'club') ? 'selected' : '';
 
-    // inputmodeをdecimalに設定（マイナスを入力しやすくするため）
+    // 【修正】type="text" にして標準キーボードを表示させる（iPhoneでマイナスを打ちやすくするため）
+    // placeholderも短縮して見切れ防止
     div.innerHTML = `
         <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
-        <input type="number" class="ex-amount" placeholder="円 (マイナスも可)" value="${amount}" inputmode="decimal" oninput="window.pushData()">
+        <input type="text" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
         <select class="ex-type" onchange="window.pushData()">
             <option value="club" ${isClub}>部費</option>
             <option value="split" ${isSplit}>割勘</option>
@@ -1005,7 +1006,7 @@ function calculate() {
             const nm = ex.name || "諸経費";
             const tp = ex.type || "club"; 
 
-            // 修正: 0以外なら計算対象とする (マイナス対応)
+            // 0以外なら計算対象とする (マイナス対応)
             if(val !== 0) { 
                 driverExtrasTotal += val; 
                 exs.push({name: nm, amount: val, type: tp});
@@ -1050,7 +1051,7 @@ function calculate() {
 
     document.getElementById('resPerPerson').textContent = "¥ " + perPersonPay.toLocaleString();
     
-    // 変更: 日本語表記にし、必要なら諸経費の内訳も表示
+    // 日本語表記にし、必要なら諸経費の内訳も表示
     let detailText = `対象: ${payers}名 / 実費計: ¥${totalCollectionTarget.toLocaleString()}`;
     
     if (totalExtrasSplit > 0) {
