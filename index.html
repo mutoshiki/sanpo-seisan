@@ -3,214 +3,232 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v6.7</title>
+<title>山歩会会計精算ツール v7.0</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-    /* --- カラーパレット: Cafe Theme (Light) --- */
-    --primary: #558b2f;       /* メイン：抹茶グリー */
-    --primary-hover: #33691e;
-    --primary-light: #f1f8e9; /* 背景用：薄い抹茶 */
+    /* --- カラーパレット: Mature Tool Theme (Light) --- */
+    /* 落ち着いた深みのあるグリーンとグレーで構成 */
+    --primary: #2c4c3b;       /* メイン：ブリティッシュグリーン */
+    --primary-hover: #1a3326;
+    --primary-bg: #e8ece9;    /* 背景用：極薄いグレーグリーン */
     
-    --accent: #f9a825;        /* 強調：マスタードイエロー */
-    --danger: #d32f2f;        /* 警告：落ち着いた赤 */
+    --accent: #d4a017;        /* 強調：アンティークゴールド */
+    --danger: #b71c1c;        /* 警告：深紅 */
     
-    --bg: #f2efe9;            /* 背景：ラテベージュ */
-    --card-bg: #fdfbf7;       /* カード：クリームホワイト */
+    --bg: #f4f6f8;            /* 背景：クールグレー */
+    --card-bg: #ffffff;       /* カード：白（シャープに） */
     
-    --text-main: #4e342e;     /* 文字：エスプレッソ */
-    --text-sub: #8d6e63;      /* サブ文字：ココアブラウン */
+    --text-main: #333333;     /* 文字：チャコールブラック */
+    --text-sub: #5f6368;      /* サブ文字：スレートグレー */
     
-    --border: #d7ccc8;        /* 枠線：ミルクココア */
-    --input-bg: #faf8f5;      /* 入力欄背景 */
+    --border: #cfd8dc;        /* 枠線：ブルーグレー */
+    --input-bg: #f8f9fa;      /* 入力欄背景 */
     
-    --radius: 12px;
-    --shadow: 0 4px 10px rgba(78, 52, 46, 0.08);
+    --radius: 6px;            /* 半径：小さくして「ツール感」を出す */
+    --shadow: 0 2px 5px rgba(0,0,0,0.08); /* 影：控えめに */
 
-    /* ルーム固有カラー（JSで動的に上書きされます） */
+    /* ルーム固有カラー */
     --room-hue: 120; 
-    --room-color: hsl(var(--room-hue), 60%, 45%);
-    --room-bg: hsl(var(--room-hue), 70%, 95%);
+    --room-color: hsl(var(--room-hue), 40%, 40%);
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        /* --- カラーパレット: Cafe Theme (Dark) --- */
-        --primary: #aed581;       
-        --primary-hover: #7cb342;
-        --primary-light: #33691e;
+        /* --- カラーパレット: Mature Tool Theme (Dark) --- */
+        /* Minecraft感を排除した、彩度低めのシックな構成 */
+        --primary: #768f80;       /* メイン：セージグリーン（彩度低め） */
+        --primary-hover: #8da595;
+        --primary-bg: #2d3330;
         
-        --accent: #ffd54f;
-        --danger: #e57373;
+        --accent: #cfa855;        /* 強調：ミュートゴールド */
+        --danger: #ef9a9a;
         
-        --bg: #251d1a;            
-        --card-bg: #3e2723;       
+        --bg: #121212;            /* 背景：ほぼ黒に近いグレー */
+        --card-bg: #1e1e1e;       /* カード：ダークグレー */
         
-        --text-main: #d7ccc8;     
-        --text-sub: #a1887f;      
+        --text-main: #e0e0e0;     /* 文字：オフホワイト */
+        --text-sub: #a0a0a0;      /* サブ文字：シルバー */
         
-        --border: #5d4037;
-        --input-bg: #4e342e;
+        --border: #333333;
+        --input-bg: #252525;
         
-        --shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        --shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
         
-        --room-color: hsl(var(--room-hue), 70%, 65%);
-        --room-bg: hsl(var(--room-hue), 30%, 25%);
+        --room-color: hsl(var(--room-hue), 30%, 60%);
     }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    margin: 0; padding: 20px 12px;
+    font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+    margin: 0; padding: 0;
     background: var(--bg); color: var(--text-main);
     line-height: 1.6; font-size: 15px;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
+.container { max-width: 600px; margin: 0 auto; padding: 20px 16px 100px 16px; }
 
-/* --- ヘッダー --- */
-header { margin-bottom: 24px; text-align: center; position: relative; }
-
-.app-brand {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
+/* --- ヘッダー (Left Aligned / Tool Style) --- */
+header {
     background: var(--card-bg);
-    padding: 16px 30px;
-    border-radius: 20px;
-    box-shadow: 
-        0 6px 15px rgba(0,0,0,0.05), 
-        0 0 0 4px rgba(255,255,255,0.5);
-    border: 1px solid var(--border);
-    position: relative;
-    margin-top: 10px;
+    border-bottom: 1px solid var(--border);
+    padding: 12px 16px;
+    margin: -20px -16px 20px -16px; /* 画面端まで広げる */
+    display: flex; justify-content: space-between; align-items: center;
+    position: sticky; top: 0; z-index: 100;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.app-logo-area { display: flex; align-items: center; gap: 10px; margin-bottom: 4px; }
-.app-icon {
-    font-size: 1.8rem; color: var(--primary); background: var(--primary-light);
-    width: 44px; height: 44px; display: flex; align-items: center; justify-content: center;
-    border-radius: 50%;
+.brand-area {
+    display: flex; align-items: center; gap: 12px;
 }
-.app-title { font-size: 1.3rem; font-weight: 800; color: var(--text-main); letter-spacing: 0.05em; margin: 0; }
+.brand-logo {
+    font-size: 1.4rem; color: var(--primary);
+    background: var(--primary-bg);
+    width: 36px; height: 36px;
+    border-radius: var(--radius);
+    display: flex; align-items: center; justify-content: center;
+}
+.brand-text {
+    display: flex; flex-direction: column;
+}
+.app-title {
+    font-size: 1.1rem; font-weight: 700; color: var(--text-main);
+    line-height: 1.2; letter-spacing: 0.02em; margin: 0;
+}
 .app-version {
-    font-size: 0.7rem; color: var(--card-bg); background: var(--text-sub);
-    padding: 2px 8px; border-radius: 10px; font-weight: bold;
-    position: absolute; top: -8px; right: -8px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    font-size: 0.7rem; color: var(--text-sub); font-family: monospace;
 }
 
-.btn-help {
-    position: absolute; top: 0; right: 0;
-    background: var(--card-bg); border: 2px solid var(--accent);
-    color: var(--accent); width: 40px; height: 40px; border-radius: 50%;
-    font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-    cursor: pointer; box-shadow: var(--shadow);
-}
+.header-actions { display: flex; align-items: center; gap: 10px; }
 
 .sync-status {
-    font-size: 0.75rem; color: var(--primary); font-weight: 600;
-    display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 12px;
+    font-size: 0.7rem; color: var(--text-sub); font-weight: 600;
+    display: flex; align-items: center; gap: 5px;
+    background: var(--input-bg); padding: 4px 8px; border-radius: 4px; border: 1px solid var(--border);
 }
-.sync-dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
-@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
+.sync-dot { width: 6px; height: 6px; background: var(--primary); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+@keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
 
-/* --- シェア・ルームID --- */
-.room-invite-card {
-    background: var(--card-bg); border-radius: var(--radius); padding: 0;
-    margin-bottom: 24px; box-shadow: var(--shadow); border: 1px solid var(--border);
-    overflow: hidden; position: relative;
+.btn-help {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--text-main); width: 36px; height: 36px; border-radius: var(--radius);
+    font-size: 1rem; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; transition: 0.2s;
 }
-.room-invite-card::before {
-    content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 6px; background: var(--room-color);
-}
-.room-id-section {
-    background: var(--room-bg); padding: 16px;
+.btn-help:hover { background: var(--input-bg); border-color: var(--text-sub); }
+
+/* --- 使い方ガイドバナー --- */
+.guide-banner {
+    background: linear-gradient(to right, #37474f, #455a64); /* ダークブルーグレー */
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: var(--radius);
+    margin-bottom: 24px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+    cursor: pointer;
     display: flex; align-items: center; justify-content: space-between;
-    border-bottom: 1px dashed var(--border);
+    transition: transform 0.2s;
 }
-.room-id-label { display: flex; align-items: center; gap: 10px; }
-.room-avatar {
-    width: 36px; height: 36px; background: var(--room-color); color: #fff;
-    border-radius: 50%; display: flex; align-items: center; justify-content: center;
-    font-weight: bold; font-size: 1.1rem; box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-.room-code-group { display: flex; flex-direction: column; }
-.room-label-tiny { font-size: 0.7rem; color: var(--text-sub); font-weight: bold; }
-.room-id-text { font-family: "OCR-B", monospace; font-size: 1.2rem; font-weight: 700; color: var(--text-main); letter-spacing: 1px; }
+.guide-banner:active { transform: scale(0.98); }
+.guide-content { display: flex; align-items: center; gap: 12px; font-weight: bold; font-size: 0.95rem; }
 
-.share-actions { padding: 12px; display: flex; gap: 10px; }
-.btn-share-sub {
-    flex: 1; background: transparent; border: 1px solid var(--border);
-    color: var(--text-sub); padding: 8px; border-radius: 8px;
-    font-size: 0.85rem; font-weight: 600; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; gap: 6px; transition: 0.2s;
-}
-.btn-share-sub:hover { background: var(--bg); color: var(--primary); border-color: var(--primary); }
-
-/* --- カード・入力フォーム --- */
+/* --- 共通カードスタイル --- */
 .card {
     background: var(--card-bg); padding: 20px; border-radius: var(--radius);
     box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border);
 }
 
 h2 { 
-    font-size: 1.1rem; margin: 0 0 16px 0; 
+    font-size: 1rem; margin: 0 0 16px 0; 
     display: flex; align-items: center; gap: 8px; 
-    color: var(--text-main); border-bottom: 2px solid var(--border); padding-bottom: 10px;
+    color: var(--text-main); border-bottom: 1px solid var(--border); padding-bottom: 10px;
+    text-transform: uppercase; letter-spacing: 0.05em;
 }
-h2 i { color: var(--primary); font-size: 1.3rem; }
+h2 i { color: var(--text-sub); font-size: 1.1rem; }
 
+/* --- シェア・ルームID --- */
+.room-invite-card {
+    background: var(--card-bg); border-radius: var(--radius);
+    margin-bottom: 24px; box-shadow: var(--shadow); border: 1px solid var(--border);
+    overflow: hidden; position: relative;
+    border-left: 4px solid var(--room-color);
+}
+.room-id-section {
+    background: var(--input-bg); padding: 12px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+    border-bottom: 1px dashed var(--border);
+}
+.room-id-label { display: flex; align-items: center; gap: 10px; }
+.room-icon-box {
+    color: var(--room-color); font-size: 1.2rem;
+}
+.room-code-group { display: flex; flex-direction: column; }
+.room-label-tiny { font-size: 0.65rem; color: var(--text-sub); font-weight: bold; text-transform: uppercase; }
+.room-id-text { font-family: "OCR-B", monospace; font-size: 1.1rem; font-weight: 700; color: var(--text-main); letter-spacing: 1px; }
+
+.share-actions { padding: 12px; display: flex; gap: 10px; }
+.btn-share-sub {
+    flex: 1; background: var(--card-bg); border: 1px solid var(--border);
+    color: var(--text-main); padding: 10px; border-radius: var(--radius);
+    font-size: 0.85rem; font-weight: 600; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; gap: 8px; transition: 0.2s;
+}
+.btn-share-sub:hover { background: var(--bg); border-color: var(--text-sub); }
+
+/* --- 入力フォーム --- */
 .input-group { margin-bottom: 16px; }
-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
+label { display: block; font-size: 0.8rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
 
 input[type="number"], input[type="text"], select {
-    width: 100%; padding: 12px; border: 1px solid var(--border); border-radius: 8px; 
+    width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--radius); 
     font-size: 16px; background: var(--input-bg); color: var(--text-main); transition: 0.2s;
+    font-family: inherit;
 }
-input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(85, 139, 47, 0.2); }
+input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 2px rgba(44, 76, 59, 0.15); }
 input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 .flex-row { display: flex; gap: 12px; }
 .flex-row > div { flex: 1; }
 
-/* トグルスイッチ */
+/* トグルスイッチ (Solid Style) */
 .checkbox-card {
     display: flex; align-items: center; justify-content: space-between;
-    background: var(--input-bg); padding: 12px 16px; border-radius: 8px; 
+    background: var(--input-bg); padding: 12px 16px; border-radius: var(--radius); 
     cursor: pointer; user-select: none; border: 1px solid var(--border);
 }
 .checkbox-card input { display: none; }
 .toggle-switch {
-    width: 44px; height: 24px; background: var(--border); border-radius: 20px; position: relative; transition: 0.3s;
+    width: 40px; height: 22px; background: var(--border); border-radius: 4px; position: relative; transition: 0.3s;
 }
 .toggle-switch::after {
-    content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
-    background: var(--card-bg); border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
+    background: #fff; border-radius: 2px; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .checkbox-card input:checked + .toggle-switch { background: var(--primary); }
-.checkbox-card input:checked + .toggle-switch::after { transform: translateX(20px); }
+.checkbox-card input:checked + .toggle-switch::after { transform: translateX(18px); }
 
-/* 車両カード */
+/* 車両カード (Tool Style) */
 .car-card {
-    border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px;
-    background: var(--card-bg); overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 12px;
+    background: var(--card-bg); overflow: hidden;
 }
 .car-header {
-    background: var(--primary-light); padding: 12px 16px;
+    background: var(--input-bg); padding: 10px 16px;
     display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer; font-weight: 600; font-size: 1rem; color: var(--text-main);
+    cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-main);
+    border-bottom: 1px solid var(--border);
 }
-.car-header i { margin-right: 6px; color: var(--primary); }
-.car-body { padding: 16px; display: none; border-top: 1px solid var(--border); background: var(--card-bg); }
+.car-header i { margin-right: 8px; color: var(--text-sub); }
+.car-body { padding: 16px; display: none; background: var(--card-bg); }
 .car-card.open .car-body { display: block; }
-.toggle-icon { transition: transform 0.3s; font-size: 1.1rem; color: var(--text-sub); }
+.toggle-icon { transition: transform 0.3s; font-size: 1rem; color: var(--text-sub); }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
 .btn-icon-only {
-    background: none; border: none; color: var(--text-sub); font-size: 1.1rem; 
+    background: none; border: none; color: var(--text-sub); font-size: 1rem; 
     cursor: pointer; padding: 6px; display: flex; align-items: center; transition: color 0.2s;
     flex-shrink: 0;
 }
@@ -218,251 +236,203 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 /* --- 諸経費セクション --- */
 .extra-section { 
-    background: var(--input-bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
-    border: 1px dashed var(--border); 
+    background: var(--input-bg); padding: 12px; border-radius: var(--radius); margin-top: 16px; 
+    border: 1px solid var(--border); 
 }
 .extra-item { 
-    display: flex; 
-    gap: 6px; 
-    margin-bottom: 10px; 
-    align-items: center; 
-    flex-wrap: nowrap;
-    border-bottom:1px dashed rgba(0,0,0,0.05); 
-    padding-bottom:8px; 
+    display: flex; gap: 8px; margin-bottom: 10px; align-items: center; 
+    border-bottom:1px solid var(--border); padding-bottom:8px; 
 }
-.extra-item:last-child { border-bottom: none; }
-.extra-item .ex-name { 
-    flex: 2; 
-    min-width: 0; 
-}
-.extra-item .ex-amount { 
-    flex: 1.5; 
-    min-width: 0; 
-}
+.extra-item:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0;}
 
-/* 部費/割勘 選択ボタン */
+/* 部費/割勘 選択ボタン (Segmented Control) */
 .type-selector {
-    display: flex;
-    background: #e0e0e0;
-    border-radius: 8px;
-    padding: 2px;
-    width: 80px; 
-    flex-shrink: 0;
+    display: flex; background: var(--border); border-radius: 4px; padding: 2px; width: 90px; flex-shrink: 0;
 }
 .type-selector input { display: none; }
 .type-selector label {
-    flex: 1;
-    text-align: center;
-    padding: 6px 0;
-    font-size: 0.7rem; 
-    cursor: pointer;
-    border-radius: 6px;
-    color: var(--text-sub);
-    transition: 0.2s;
-    font-weight: 600;
-    margin: 0;
-    white-space: nowrap;
+    flex: 1; text-align: center; padding: 6px 0; font-size: 0.7rem; cursor: pointer;
+    border-radius: 2px; color: var(--text-sub); transition: 0.2s; font-weight: 600; margin: 0;
 }
 .type-selector input:checked + label {
-    background: #fff;
-    color: var(--primary);
-    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
-}
-@media (prefers-color-scheme: dark) {
-    .type-selector { background: #333; }
-    .type-selector input:checked + label { background: #555; color: #fff; }
+    background: var(--card-bg); color: var(--text-main); box-shadow: 0 1px 2px rgba(0,0,0,0.1);
 }
 
 /* ボタン類 */
 .btn {
-    width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: 700;
+    width: 100%; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 600;
     padding: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
     text-decoration: none;
 }
 .btn-primary { 
     background: var(--primary); color: #fff; margin-top: 10px; 
-    box-shadow: 0 4px 10px rgba(85, 139, 47, 0.3);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
 .btn-primary:hover { background: var(--primary-hover); }
-.btn-primary:active { transform: scale(0.98); }
+.btn-primary:active { transform: translateY(1px); }
 
 .btn-outline { 
-    background: transparent; border: 2px dashed var(--border); color: var(--text-main); 
-    padding: 12px; font-weight: 600;
+    background: transparent; border: 1px dashed var(--text-sub); color: var(--text-sub); 
+    padding: 10px; font-weight: 600;
 }
-.btn-outline:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
-.btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
+.btn-outline:hover { background: var(--input-bg); border-color: var(--primary); color: var(--primary); }
+.btn-sm { padding: 6px 12px; font-size: 0.8rem; width: auto; display: inline-flex; border-radius: 4px; }
 
-/* --- レシート風デザイン --- */
+/* --- レシート風デザイン (Classic Receipt) --- */
 #resultArea { display: none; }
 
-.receipt-wrapper { padding: 20px; margin: 20px -20px; }
+.receipt-wrapper { padding: 20px; margin: 20px -16px; }
 .receipt-paper {
-    background: #fff; color: #2c2c2c; font-family: 'Courier New', Courier, "OCR-B", monospace;
-    padding: 30px 25px; position: relative; box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    max-width: 380px; margin: 0 auto; margin-top: 10px; margin-bottom: 10px;
+    background: #fff; color: #222; font-family: 'Courier New', Courier, monospace;
+    padding: 25px 20px; position: relative; box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    max-width: 400px; margin: 0 auto;
+    border-top: 4px solid #333;
 }
-.receipt-paper::before, .receipt-paper::after {
-    content: ""; position: absolute; left: 0; width: 100%; height: 10px;
-    background-size: 20px 20px; background-repeat: repeat-x;
-}
-.receipt-paper::before {
-    top: -10px;
-    background-image: linear-gradient(135deg, transparent 50%, #fff 50%), linear-gradient(-135deg, transparent 50%, #fff 50%);
-    background-position: top left, top left;
-}
+/* レシートのギザギザ（下部のみシンプルに） */
 .receipt-paper::after {
-    bottom: -10px;
-    background-image: linear-gradient(-45deg, transparent 50%, #fff 50%), linear-gradient(45deg, transparent 50%, #fff 50%);
-    background-position: bottom left, bottom left;
+    content: ""; display: block; height: 1px; border-bottom: 2px dashed #ccc; margin-top: 20px;
 }
-.receipt-header { text-align: center; border-bottom: 2px dashed #444; padding-bottom: 15px; margin-bottom: 15px; }
-.receipt-logo { font-size: 2.5rem; color: #333; margin-bottom: 5px; }
-.receipt-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
-.receipt-meta { font-size: 0.7rem; color: #666; margin-top: 5px; }
 
-.receipt-total-section { text-align: center; padding: 15px 0; border-bottom: 2px dashed #444; }
-.receipt-label-main { font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px; }
-.receipt-amount-main { font-size: 2.4rem; font-weight: 900; line-height: 1; display: block; }
-.receipt-note { font-size: 0.7rem; color: #666; margin-top: 5px; display: block;}
+.receipt-header { text-align: center; border-bottom: 1px solid #333; padding-bottom: 15px; margin-bottom: 15px; }
+.receipt-logo { font-size: 2rem; color: #333; margin-bottom: 5px; } /* ロゴ統一 */
+.receipt-title { font-size: 1.2rem; font-weight: 900; letter-spacing: 1px; text-transform: uppercase; margin: 0; }
+.receipt-meta { font-size: 0.75rem; color: #555; margin-top: 5px; }
 
-.receipt-section { padding: 15px 0; border-bottom: 1px dashed #bbb; }
+.receipt-total-section { text-align: right; padding: 15px 0; border-bottom: 2px solid #333; }
+.receipt-label-main { font-size: 0.85rem; font-weight: bold; display: block; margin-bottom: 4px; }
+.receipt-amount-main { font-size: 2.2rem; font-weight: 900; line-height: 1; display: block; letter-spacing: -1px;}
+.receipt-note { font-size: 0.75rem; color: #555; margin-top: 5px; display: block; font-style: italic;}
+
+.receipt-section { padding: 12px 0; border-bottom: 1px dashed #aaa; }
 .receipt-section-title {
-    font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
-    text-transform: uppercase; letter-spacing: 1px;
+    font-size: 0.75rem; font-weight: bold; margin-bottom: 6px; display: block; text-align: left;
+    text-transform: uppercase; background: #eee; display:inline-block; padding: 2px 4px;
 }
 .receipt-row {
     display: flex; justify-content: space-between; align-items: baseline;
-    font-size: 0.9rem; margin-bottom: 6px; line-height: 1.4;
+    font-size: 0.9rem; margin-bottom: 4px; line-height: 1.4;
 }
 .receipt-row.bold { font-weight: 800; font-size: 0.95rem; }
-.receipt-row span:last-child { white-space: nowrap; margin-left: 10px; }
-.receipt-detail { font-size: 0.7rem; color: #666; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
-.receipt-footer { text-align: center; margin-top: 20px; font-size: 0.7rem; opacity: 0.7; font-weight: bold; }
+.receipt-detail { font-size: 0.75rem; color: #666; margin-left: 12px; display: block; }
+.receipt-footer { text-align: center; margin-top: 20px; font-size: 0.7rem; font-weight: bold; text-transform: uppercase;}
 
 /* コピーエリア */
-.copy-area { background: var(--text-main); color: var(--card-bg); padding: 15px; border-radius: 8px; margin-top: 20px; }
-#copyTextarea { width: 100%; background: transparent; border: none; color: inherit; font-family: monospace; height: 120px; resize: none; font-size: 0.8rem; outline: none; opacity: 0.9; }
-.btn-copy { background: rgba(255,255,255,0.1); color: inherit; padding: 10px; width: 100%; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
-.btn-copy:hover { background: rgba(255,255,255,0.2); }
+.copy-area { background: var(--text-main); color: var(--card-bg); padding: 15px; border-radius: var(--radius); margin-top: 20px; }
+#copyTextarea { width: 100%; background: transparent; border: none; color: inherit; font-family: monospace; height: 100px; resize: none; font-size: 0.8rem; outline: none; opacity: 0.8; }
+.btn-copy { background: rgba(255,255,255,0.15); color: inherit; padding: 10px; width: 100%; border: 1px solid rgba(255,255,255,0.3); border-radius: var(--radius); margin-top: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
 
 /* --- 履歴 --- */
 .history-container { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
 .history-item { 
-    background: var(--card-bg); padding: 12px 14px; border-radius: 8px; margin-bottom: 8px;
+    background: var(--card-bg); padding: 10px 12px; border-radius: var(--radius); margin-bottom: 8px;
     display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border);
 }
 .history-meta { font-size: 0.75rem; color: var(--text-sub); }
-.btn-restore { background: var(--primary); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+.btn-restore { background: var(--text-sub); color: #fff; border: none; padding: 4px 8px; border-radius: 2px; cursor: pointer; font-size: 0.7rem; font-weight:bold; }
 
 /* トースト */
 #toast {
     visibility: hidden; min-width: 250px; background-color: var(--text-main); color: var(--card-bg); text-align: center;
-    border-radius: 50px; padding: 14px; position: fixed; z-index: 100; left: 50%; bottom: 30px;
+    border-radius: 50px; padding: 12px 20px; position: fixed; z-index: 2000; left: 50%; bottom: 30px;
     transform: translateX(-50%); font-size: 0.9rem; opacity: 0; transition: opacity 0.3s, bottom 0.3s;
-    display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3); font-weight: bold;
 }
 #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
-/* --- 画像プレビュー用モーダル (iPhone対策) --- */
+/* --- モーダル (Usage Guide / Image Preview) --- */
 .modal-overlay {
-    display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0,0,0,0.85); z-index: 999;
-    align-items: center; justify-content: center; flex-direction: column;
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7); z-index: 9999;
+    display: none; align-items: center; justify-content: center;
+    backdrop-filter: blur(4px);
 }
-.modal-overlay.active { display: flex; }
+.modal-overlay.active { display: flex; animation: fadeIn 0.2s; }
 .modal-content {
-    background: transparent; max-width: 90%; max-height: 80%;
-    text-align: center;
+    background: var(--card-bg); width: 92%; max-width: 480px; max-height: 85vh;
+    border-radius: var(--radius); overflow-y: auto; position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+    display: flex; flex-direction: column;
 }
-.modal-content img {
-    max-width: 100%; height: auto; border-radius: 8px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
-    border: 2px solid #fff;
+.modal-header {
+    background: var(--input-bg); color: var(--text-main);
+    padding: 16px; display: flex; justify-content: space-between; align-items: center;
+    border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 10;
 }
-.modal-guide {
-    color: #fff; margin-top: 15px; font-weight: bold; font-size: 1.1rem;
-    background: rgba(0,0,0,0.5); padding: 8px 16px; border-radius: 20px;
+.modal-title { font-weight: bold; font-size: 1.1rem; display: flex; align-items: center; gap: 8px; }
+.modal-close-btn {
+    background: none; border: none; color: var(--text-sub); font-size: 1.5rem; cursor: pointer; line-height: 1;
 }
-.modal-close {
-    position: absolute; top: 20px; right: 20px;
-    background: rgba(255,255,255,0.2); border: none; color: #fff;
-    width: 40px; height: 40px; border-radius: 50%;
-    font-size: 1.5rem; cursor: pointer;
-}
+.modal-body { padding: 20px; overflow-y: auto; }
 
-/* --- 使い方ガイド用モーダル --- */
-#guideModal .modal-content {
-    background: var(--card-bg);
-    width: 90%; max-width: 500px;
-    max-height: 85%;
-    border-radius: 20px;
-    padding: 0;
-    text-align: left;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+/* ガイド用スタイル */
+.guide-step { margin-bottom: 30px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+.guide-step:last-child { border: none; margin-bottom: 0; }
+.guide-step h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1rem; font-weight:bold; display:flex; align-items:center; gap:8px;}
+.guide-step p { font-size: 0.9rem; color: var(--text-main); margin-bottom: 12px; }
+.guide-img-box { border: 1px solid var(--border); border-radius: 4px; overflow: hidden; }
+.guide-img-box img { width: 100%; display: block; }
+
+/* 画像プレビュー用 */
+.image-modal-content {
+    background: transparent; max-width: 90%; text-align: center; box-shadow: none; overflow: visible;
 }
-#guideModal .modal-header {
-    padding: 15px 20px;
-    border-bottom: 1px solid var(--border);
-    display: flex; justify-content: space-between; align-items: center;
-    background: var(--bg);
+.image-modal-content img {
+    max-width: 100%; height: auto; border-radius: var(--radius);
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5); border: 2px solid #fff;
 }
-#guideModal .modal-title { font-weight: bold; font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-#guideModal .modal-body {
-    padding: 20px;
-    overflow-y: auto;
-    color: var(--text-main);
-}
-#guideModal .guide-step { margin-bottom: 30px; border-bottom: 1px dashed var(--border); padding-bottom: 20px; }
-#guideModal .guide-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
-#guideModal .guide-step h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1rem; display: flex; align-items: center; gap: 8px; }
-#guideModal .guide-step img { width: 100%; border-radius: 8px; border: 1px solid var(--border); margin: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-#guideModal .guide-step p { font-size: 0.9rem; margin: 0; color: var(--text-sub); line-height: 1.6; }
-#guideModal .modal-close-btn {
-    background: transparent; border: none; font-size: 1.5rem; color: var(--text-sub); cursor: pointer;
-}
+.modal-guide-text { color: #fff; margin-top: 15px; font-weight: bold; text-shadow: 0 2px 4px rgba(0,0,0,0.8); }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 </style>
 </head>
 <body>
 
-<div class="container">
-    
-    <header>
-        <button class="btn-help" onclick="openGuide()" title="使い方"><i class="fa-solid fa-question"></i></button>
-        <div class="app-brand">
-            <span class="app-version">v6.7</span>
-            <div class="app-logo-area">
-                <div class="app-icon"><i class='fa-solid fa-mountain'></i></div>
-                <h1 class="app-title">山歩会 精算ツール</h1>
-            </div>
+<header>
+    <div class="brand-area">
+        <div class="brand-logo"><i class='fa-solid fa-mountain'></i></div>
+        <div class="brand-text">
+            <h1 class="app-title">山歩会会計</h1>
+            <span class="app-version">v7.0</span>
         </div>
+    </div>
+    <div class="header-actions">
         <div class="sync-status">
             <span class="sync-dot"></span>
-            <span id="syncText">同期中...</span>
+            <span id="syncText">SYNC</span>
         </div>
-    </header>
+        <button class="btn-help" onclick="openGuide()" title="使い方">
+            <i class="fa-solid fa-question"></i>
+        </button>
+    </div>
+</header>
+
+<div class="container">
+
+    <div class="guide-banner" onclick="openGuide()">
+        <div class="guide-content">
+            <i class="fa-solid fa-book-open"></i>
+            <span>初めての方へ（使い方ガイド）</span>
+        </div>
+        <i class="fa-solid fa-chevron-right" style="opacity:0.7;"></i>
+    </div>
 
     <div class="room-invite-card">
         <div class="room-id-section">
             <div class="room-id-label">
-                <div class="room-avatar" id="roomAvatarIcon">
-                    <i class='fa-solid fa-hashtag'></i>
-                </div>
+                <div class="room-icon-box"><i class='fa-solid fa-users-rectangle'></i></div>
                 <div class="room-code-group">
-                    <span class="room-label-tiny">Room ID</span>
+                    <span class="room-label-tiny">ROOM ID</span>
                     <span id="dispRoomId" class="room-id-text">...</span>
                 </div>
             </div>
-            <button class="btn btn-outline btn-sm" style="border:1px solid var(--border); background:#fff; color:var(--text-sub);" onclick="copyRoomLink()">
+            <button class="btn btn-sm" style="background:#fff; border:1px solid var(--border); color:var(--text-main);" onclick="copyRoomLink()">
                 <i class='fa-regular fa-copy'></i>
             </button>
         </div>
         <div class="share-actions">
             <button class="btn-share-sub" onclick="shareToLine()">
-                <i class='fa-brands fa-line' style="color:#06c755; font-size:1.2rem;"></i> LINEで送る
+                <i class='fa-brands fa-line' style="color:#06c755; font-size:1.1rem;"></i> LINE送信
             </button>
             <button class="btn-share-sub" onclick="copyRoomLink()">
                 <i class='fa-solid fa-link'></i> URLコピー
@@ -471,7 +441,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     </div>
 
     <div class="card">
-        <h2><i class='fa-solid fa-car'></i> 車両情報の登録</h2>
+        <h2><i class='fa-solid fa-car'></i> 車両リスト</h2>
         <div id="carList"></div>
         <button class="btn btn-outline" onclick="handleAddCarBtn()">
             <i class='fa-solid fa-plus'></i> 車両を追加
@@ -479,91 +449,91 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     </div>
 
     <div class="card">
-        <h2><i class='fa-solid fa-gear'></i> 精算の設定</h2>
+        <h2><i class='fa-solid fa-sliders'></i> 精算オプション</h2>
         
         <div class="input-group">
-            <label>端数処理（切り上げ単位）</label>
+            <label>端数処理 (切り上げ)</label>
             <select id="roundingUnit" onchange="pushData()">
-                <option value="100" selected>100円 (推奨)</option>
-                <option value="50">50円</option>
-                <option value="10">10円</option>
-                <option value="1">1円</option>
+                <option value="100" selected>100円単位 (推奨)</option>
+                <option value="50">50円単位</option>
+                <option value="10">10円単位</option>
+                <option value="1">1円単位</option>
             </select>
         </div>
 
         <div class="input-group">
-            <label>企画の参加人数 (企画者含む)</label>
+            <label>総参加人数 (企画者含む)</label>
             <div style="position: relative;">
                 <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 40px;">
-                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 13px; color: var(--text-sub);"></i>
+                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 11px; color: var(--text-sub);"></i>
             </div>
         </div>
         
         <label class="checkbox-card">
-            <span>企画者はガソリン代を支払わない</span>
+            <span style="font-weight:600; font-size:0.9rem;">企画者はガソリン代免除</span>
             <input type="checkbox" id="organizerFree" onchange="pushData()">
             <div class="toggle-switch"></div>
         </label>
     </div>
 
     <button class="btn btn-primary" onclick="calculate()">
-        <i class='fa-solid fa-calculator'></i> 精算を実行する
+        <i class='fa-solid fa-calculator'></i> 精算を実行
     </button>
 
-   <div id="resultArea">
+    <div id="resultArea">
         <div id="captureTarget" class="receipt-wrapper">
             <div class="receipt-paper">
                 <div class="receipt-header">
-                    <div class="receipt-logo"><i class='fa-solid fa-mountain-sun'></i></div>
-                    <h3 class="receipt-title">ガソリン代精算書</h3>
+                    <div class="receipt-logo"><i class='fa-solid fa-mountain'></i></div>
+                    <h3 class="receipt-title">GASOLINE RECEIPT</h3>
                     <div class="receipt-meta" id="receiptDate">2024.01.01 12:00</div>
                 </div>
 
                 <div class="receipt-total-section">
-                    <span class="receipt-label-main">1人あたりの徴収額</span>
+                    <span class="receipt-label-main">PER PERSON</span>
                     <span class="receipt-amount-main" id="resPerPerson">0</span>
                     <span class="receipt-note" id="resTargetDetail">--</span>
                 </div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title">ドライバーへの支払い</span>
+                    <span class="receipt-section-title">PAYMENT TO DRIVERS</span>
                     <div id="resDriverList"></div>
                 </div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title">サークル会計情報</span>
+                    <span class="receipt-section-title">CLUB ACCOUNT</span>
                     <div class="receipt-row">
-                        <span>部費負担分の経費合計</span>
+                        <span>部費負担分</span>
                         <span id="resCircleExpense">0</span>
                     </div>
                     <div class="receipt-row">
-                        <span>端数調整の余り (サークル費へ)</span>
+                        <span>端数調整 (余剰)</span>
                         <span id="resGasSurplus">0</span>
                     </div>
-                    <div class="receipt-row bold">
-                        <span>会計からの実支出</span>
+                    <div class="receipt-row bold" style="margin-top:4px; border-top:1px dashed #aaa; padding-top:4px;">
+                        <span>会計実支出</span>
                         <span id="resWithdraw">0</span>
                     </div>
                 </div>
 
                 <div class="receipt-footer">
-                    お疲れ様でした！<br>
-                    山歩会
+                    THANK YOU FOR WALKING<br>
+                    SANPO-KAI
                 </div>
             </div>
         </div>
 
         <div class="copy-area">
-            <h3 style="margin:0 0 10px 0; font-size:1rem; display:flex; align-items:center; gap:8px;">
-                <i class='fa-solid fa-share-nodes'></i> 結果の共有
+            <h3 style="margin:0 0 10px 0; font-size:0.9rem; text-transform:uppercase; letter-spacing:1px; color:rgba(255,255,255,0.7);">
+                <i class='fa-solid fa-share-from-square'></i> Share Result
             </h3>
             <textarea id="copyTextarea" readonly></textarea>
             <div style="display: flex; gap: 10px;">
                 <button class="btn-copy" onclick="copyToClipboard()">
-                    <i class='fa-solid fa-copy'></i> テキストをコピー
+                    <i class='fa-solid fa-copy'></i> COPY TEXT
                 </button>
-                <button class="btn" style="background: var(--text-main); color: var(--primary-light); font-size:0.9rem; border: none; border-radius: 6px; width: 100%; margin-top:10px;" onclick="downloadResultImage()">
-                    <i class='fa-solid fa-download'></i> 画像を保存
+                <button class="btn" style="background: #fff; color: var(--text-main); font-size:0.9rem; border: none; border-radius: var(--radius); width: 100%; margin-top:10px;" onclick="downloadResultImage()">
+                    <i class='fa-solid fa-download'></i> SAVE IMAGE
                 </button>
             </div>
         </div>
@@ -571,28 +541,27 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     
     <div class="history-container">
         <details>
-            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none;">
-                <i class='fa-solid fa-clock-rotate-left'></i> 計算履歴 (保存済み)
+            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none; font-size:0.9rem;">
+                <i class='fa-solid fa-clock-rotate-left'></i> 計算履歴
             </summary>
             <div style="margin-top: 15px;">
-                <ul id="historyList" style="list-style: none; padding: 0;">
-                    <li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.85rem;">履歴はありません</li>
-                </ul>
-                <button class="btn btn-outline btn-sm" style="width:100%; margin-top:10px; font-weight:normal;" onclick="resetRoom()">
-                    <i class='fa-solid fa-trash'></i> 入力を全てクリア
+                <ul id="historyList" style="list-style: none; padding: 0;"></ul>
+                <button class="btn btn-outline btn-sm" style="width:100%; margin-top:10px; border-color:var(--danger); color:var(--danger);" onclick="resetRoom()">
+                    <i class='fa-solid fa-trash-can'></i> データをリセット
                 </button>
             </div>
         </details>
     </div>
-    <div style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
-        <button class="btn btn-sm" style="background: var(--text-sub); color: var(--card-bg); width: auto; margin: 0 auto;" onclick="fillTestData()">
-            <i class='fa-solid fa-flask'></i> デバッグ用データを投入
+
+    <div style="margin-top: 40px; text-align: center; border-top: 1px solid var(--border); padding-top: 20px;">
+        <button class="btn btn-sm" style="background: var(--input-bg); color: var(--text-sub); border:1px solid var(--border); width: auto;" onclick="fillTestData()">
+            <i class='fa-solid fa-flask'></i> Debug Data
         </button>
     </div>
 
 </div>
 
-<div id="guideModal" class="modal-overlay">
+<div id="guideModal" class="modal-overlay" onclick="if(event.target == this) closeGuide()">
     <div class="modal-content">
         <div class="modal-header">
             <div class="modal-title"><i class="fa-solid fa-book-open" style="color:var(--accent);"></i> 使い方ガイド</div>
@@ -601,46 +570,50 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         <div class="modal-body">
             
             <div class="guide-step">
-                <h4>1. ルームを共有する</h4>
+                <h4><i class="fa-solid fa-1"></i> ルームを共有</h4>
                 <p>URLをメンバーに送ると、全員で同じ画面を見ながら入力できます。</p>
-                <img src="guide_1.png" alt="ルーム共有">
+                <div class="guide-img-box"><img src="guide_1.png" alt="ルーム共有"></div>
             </div>
 
             <div class="guide-step">
-                <h4>2. 車両を追加・入力</h4>
+                <h4><i class="fa-solid fa-2"></i> 車両を追加・入力</h4>
                 <p>車を出した人は距離・燃費・ガソリン価格を入力します。「＋」ボタンで複数台登録も可能です。</p>
-                <img src="guide_2.png" alt="車両入力">
+                <div class="guide-img-box"><img src="guide_2.png" alt="車両入力"></div>
             </div>
 
             <div class="guide-step">
-                <h4>3. 諸経費（部費・割勘）</h4>
+                <h4><i class="fa-solid fa-3"></i> 諸経費（部費・割勘）</h4>
                 <p>高速代や駐車場代などを追加します。<br>
                 <span style="font-weight:bold; color:var(--primary);">[部費]</span> 会計から全額出る費用（レンタカー代など）<br>
                 <span style="font-weight:bold; color:var(--accent);">[割勘]</span> 参加者で割る費用（高速代・駐車場代）</p>
-                <img src="guide_3.png" alt="諸経費設定">
+                <div class="guide-img-box"><img src="guide_3.png" alt="諸経費設定"></div>
             </div>
 
             <div class="guide-step">
-                <h4>4. 人数設定と計算</h4>
+                <h4><i class="fa-solid fa-4"></i> 人数設定と計算</h4>
                 <p>参加人数を入力し、端数処理や企画者の免除設定を確認して「精算を実行」を押します。</p>
-                <img src="guide_4.png" alt="計算設定">
+                <div class="guide-img-box"><img src="guide_4.png" alt="計算設定"></div>
             </div>
 
             <div class="guide-step">
-                <h4>5. 結果の保存</h4>
+                <h4><i class="fa-solid fa-5"></i> 結果の保存</h4>
                 <p>精算レシートが表示されます。「画像を保存」でアルバムに残したり、テキストをLINEに貼って報告できます。</p>
-                <img src="guide_5.png" alt="精算結果">
+                <div class="guide-img-box"><img src="guide_5.png" alt="精算結果"></div>
+            </div>
+            
+            <div style="text-align:center;">
+                <button class="btn btn-primary" onclick="closeGuide()">閉じる</button>
             </div>
 
         </div>
     </div>
 </div>
 
-<div id="imageModal" class="modal-overlay">
-    <button class="modal-close" onclick="closeImageModal()">&times;</button>
-    <div class="modal-content">
+<div id="imageModal" class="modal-overlay" onclick="if(event.target == this) closeImageModal()">
+    <div class="image-modal-content">
         <img id="generatedImage" src="" alt="精算結果">
-        <div class="modal-guide">画像を長押しして<br>「写真に保存」</div>
+        <div class="modal-guide-text">長押しして画像を保存</div>
+        <button onclick="closeImageModal()" style="margin-top:20px; background:rgba(255,255,255,0.2); border:1px solid #fff; color:#fff; padding:8px 20px; border-radius:20px;">閉じる</button>
     </div>
 </div>
 
@@ -703,10 +676,10 @@ try {
         const syncText = document.getElementById("syncText");
         
         if (data) {
-            if(syncText) syncText.textContent = "同期完了";
+            if(syncText) syncText.textContent = "OK";
             renderForm(data);
         } else {
-            if(syncText) syncText.textContent = "新規ルーム";
+            if(syncText) syncText.textContent = "NEW";
             const list = document.getElementById('carList');
             if(list && list.children.length === 0) {
                 addCarToDOM(null, 0, true);
@@ -716,7 +689,7 @@ try {
 
 } catch (e) {
     console.error("Initialization Error:", e);
-    showToast("初期化エラーが発生しました");
+    showToast("初期化エラー");
 }
 
 function updateRoomColor(id) {
@@ -726,13 +699,12 @@ function updateRoomColor(id) {
     document.documentElement.style.setProperty('--room-hue', hue);
 }
 
-
 function downloadResultImage() {
     const target = document.getElementById('captureTarget');
-    showToast("画像を生成中...");
+    showToast("画像生成中...");
 
     if (typeof html2canvas === 'undefined') {
-        alert("画像生成ライブラリの読み込みに失敗しました。");
+        alert("画像ライブラリ読込失敗");
         return;
     }
 
@@ -752,17 +724,17 @@ function downloadResultImage() {
             const img = document.getElementById('generatedImage');
             img.src = dataUrl;
             document.getElementById('imageModal').classList.add('active');
-            showToast("画像を長押しして保存してください");
+            showToast("画像を長押しして保存");
         } else {
             const link = document.createElement('a');
             link.download = `receipt_${roomId}.png`;
             link.href = dataUrl;
             link.click();
-            showToast("✅ 画像を保存しました");
+            showToast("✅ 保存しました");
         }
     }).catch(err => {
         console.error(err);
-        showToast("エラーが発生しました");
+        showToast("エラー発生");
     });
 }
 
@@ -859,11 +831,11 @@ function pushDataToFirebase() {
     if(!roomRef) return; 
     const data = getFormData();
     const syncText = document.getElementById("syncText");
-    if(syncText) syncText.textContent = "保存中...";
+    if(syncText) syncText.textContent = "...";
     set(roomRef, data).then(() => {
-        if(syncText) syncText.textContent = "同期完了";
+        if(syncText) syncText.textContent = "OK";
     }).catch((e) => {
-        if(syncText) syncText.textContent = "エラー";
+        if(syncText) syncText.textContent = "ERR";
         console.error(e);
     });
 }
@@ -904,7 +876,7 @@ function getFormData() {
 
 function resetRoom() {
     if(!roomRef) return;
-    if(confirm("全ての入力をリセットしますか？\n（他のメンバーの画面からも消えます）")) {
+    if(confirm("全ての入力をリセットしますか？")) {
         set(roomRef, null).then(() => {
             window.location.reload();
         });
@@ -912,33 +884,29 @@ function resetRoom() {
 }
 
 function fillTestData() {
-    if(!confirm("現在の入力をクリアし、全機能確認用のテストデータを投入しますか？")) return;
+    if(!confirm("テストデータを投入しますか？")) return;
 
     document.getElementById('carList').innerHTML = "";
     document.getElementById('totalPeople').value = 8;
     document.getElementById('roundingUnit').value = "100";
     document.getElementById('organizerFree').checked = true;
 
-    // テストデータ定義：全機能（割勘、部費、マイナス）を網羅
+    // テストデータ定義
     const testData = [
         { 
-            name: "織田信長", // 自家用車提供・高速代立替パターン
-            dist: 245, 
-            eco: 12, 
-            price: 175, 
+            name: "織田信長", 
+            dist: 245, eco: 12, price: 175, 
             extras: [
-                { name: "高速代(往復)", amount: 5600, type: "split" } // 割勘
+                { name: "高速代(往復)", amount: 5600, type: "split" } 
             ] 
         },
         { 
-            name: "坂本龍馬", // レンタカー・部費立替・割引パターン
-            dist: 220, 
-            eco: 20, 
-            price: 168, 
+            name: "坂本龍馬", 
+            dist: 220, eco: 20, price: 168, 
             extras: [
-                { name: "レンタカー代", amount: 12000, type: "club" }, // 部費
-                { name: "駐車場", amount: 1500, type: "split" },       // 割勘
-                { name: "クーポン割引", amount: -1000, type: "club" }   // マイナス入力(部費還元)
+                { name: "レンタカー代", amount: 12000, type: "club" }, 
+                { name: "駐車場", amount: 1500, type: "split" },       
+                { name: "クーポン割引", amount: -1000, type: "club" }   
             ] 
         }
     ];
@@ -959,9 +927,7 @@ function fillTestData() {
     });
 
     pushDataToFirebase();
-    showToast("🧪 テストデータを投入しました");
-    
-    // 計算実行まで自動で行う
+    showToast("🧪 テストデータ投入");
     setTimeout(calculate, 500);
 }
 
@@ -969,7 +935,7 @@ function saveToHistory() {
     const data = getFormData();
     if(!data.total && data.cars.length === 1 && !data.cars[0].dist) return;
     try {
-        const history = JSON.parse(localStorage.getItem('sanpo_history_v6') || "[]");
+        const history = JSON.parse(localStorage.getItem('sanpo_history_v7') || "[]");
         if(history.length > 0) {
             const last = history[0].data;
             if(JSON.stringify(last) === JSON.stringify(data)) return; 
@@ -980,7 +946,7 @@ function saveToHistory() {
             summary: summary,
             data: data 
         });
-        localStorage.setItem('sanpo_history_v6', JSON.stringify(history.slice(0, 10)));
+        localStorage.setItem('sanpo_history_v7', JSON.stringify(history.slice(0, 10)));
         renderHistoryList();
     } catch(e) { console.error("History Save Error:", e); }
 }
@@ -989,10 +955,10 @@ function renderHistoryList() {
     const list = document.getElementById('historyList');
     if(!list) return;
     let history = [];
-    try { history = JSON.parse(localStorage.getItem('sanpo_history_v6') || "[]"); } catch(e) {}
+    try { history = JSON.parse(localStorage.getItem('sanpo_history_v7') || "[]"); } catch(e) {}
     
     if (history.length === 0) {
-        list.innerHTML = `<li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.8rem;">履歴はありません</li>`;
+        list.innerHTML = `<li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.8rem;">履歴なし</li>`;
         return;
     }
     list.innerHTML = "";
@@ -1006,7 +972,7 @@ function renderHistoryList() {
             </div>
             <div style="display:flex; gap:8px;">
                 <button class="btn-restore" onclick="loadFromHistory(${index})">復元</button>
-                <button class="btn-icon-only" style="color:var(--text-sub); font-size:1rem;" onclick="deleteHistory(${index})"><i class='fa-solid fa-xmark'></i></button>
+                <button class="btn-icon-only" style="color:var(--text-sub);" onclick="deleteHistory(${index})"><i class='fa-solid fa-xmark'></i></button>
             </div>
         `;
         list.appendChild(li);
@@ -1017,22 +983,22 @@ function loadFromHistory(index) {
     if(!roomRef) return;
     if(!confirm("現在の入力を上書きして復元しますか？")) return;
     try {
-        const history = JSON.parse(localStorage.getItem('sanpo_history_v6') || "[]");
+        const history = JSON.parse(localStorage.getItem('sanpo_history_v7') || "[]");
         const item = history[index];
         if(item && item.data) {
             set(roomRef, item.data).then(() => {
-                showToast("📂 履歴から復元しました");
+                showToast("📂 復元しました");
             });
         }
     } catch(e) { console.error(e); }
 }
 
 function deleteHistory(index) {
-    if(!confirm("この履歴を削除しますか？")) return;
+    if(!confirm("削除しますか？")) return;
     try {
-        const history = JSON.parse(localStorage.getItem('sanpo_history_v6') || "[]");
+        const history = JSON.parse(localStorage.getItem('sanpo_history_v7') || "[]");
         history.splice(index, 1);
-        localStorage.setItem('sanpo_history_v6', JSON.stringify(history));
+        localStorage.setItem('sanpo_history_v7', JSON.stringify(history));
         renderHistoryList();
     } catch(e) { console.error(e); }
 }
@@ -1063,22 +1029,19 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
         </div>
         <div class="car-body">
             <div class="input-group">
-                <label>ドライバー名（任意）</label>
-                <div style="position:relative;">
-                    <i class='fa-solid fa-user' style="position:absolute; left:12px; top:13px; color:var(--text-sub);"></i>
-                    <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:36px;">
-                </div>
+                <label>ドライバー名</label>
+                <input type="text" class="inp-name" placeholder="氏名 (任意)" ${onInput}>
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離 (km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>燃費 (km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>価格 (円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
+                <div class="input-group"><label>距離 (km)</label><input type="number" class="inp-dist" placeholder="240" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>燃費 (km/L)</label><input type="number" class="inp-eco" placeholder="15" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>価格 (円)</label><input type="number" class="inp-price" placeholder="165" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場・割引など）</label>
+                <label style="margin-bottom:8px;">➕ 諸経費 (高速・駐車場など)</label>
                 <div id="${extrasId}"></div>
-                <button class="btn-reset" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
-                    + 経費を追加
+                <button class="btn-sm" style="background:#fff; color:var(--text-sub); border:1px solid var(--border); margin-top:8px;" onclick="handleAddExtra(this)">
+                    追加
                 </button>
             </div>
         </div>
@@ -1088,7 +1051,7 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
 
 function removeCar(e, btn){ 
     e.stopPropagation(); 
-    if(confirm("この車両を削除しますか？")) { 
+    if(confirm("削除しますか？")) { 
         btn.closest('.car-card').remove(); 
         pushDataToFirebase();
     } 
@@ -1108,16 +1071,19 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     const uniqueName = "type-" + Date.now() + Math.random().toString(36).substr(2,5);
 
     div.innerHTML = `
-        <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
-        <input type="text" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
-        
-        <div class="type-selector">
-            <input type="radio" id="${uniqueName}-c" name="${uniqueName}" value="club" ${isClub} onchange="window.pushData()">
-            <label for="${uniqueName}-c">部費</label>
-            <input type="radio" id="${uniqueName}-s" name="${uniqueName}" value="split" ${isSplit} onchange="window.pushData()">
-            <label for="${uniqueName}-s">割勘</label>
+        <div style="flex:1;">
+            <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()" style="margin-bottom:4px;">
+            <div style="display:flex; gap:8px;">
+                <input type="text" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
+                <div class="type-selector">
+                    <input type="radio" id="${uniqueName}-c" name="${uniqueName}" value="club" ${isClub} onchange="window.pushData()">
+                    <label for="${uniqueName}-c">部費</label>
+                    <input type="radio" id="${uniqueName}-s" name="${uniqueName}" value="split" ${isSplit} onchange="window.pushData()">
+                    <label for="${uniqueName}-s">割勘</label>
+                </div>
+            </div>
         </div>
-        <button class="btn-icon-only" style="color:var(--text-sub);" onclick="this.parentElement.remove(); window.pushData();"><i class='fa-solid fa-xmark'></i></button>
+        <button class="btn-icon-only" style="align-self:flex-start; margin-top:8px;" onclick="this.parentElement.remove(); window.pushData();"><i class='fa-solid fa-xmark'></i></button>
     `;
     container.appendChild(div);
 }
@@ -1129,16 +1095,16 @@ function calculate() {
     
     let errorMsgs = [];
     if (!totalPeople || totalPeople <= 0) errorMsgs.push("参加人数を入力してください");
-    if (data.cars.length === 0) errorMsgs.push("車両が1台も登録されていません");
+    if (data.cars.length === 0) errorMsgs.push("車両がありません");
 
     data.cars.forEach((c, index) => {
         const dName = c.name || `車両 ${index + 1}`;
-        if(!c.dist) errorMsgs.push(`${dName}: 走行距離が未入力です`);
-        if(!c.eco) errorMsgs.push(`${dName}: 燃費が未入力です`);
-        if(!c.price) errorMsgs.push(`${dName}: ガソリン価格が未入力です`);
+        if(!c.dist) errorMsgs.push(`${dName}: 距離未入力`);
+        if(!c.eco) errorMsgs.push(`${dName}: 燃費未入力`);
+        if(!c.price) errorMsgs.push(`${dName}: 価格未入力`);
     });
 
-    if (errorMsgs.length > 0) { alert("⚠️ エラー:\n・" + errorMsgs.join("\n・")); return; }
+    if (errorMsgs.length > 0) { alert("確認してください:\n・" + errorMsgs.join("\n・")); return; }
 
     let totalGas = 0; 
     let totalExtrasSplit = 0; 
@@ -1185,9 +1151,9 @@ function calculate() {
     const circleNeed = (totalExtrasClub + totalReward) - surplus;
 
     document.getElementById('receiptDate').textContent = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
-    document.getElementById('resPerPerson').textContent = "¥ " + perPersonPay.toLocaleString();
+    document.getElementById('resPerPerson').textContent = "¥" + perPersonPay.toLocaleString();
     
-    let detailText = `対象: ${payers}名 / 実費計: ¥${totalCollectionTarget.toLocaleString()}`;
+    let detailText = `${payers}名 / 実費: ¥${totalCollectionTarget.toLocaleString()}`;
     if (totalExtrasSplit > 0) detailText += ` (内:諸経費${totalExtrasSplit.toLocaleString()})`;
     document.getElementById('resTargetDetail').textContent = detailText;
     
@@ -1196,7 +1162,7 @@ function calculate() {
     driverResults.forEach(d => {
         let extrasHtml = "";
         d.extras.forEach(ex => {
-            const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
+            const mark = ex.type === 'split' ? '(割)' : '(部)';
             extrasHtml += `<span class="receipt-detail">- ${ex.name} ${mark}: ¥${ex.amount.toLocaleString()}</span>`;
         });
         const row = document.createElement('div'); 
@@ -1204,11 +1170,11 @@ function calculate() {
         row.innerHTML = `
             <div style="flex:1;">
                 <div style="display:flex; justify-content:space-between; font-weight:bold;">
-                    <span>${d.name} さん</span>
+                    <span>${d.name}</span>
                     <span>¥${d.totalPay.toLocaleString()}</span>
                 </div>
-                <span class="receipt-detail">- ガソリン代: ¥${d.gasCost.toLocaleString()}</span>
-                <span class="receipt-detail">- ドライバー調整費: ¥${d.reward.toLocaleString()}</span>
+                <span class="receipt-detail">- ガソリン: ¥${d.gasCost.toLocaleString()}</span>
+                <span class="receipt-detail">- 調整費: ¥${d.reward.toLocaleString()}</span>
                 ${extrasHtml}
             </div>
         `;
@@ -1245,17 +1211,17 @@ function calculate() {
     lineText += `\n▼計算・編集URL\n${window.location.href}`;
     document.getElementById('copyTextarea').value = lineText;
 
-    showToast("✅ 精算完了！履歴に保存しました");
+    showToast("✅ 計算完了");
 }
 
 function copyRoomLink() {
     const url = window.location.href;
     if (navigator.clipboard) {
-        navigator.clipboard.writeText(url).then(() => showToast("URLをコピーしました！"));
+        navigator.clipboard.writeText(url).then(() => showToast("URLコピー完了"));
     } else {
         const ta = document.createElement("textarea"); ta.value = url; document.body.appendChild(ta);
         ta.select(); document.execCommand("copy"); document.body.removeChild(ta);
-        showToast("URLをコピーしました！");
+        showToast("URLコピー完了");
     }
 }
 function shareToLine() {
@@ -1263,7 +1229,7 @@ function shareToLine() {
 }
 function copyToClipboard() {
     document.getElementById('copyTextarea').select(); document.execCommand('copy');
-    showToast("テキストをコピーしました！");
+    showToast("テキストをコピーしました");
 }
 function showToast(msg) {
     const toast = document.getElementById("toast");
