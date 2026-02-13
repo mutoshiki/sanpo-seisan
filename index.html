@@ -428,6 +428,52 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         </div>
     </div>
 
+<div class="card" style="border-left: 5px solid var(--accent);">
+        <details>
+            <summary style="cursor: pointer; font-weight: bold; color: var(--text-main); list-style: none; display: flex; align-items: center; justify-content: space-between;">
+                <span style="display:flex; align-items:center; gap:8px;">
+                    <i class="fa-solid fa-book-open" style="color: var(--accent);"></i> 初めての方へ（使い方ガイド）
+                </span>
+                <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-sub);"></i>
+            </summary>
+            
+            <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-main);">
+                
+                <div style="margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
+                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-1"></i> ルームを共有</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                        まずは「LINEで送る」ボタンでURLをメンバーに共有しましょう。全員が自分のスマホで同じ画面を見ながら入力できます。
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
+                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-2"></i> 車両情報の入力</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                        車を出してくれた人は「車両を追加」し、<strong>距離・燃費・ガソリン価格</strong>を入力します。<br>
+                        <span style="font-size:0.8rem; background:var(--bg); padding:2px 6px; border-radius:4px;">💡 ヒント</span> 高速代や駐車場代は「＋諸経費」から追加してください。
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
+                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-3"></i> 諸経費の「部費・割勘」</h4>
+                    <ul style="margin: 5px 0 0 20px; padding: 0; font-size: 0.85rem; color: var(--text-sub);">
+                        <li><strong>部費:</strong> サークル会計から出す費用（レンタカー代など）</li>
+                        <li><strong>割勘:</strong> 参加者全員で割る費用（高速代・駐車場代など）</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 0;">
+                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-4"></i> 計算と精算</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
+                        参加人数を入力して「精算を実行」を押すと、1人あたりの支払額が計算されます。結果は画像保存したり、テキストでコピーしてLINEに貼れます。
+                    </p>
+                </div>
+
+            </div>
+        </details>
+    </div>
+
+
     <div class="card">
         <h2><i class='fa-solid fa-car'></i> 車両情報の登録</h2>
         <div id="carList"></div>
@@ -527,6 +573,9 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         </div>
     </div>
 
+
+
+    
     <div class="history-container">
         <details>
             <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none;">
