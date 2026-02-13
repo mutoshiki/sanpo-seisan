@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v6.3</title>
+<title>山歩会会計精算ツール v6.5</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -71,7 +71,7 @@ body {
 .container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
 
 /* --- ヘッダー --- */
-header { margin-bottom: 24px; text-align: center; }
+header { margin-bottom: 24px; text-align: center; position: relative; }
 
 .app-brand {
     display: inline-flex;
@@ -100,6 +100,14 @@ header { margin-bottom: 24px; text-align: center; }
     padding: 2px 8px; border-radius: 10px; font-weight: bold;
     position: absolute; top: -8px; right: -8px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+.btn-help {
+    position: absolute; top: 0; right: 0;
+    background: var(--card-bg); border: 2px solid var(--accent);
+    color: var(--accent); width: 40px; height: 40px; border-radius: 50%;
+    font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+    cursor: pointer; box-shadow: var(--shadow);
 }
 
 .sync-status {
@@ -208,7 +216,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 }
 .btn-icon-only:hover { color: var(--danger); }
 
-/* --- 諸経費セクション (横並び修正版) --- */
+/* --- 諸経費セクション --- */
 .extra-section { 
     background: var(--input-bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
     border: 1px dashed var(--border); 
@@ -218,35 +226,35 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     gap: 6px; 
     margin-bottom: 10px; 
     align-items: center; 
-    flex-wrap: nowrap; /* 強制的に1行にする */
+    flex-wrap: nowrap;
     border-bottom:1px dashed rgba(0,0,0,0.05); 
     padding-bottom:8px; 
 }
 .extra-item:last-child { border-bottom: none; }
 .extra-item .ex-name { 
-    flex: 2; /* 項目名は広めに */
-    min-width: 0; /* 縮小を許可 */
+    flex: 2; 
+    min-width: 0; 
 }
 .extra-item .ex-amount { 
-    flex: 1.5; /* 金額は少し狭く */
-    min-width: 0; /* 縮小を許可 */
+    flex: 1.5; 
+    min-width: 0; 
 }
 
-/* 部費/割勘 選択ボタン（スリム化） */
+/* 部費/割勘 選択ボタン */
 .type-selector {
     display: flex;
     background: #e0e0e0;
     border-radius: 8px;
     padding: 2px;
-    width: 80px; /* さらに幅を狭く(元90px) */
-    flex-shrink: 0; /* 縮小禁止 */
+    width: 80px; 
+    flex-shrink: 0;
 }
 .type-selector input { display: none; }
 .type-selector label {
     flex: 1;
     text-align: center;
     padding: 6px 0;
-    font-size: 0.7rem; /* 文字サイズ調整 */
+    font-size: 0.7rem; 
     cursor: pointer;
     border-radius: 6px;
     color: var(--text-sub);
@@ -383,6 +391,39 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     font-size: 1.5rem; cursor: pointer;
 }
 
+/* --- 使い方ガイド用モーダル --- */
+#guideModal .modal-content {
+    background: var(--card-bg);
+    width: 90%; max-width: 500px;
+    max-height: 85%;
+    border-radius: 20px;
+    padding: 0;
+    text-align: left;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+#guideModal .modal-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid var(--border);
+    display: flex; justify-content: space-between; align-items: center;
+    background: var(--bg);
+}
+#guideModal .modal-title { font-weight: bold; font-size: 1.1rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+#guideModal .modal-body {
+    padding: 20px;
+    overflow-y: auto;
+    color: var(--text-main);
+}
+#guideModal .guide-step { margin-bottom: 30px; border-bottom: 1px dashed var(--border); padding-bottom: 20px; }
+#guideModal .guide-step:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+#guideModal .guide-step h4 { margin: 0 0 10px 0; color: var(--primary); font-size: 1rem; display: flex; align-items: center; gap: 8px; }
+#guideModal .guide-step img { width: 100%; border-radius: 8px; border: 1px solid var(--border); margin: 10px 0; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+#guideModal .guide-step p { font-size: 0.9rem; margin: 0; color: var(--text-sub); line-height: 1.6; }
+#guideModal .modal-close-btn {
+    background: transparent; border: none; font-size: 1.5rem; color: var(--text-sub); cursor: pointer;
+}
+
 </style>
 </head>
 <body>
@@ -390,8 +431,9 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 <div class="container">
     
     <header>
+        <button class="btn-help" onclick="openGuide()" title="使い方"><i class="fa-solid fa-question"></i></button>
         <div class="app-brand">
-            <span class="app-version">v6.3</span>
+            <span class="app-version">v6.5</span>
             <div class="app-logo-area">
                 <div class="app-icon"><i class='fa-solid fa-mountain'></i></div>
                 <h1 class="app-title">山歩会 精算ツール</h1>
@@ -427,52 +469,6 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
             </button>
         </div>
     </div>
-
-<div class="card" style="border-left: 5px solid var(--accent);">
-        <details>
-            <summary style="cursor: pointer; font-weight: bold; color: var(--text-main); list-style: none; display: flex; align-items: center; justify-content: space-between;">
-                <span style="display:flex; align-items:center; gap:8px;">
-                    <i class="fa-solid fa-book-open" style="color: var(--accent);"></i> 初めての方へ（使い方ガイド）
-                </span>
-                <i class="fa-solid fa-chevron-down" style="font-size: 0.8rem; color: var(--text-sub);"></i>
-            </summary>
-            
-            <div style="margin-top: 15px; font-size: 0.9rem; color: var(--text-main);">
-                
-                <div style="margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
-                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-1"></i> ルームを共有</h4>
-                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
-                        まずは「LINEで送る」ボタンでURLをメンバーに共有しましょう。全員が自分のスマホで同じ画面を見ながら入力できます。
-                    </p>
-                </div>
-
-                <div style="margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
-                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-2"></i> 車両情報の入力</h4>
-                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
-                        車を出してくれた人は「車両を追加」し、<strong>距離・燃費・ガソリン価格</strong>を入力します。<br>
-                        <span style="font-size:0.8rem; background:var(--bg); padding:2px 6px; border-radius:4px;">💡 ヒント</span> 高速代や駐車場代は「＋諸経費」から追加してください。
-                    </p>
-                </div>
-
-                <div style="margin-bottom: 15px; border-bottom: 1px dashed var(--border); padding-bottom: 10px;">
-                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-3"></i> 諸経費の「部費・割勘」</h4>
-                    <ul style="margin: 5px 0 0 20px; padding: 0; font-size: 0.85rem; color: var(--text-sub);">
-                        <li><strong>部費:</strong> サークル会計から出す費用（レンタカー代など）</li>
-                        <li><strong>割勘:</strong> 参加者全員で割る費用（高速代・駐車場代など）</li>
-                    </ul>
-                </div>
-
-                <div style="margin-bottom: 0;">
-                    <h4 style="margin: 0 0 5px 0; color: var(--primary);"><i class="fa-solid fa-4"></i> 計算と精算</h4>
-                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-sub);">
-                        参加人数を入力して「精算を実行」を押すと、1人あたりの支払額が計算されます。結果は画像保存したり、テキストでコピーしてLINEに貼れます。
-                    </p>
-                </div>
-
-            </div>
-        </details>
-    </div>
-
 
     <div class="card">
         <h2><i class='fa-solid fa-car'></i> 車両情報の登録</h2>
@@ -572,9 +568,6 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
             </div>
         </div>
     </div>
-
-
-
     
     <div class="history-container">
         <details>
@@ -597,6 +590,50 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         </button>
     </div>
 
+</div>
+
+<div id="guideModal" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <div class="modal-title"><i class="fa-solid fa-book-open" style="color:var(--accent);"></i> 使い方ガイド</div>
+            <button class="modal-close-btn" onclick="closeGuide()">&times;</button>
+        </div>
+        <div class="modal-body">
+            
+            <div class="guide-step">
+                <h4>1. ルームを共有する</h4>
+                <p>URLをメンバーに送ると、全員で同じ画面を見ながら入力できます。</p>
+                <img src="https://raw.githubusercontent.com/ユーザー名/リポジトリ名/main/guide_1_share.png" alt="ルーム共有">
+            </div>
+
+            <div class="guide-step">
+                <h4>2. 車両を追加・入力</h4>
+                <p>車を出した人は距離・燃費・ガソリン価格を入力します。「＋」ボタンで複数台登録も可能です。</p>
+                <img src="https://raw.githubusercontent.com/ユーザー名/リポジトリ名/main/guide_2_car.png" alt="車両入力">
+            </div>
+
+            <div class="guide-step">
+                <h4>3. 諸経費（部費・割勘）</h4>
+                <p>高速代や駐車場代などを追加します。<br>
+                <span style="font-weight:bold; color:var(--primary);">[部費]</span> 会計から全額出る費用（レンタカー代など）<br>
+                <span style="font-weight:bold; color:var(--accent);">[割勘]</span> 参加者で割る費用（高速代・駐車場代）</p>
+                <img src="https://raw.githubusercontent.com/ユーザー名/リポジトリ名/main/guide_3_extra.png" alt="諸経費設定">
+            </div>
+
+            <div class="guide-step">
+                <h4>4. 人数設定と計算</h4>
+                <p>参加人数を入力し、端数処理や企画者の免除設定を確認して「精算を実行」を押します。</p>
+                <img src="https://raw.githubusercontent.com/ユーザー名/リポジトリ名/main/guide_4_calc.png" alt="計算設定">
+            </div>
+
+            <div class="guide-step">
+                <h4>5. 結果の保存</h4>
+                <p>精算レシートが表示されます。「画像を保存」でアルバムに残したり、テキストをLINEに貼って報告できます。</p>
+                <img src="https://raw.githubusercontent.com/ユーザー名/リポジトリ名/main/guide_5_result.png" alt="精算結果">
+            </div>
+
+        </div>
+    </div>
 </div>
 
 <div id="imageModal" class="modal-overlay">
@@ -629,6 +666,8 @@ window.calculate = calculate;
 window.copyRoomLink = copyRoomLink;
 window.shareToLine = shareToLine;
 window.copyToClipboard = copyToClipboard;
+window.openGuide = openGuide;
+window.closeGuide = closeGuide;
 
 const firebaseConfig = {
   apiKey: "AIzaSyAypqRPRn-YHWLwjT3lQ6pN6_bWBqzUvp4",
@@ -688,7 +727,6 @@ function updateRoomColor(id) {
 }
 
 
-// --- 画像保存ロジックの改善版 ---
 function downloadResultImage() {
     const target = document.getElementById('captureTarget');
     showToast("画像を生成中...");
@@ -707,19 +745,15 @@ function downloadResultImage() {
 
     html2canvas(target, options).then(canvas => {
         const dataUrl = canvas.toDataURL('image/png');
-        
-        // ユーザーエージェントでiOS判定
         const ua = navigator.userAgent;
         const isIOS = /iPhone|iPad|iPod/i.test(ua);
 
         if (isIOS) {
-            // iOSの場合はモーダルで表示して長押しさせる
             const img = document.getElementById('generatedImage');
             img.src = dataUrl;
             document.getElementById('imageModal').classList.add('active');
             showToast("画像を長押しして保存してください");
         } else {
-            // PC/Android等はダウンロードリンク発火
             const link = document.createElement('a');
             link.download = `receipt_${roomId}.png`;
             link.href = dataUrl;
@@ -734,6 +768,13 @@ function downloadResultImage() {
 
 function closeImageModal() {
     document.getElementById('imageModal').classList.remove('active');
+}
+
+function openGuide() {
+    document.getElementById('guideModal').classList.add('active');
+}
+function closeGuide() {
+    document.getElementById('guideModal').classList.remove('active');
 }
 
 function renderForm(data) {
@@ -871,50 +912,57 @@ function resetRoom() {
 }
 
 function fillTestData() {
-    if(!confirm("現在の入力をクリアし、テストデータを投入しますか？")) return;
+    if(!confirm("現在の入力をクリアし、全機能確認用のテストデータを投入しますか？")) return;
 
     document.getElementById('carList').innerHTML = "";
-    document.getElementById('totalPeople').value = 11;
+    document.getElementById('totalPeople').value = 8;
     document.getElementById('roundingUnit').value = "100";
     document.getElementById('organizerFree').checked = true;
 
+    // テストデータ定義：全機能（割勘、部費、マイナス）を網羅
     const testData = [
         { 
-            name: "レンタカーA", dist: [200, 240], eco: [12, 16], price: [165, 175], 
+            name: "織田信長", // 自家用車提供・高速代立替パターン
+            dist: 245, 
+            eco: 12, 
+            price: 175, 
             extras: [
-                ["高速代", 4500, "split"],
-                ["レンタカー代", 8000, "club"],
-                ["駐車場", 1200, "split"]
+                { name: "高速代(往復)", amount: 5600, type: "split" } // 割勘
             ] 
         },
         { 
-            name: "鈴木一郎", dist: [180, 220], eco: [20, 25], price: [160, 170], 
+            name: "坂本龍馬", // レンタカー・部費立替・割引パターン
+            dist: 220, 
+            eco: 20, 
+            price: 168, 
             extras: [
-                ["アイス代", 800, "club"],
-                ["クーポン割引", -500, "club"] 
+                { name: "レンタカー代", amount: 12000, type: "club" }, // 部費
+                { name: "駐車場", amount: 1500, type: "split" },       // 割勘
+                { name: "クーポン割引", amount: -1000, type: "club" }   // マイナス入力(部費還元)
             ] 
         }
     ];
-
-    const rand = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
 
     testData.forEach((d, i) => {
         addCarToDOM(null, -1, true);
         const card = document.getElementById('carList').lastElementChild;
         
         card.querySelector('.inp-name').value = d.name;
-        card.querySelector('.inp-dist').value = rand(d.dist[0], d.dist[1]);
-        card.querySelector('.inp-eco').value  = rand(d.eco[0], d.eco[1]);
-        card.querySelector('.inp-price').value = rand(d.price[0], d.price[1]);
+        card.querySelector('.inp-dist').value = d.dist;
+        card.querySelector('.inp-eco').value  = d.eco;
+        card.querySelector('.inp-price').value = d.price;
 
         const extraBox = card.querySelector('.extra-section > div');
         d.extras.forEach(ex => {
-            addExtraToDOM(extraBox, ex[0], ex[1], ex[2]);
+            addExtraToDOM(extraBox, ex.name, ex.amount, ex.type);
         });
     });
 
     pushDataToFirebase();
     showToast("🧪 テストデータを投入しました");
+    
+    // 計算実行まで自動で行う
+    setTimeout(calculate, 500);
 }
 
 function saveToHistory() {
