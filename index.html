@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v6.0</title>
+<title>山歩会会計精算ツール v6.1</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -195,10 +195,45 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     background: var(--input-bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
     border: 1px dashed var(--border); 
 }
-.extra-item { display: flex; gap: 6px; margin-bottom: 8px; align-items: center;}
-.extra-item .ex-name { flex: 1.5; }
-.extra-item .ex-amount { flex: 1; min-width: 0; }
-.extra-item .ex-type { flex: 0.8; font-size: 0.8rem; padding: 10px 4px; }
+.extra-item { display: flex; gap: 8px; margin-bottom: 10px; align-items: flex-start; flex-wrap: wrap; border-bottom:1px dashed rgba(0,0,0,0.05); padding-bottom:8px; }
+.extra-item:last-child { border-bottom: none; }
+.extra-item .ex-name { flex: 2; min-width: 120px; }
+.extra-item .ex-amount { flex: 1.5; min-width: 100px; }
+
+/* 部費/割勘 選択ボタン（Segmented Control風） */
+.type-selector {
+    display: flex;
+    background: #e0e0e0;
+    border-radius: 8px;
+    padding: 3px;
+    width: 130px; /* 固定幅で押しやすく */
+    flex-shrink: 0;
+}
+.type-selector input { display: none; }
+.type-selector label {
+    flex: 1;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 0.8rem;
+    cursor: pointer;
+    border-radius: 6px;
+    color: var(--text-sub);
+    transition: 0.2s;
+    font-weight: 600;
+    margin: 0;
+}
+/* 選択された時のスタイル */
+.type-selector input:checked + label {
+    background: #fff;
+    color: var(--primary);
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+}
+/* ダークモード対応 */
+@media (prefers-color-scheme: dark) {
+    .type-selector { background: #333; }
+    .type-selector input:checked + label { background: #555; color: #fff; }
+}
+
 
 /* ボタン類 */
 .btn {
@@ -338,7 +373,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v6.0</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v6.1</span></h1>
         
         <div class="sync-status">
             <span class="sync-dot"></span>
@@ -646,11 +681,16 @@ function renderForm(data) {
             const exData = remoteExtras[j];
             const nameInp = row.querySelector('.ex-name');
             const amtInp = row.querySelector('.ex-amount');
-            const typeSel = row.querySelector('.ex-type');
             
             if(document.activeElement !== nameInp) nameInp.value = exData.name || "";
             if(document.activeElement !== amtInp) amtInp.value = exData.amount || "";
-            if(document.activeElement !== typeSel) typeSel.value = exData.type || "club";
+            
+            // ラジオボタンの値を反映
+            const typeVal = exData.type || "club";
+            const radio = row.querySelector(`input[type="radio"][value="${typeVal}"]`);
+            if(radio && !radio.checked) {
+                radio.checked = true;
+            }
         });
     });
 }
@@ -697,11 +737,15 @@ function getFormData() {
         dist: card.querySelector('.inp-dist').value,
         eco: card.querySelector('.inp-eco').value, 
         price: card.querySelector('.inp-price').value,
-        extras: Array.from(card.querySelectorAll('.extra-item')).map(row => ({ 
-            name: row.querySelector('.ex-name').value, 
-            amount: row.querySelector('.ex-amount').value,
-            type: row.querySelector('.ex-type').value 
-        }))
+        extras: Array.from(card.querySelectorAll('.extra-item')).map(row => {
+            // ラジオボタンから値を取得
+            const checkedRadio = row.querySelector('input[type="radio"]:checked');
+            return { 
+                name: row.querySelector('.ex-name').value, 
+                amount: row.querySelector('.ex-amount').value,
+                type: checkedRadio ? checkedRadio.value : "club"
+            };
+        })
     }));
     return {
         total: document.getElementById('totalPeople').value,
@@ -931,16 +975,25 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     const div = document.createElement('div');
     div.className = 'extra-item';
     
-    const isSplit = (type === 'split') ? 'selected' : '';
-    const isClub = (type === 'club') ? 'selected' : '';
+    const isSplit = (type === 'split') ? 'checked' : '';
+    const isClub = (type === 'club') ? 'checked' : '';
+    
+    // ラジオボタンのname属性を一意にするためのID
+    const uniqueName = "type-" + Date.now() + Math.random().toString(36).substr(2,5);
 
+    // セレクトボックスを廃止し、ボタン式ラジオボタンに変更
     div.innerHTML = `
         <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
         <input type="text" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
-        <select class="ex-type" onchange="window.pushData()">
-            <option value="club" ${isClub}>部費</option>
-            <option value="split" ${isSplit}>割勘</option>
-        </select>
+        
+        <div class="type-selector">
+            <input type="radio" id="${uniqueName}-c" name="${uniqueName}" value="club" ${isClub} onchange="window.pushData()">
+            <label for="${uniqueName}-c">部費</label>
+            
+            <input type="radio" id="${uniqueName}-s" name="${uniqueName}" value="split" ${isSplit} onchange="window.pushData()">
+            <label for="${uniqueName}-s">割勘</label>
+        </div>
+
         <button class="btn-icon-only" style="color:var(--text-sub);" onclick="this.parentElement.remove(); window.pushData();"><i class='fa-solid fa-xmark'></i></button>
     `;
     container.appendChild(div);
@@ -1076,7 +1129,8 @@ function calculate() {
 
     saveToHistory();
 
-    let lineText = `【山歩会 精算報告 ⛰️】\n`;
+    // LINE共有テキストの生成ロジック変更
+    let lineText = `【精算報告 ⛰️】\n`;
     lineText += `■徴収額（1人あたり）\n`;
     lineText += `${perPersonPay.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
@@ -1084,15 +1138,19 @@ function calculate() {
     lineText += `\n■ドライバーへの支払額\n`;
     driverResults.forEach(d => {
         lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
-        let details = [`ガス:${d.gasCost}`];
-        const splitEx = d.extras.filter(e => e.type === 'split').reduce((s,e)=>s+e.amount,0);
-        const clubEx  = d.extras.filter(e => e.type !== 'split').reduce((s,e)=>s+e.amount,0);
         
-        if(splitEx !== 0) details.push(`割勘経費:${splitEx}`);
-        if(clubEx !== 0) details.push(`部費経費:${clubEx}`);
-        details.push(`調整:${d.reward}`);
+        // 内訳を詳細表示
+        lineText += `  - ガソリン代: ${d.gasCost.toLocaleString()}\n`;
         
-        lineText += `  (${details.join('/')})\n`;
+        if(d.extras.length > 0) {
+            d.extras.forEach(ex => {
+                const typeStr = ex.type === 'split' ? '(割勘)' : '(部費)';
+                const exName = ex.name || '諸経費';
+                lineText += `  - ${exName}${typeStr}: ${parseInt(ex.amount).toLocaleString()}\n`;
+            });
+        }
+        
+        lineText += `  - 調整費: ${d.reward.toLocaleString()}\n`;
     });
     
     lineText += `\n■サークル会計からの支出\n計：${circleNeed.toLocaleString()}円\n`;
