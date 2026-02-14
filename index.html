@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-<title>山歩会会計精算ツール v7.2</title>
+<title>山歩会会計精算ツール v7.3</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -245,7 +245,13 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 .btn-sm { padding: 6px 12px; font-size: 0.8rem; width: auto; display: inline-flex; border-radius: 4px; }
 
 /* --- レシート --- */
-#resultArea { display: none; }
+#resultArea { 
+    display: none; 
+    opacity: 0.5; /* 計算中は少し薄くするなどの演出用 */
+    transition: opacity 0.3s;
+}
+#resultArea.active { opacity: 1; }
+
 .receipt-wrapper { padding: 20px; margin: 20px -16px; }
 .receipt-paper {
     background: #fff; color: #222; font-family: 'Courier New', Courier, "Hiragino Sans", monospace;
@@ -347,7 +353,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 /* --- Hidden Guide Templates Container --- */
 #guide-templates {
-    position: fixed; left: -9999px; top: 0; width: 350px; /* Mobile Width Simulation */
+    position: fixed; left: -9999px; top: 0; width: 380px;
     background: var(--bg); pointer-events: none; opacity: 1; visibility: visible; z-index: -1;
 }
 .tpl-container { padding: 20px; background: var(--bg); }
@@ -361,8 +367,8 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
     <div class="brand-area">
         <div class="brand-logo"><i class='fa-solid fa-mountain'></i></div>
         <div class="brand-text">
-            <h1 class="app-title">山歩会会計</h1>
-            <span class="app-version">v7.2</span>
+            <h1 class="app-title">山歩会精算ツール</h1>
+            <span class="app-version">v7.3</span>
         </div>
     </div>
     <div class="header-actions">
@@ -532,8 +538,9 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
 <div id="guide-templates">
     <div class="tpl-container">
+        
         <div id="tpl-step1" class="tpl-wrapper">
-            <div class="room-invite-card" style="margin:0;">
+             <div class="room-invite-card" style="margin:0;">
                 <div class="room-id-section">
                     <div class="room-id-label">
                         <div class="room-icon-box"><i class='fa-solid fa-users-rectangle'></i></div>
@@ -542,71 +549,93 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
                             <span class="room-id-text">A7X9</span>
                         </div>
                     </div>
+                    <button class="btn btn-sm" style="background:#fff; border:1px solid var(--border); color:var(--text-main);">
+                        <i class='fa-regular fa-copy'></i>
+                    </button>
                 </div>
                 <div class="share-actions">
                     <button class="btn-share-sub"><i class='fa-brands fa-line' style="color:#06c755;"></i> LINE送信</button>
+                    <button class="btn-share-sub"><i class='fa-solid fa-link'></i> URLコピー</button>
                 </div>
             </div>
         </div>
+
         <div id="tpl-step2" class="tpl-wrapper">
             <div class="car-card open" style="margin:0;">
                 <div class="car-header">
-                    <span><i class='fa-solid fa-car'></i> 佐藤の車</span>
+                    <span style="font-weight:600;"><i class='fa-solid fa-car' style="color:var(--text-sub);"></i> 佐藤の車</span>
+                    <i class='fa-solid fa-chevron-down' style="transform:rotate(180deg); color:var(--text-sub);"></i>
                 </div>
                 <div class="car-body">
-                    <div class="input-group"><label>ドライバー</label><input type="text" value="佐藤" readonly></div>
+                    <div class="input-group">
+                        <label>ドライバー名</label>
+                        <input type="text" value="佐藤" readonly>
+                    </div>
                     <div class="flex-row">
-                        <div class="input-group"><label>距離</label><input type="text" value="240" readonly></div>
-                        <div class="input-group"><label>燃費</label><input type="text" value="15" readonly></div>
-                        <div class="input-group"><label>価格</label><input type="text" value="168" readonly></div>
+                        <div class="input-group"><label>距離 (km)</label><input type="number" value="240" readonly></div>
+                        <div class="input-group"><label>燃費 (km/L)</label><input type="number" value="15" readonly></div>
+                        <div class="input-group"><label>価格 (円)</label><input type="number" value="168" readonly></div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div id="tpl-step3" class="tpl-wrapper">
-             <div class="extra-section" style="background:var(--input-bg); padding:10px; border:1px solid var(--border); border-radius:6px;">
-                <div class="extra-item">
-                    <div style="flex:1;">
-                        <input type="text" class="ex-name" value="高速代(ETC)" style="margin-bottom:4px;" readonly>
-                        <div style="display:flex; gap:8px;">
-                            <input type="text" class="ex-amount" value="5600" readonly>
-                            <div class="type-selector">
-                                <input type="radio" checked><label style="background:var(--card-bg); color:var(--text-main); box-shadow:0 1px 2px rgba(0,0,0,0.1);">割勘</label>
-                                <label>部費</label>
+            <div class="car-card open" style="margin:0;">
+                <div class="car-body" style="padding:10px;">
+                    <div class="extra-section" style="margin-top:0;">
+                        <label style="margin-bottom:8px;">➕ 諸経費 (高速・駐車場など)</label>
+                        <div class="extra-item">
+                            <div style="flex:1;">
+                                <input type="text" value="高速代(ETC)" style="margin-bottom:4px;" readonly>
+                                <div style="display:flex; gap:8px;">
+                                    <input type="text" value="5600" readonly>
+                                    <div class="type-selector">
+                                        <input type="radio" checked><label style="background:var(--card-bg); color:var(--text-main); box-shadow:0 1px 2px rgba(0,0,0,0.1);">部費</label>
+                                        <label>割勘</label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-             </div>
+            </div>
         </div>
+
         <div id="tpl-step4" class="tpl-wrapper">
             <div class="card" style="margin:0;">
-                <h2><i class='fa-solid fa-sliders'></i> 精算設定</h2>
+                <h2><i class='fa-solid fa-sliders'></i> 精算オプション</h2>
                 <div class="input-group">
-                    <label>人数 (企画者含む)</label>
-                    <div style="position:relative;">
-                        <input type="text" value="4" style="padding-left:40px;" readonly>
-                        <i class='fa-solid fa-users' style="position:absolute; left:12px; top:11px; color:var(--text-sub);"></i>
+                    <label>総参加人数 (企画者含む)</label>
+                    <div style="position: relative;">
+                        <input type="number" value="4" style="padding-left: 40px;" readonly>
+                        <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 11px; color: var(--text-sub);"></i>
                     </div>
                 </div>
                 <label class="checkbox-card">
-                    <span style="font-weight:600; font-size:0.9rem;">企画者は免除</span>
+                    <span style="font-weight:600; font-size:0.9rem;">企画者はガソリン代免除</span>
                     <div class="toggle-switch" style="background:var(--primary);"><div style="position:absolute; top:2px; left:2px; width:18px; height:18px; background:#fff; border-radius:2px; transform:translateX(18px);"></div></div>
                 </label>
             </div>
         </div>
+
         <div id="tpl-step5" class="tpl-wrapper">
-            <div class="receipt-paper" style="padding:15px; border-top:3px solid #333; max-width:100%;">
+            <div class="receipt-paper" style="max-width:100%; border-top:3px solid #333; padding:15px;">
                 <div class="receipt-header" style="margin-bottom:10px; padding-bottom:10px;">
                     <h3 class="receipt-title" style="font-size:1rem;">精算レシート</h3>
                 </div>
                 <div class="receipt-total-section" style="padding:10px 0;">
                     <span class="receipt-label-main">1人あたり</span>
                     <span class="receipt-amount-main" style="font-size:1.8rem;">¥3,500</span>
+                    <span class="receipt-note">3名 / 実費: ¥10,240</span>
                 </div>
                 <div class="receipt-section">
-                    <div class="receipt-row"><span>佐藤さん</span><span>¥8,900</span></div>
-                    <div class="receipt-row"><span>鈴木さん</span><span>¥0</span></div>
+                    <div class="receipt-row">
+                        <span style="font-weight:bold;">佐藤さん</span>
+                        <span style="font-weight:bold;">¥9,200</span>
+                    </div>
+                    <span class="receipt-detail" style="font-size:0.7rem;">- ガソリン: ¥2,600</span>
+                    <span class="receipt-detail" style="font-size:0.7rem;">- 高速代(ETC) (部): ¥5,600</span>
                 </div>
             </div>
         </div>
@@ -643,7 +672,7 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
 
             <div class="guide-step">
                 <h4><i class="fa-solid fa-4"></i> 人数設定と計算</h4>
-                <p>参加人数を入力し、端数処理や企画者の免除設定を確認して「精算を実行」を押します。</p>
+                <p>参加人数を入力すると、自動で計算結果が更新されます。端数処理の設定も可能です。</p>
                 <div class="guide-img-box"><img id="guide-img-4" alt="計算設定"></div>
             </div>
 
@@ -687,7 +716,7 @@ window.closeImageModal = closeImageModal;
 window.addCarToDOM = addCarToDOM;
 window.removeCar = removeCar;
 window.handleAddExtra = handleAddExtra;
-window.calculate = calculate;
+window.calculate = () => calculate(false); // Button click (interactive)
 window.copyRoomLink = copyRoomLink;
 window.shareToLine = shareToLine;
 window.copyToClipboard = copyToClipboard;
@@ -735,6 +764,7 @@ try {
         if (data) {
             if(syncText) syncText.textContent = "OK";
             renderForm(data);
+            calculate(true); // Silent calculation on data load
         } else {
             if(syncText) syncText.textContent = "NEW";
             const list = document.getElementById('carList');
@@ -918,6 +948,10 @@ function pushDataToFirebase() {
     const data = getFormData();
     const syncText = document.getElementById("syncText");
     if(syncText) syncText.textContent = "...";
+    
+    // Real-time calculation (silent mode)
+    calculate(true);
+
     set(roomRef, data).then(() => {
         if(syncText) syncText.textContent = "OK";
     }).catch((e) => {
@@ -1014,7 +1048,7 @@ function fillTestData() {
 
     pushDataToFirebase();
     showToast("🧪 テストデータ投入");
-    setTimeout(calculate, 500);
+    // setTimeout(calculate, 500); // Triggered by pushData now
 }
 
 function saveToHistory() {
@@ -1174,11 +1208,12 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     container.appendChild(div);
 }
 
-function calculate() {
+function calculate(silent = false) {
     const data = getFormData();
     const totalPeople = parseInt(data.total);
     const isOrgFree = data.org;
     
+    // Validation
     let errorMsgs = [];
     if (!totalPeople || totalPeople <= 0) errorMsgs.push("参加人数を入力してください");
     if (data.cars.length === 0) errorMsgs.push("車両がありません");
@@ -1190,7 +1225,12 @@ function calculate() {
         if(!c.price) errorMsgs.push(`${dName}: 価格未入力`);
     });
 
-    if (errorMsgs.length > 0) { alert("確認してください:\n・" + errorMsgs.join("\n・")); return; }
+    if (errorMsgs.length > 0) { 
+        if (!silent) {
+            alert("確認してください:\n・" + errorMsgs.join("\n・")); 
+        }
+        return; 
+    }
 
     let totalGas = 0; 
     let totalExtrasSplit = 0; 
@@ -1273,9 +1313,14 @@ function calculate() {
     
     const resultArea = document.getElementById('resultArea');
     resultArea.style.display = 'block';
-    resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    resultArea.classList.add('active');
 
-    saveToHistory();
+    // Only scroll and show toast if button was clicked
+    if (!silent) {
+        resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        saveToHistory();
+        showToast("✅ 計算完了");
+    }
 
     let lineText = `【精算報告 ⛰️】\n`;
     lineText += `■徴収額（1人あたり）\n${perPersonPay.toLocaleString()}円\n`;
@@ -1296,8 +1341,6 @@ function calculate() {
     if(surplus > 0) lineText += `(端数余剰 ${surplus}円充当済み)\n`;
     lineText += `\n▼計算・編集URL\n${window.location.href}`;
     document.getElementById('copyTextarea').value = lineText;
-
-    showToast("✅ 計算完了");
 }
 
 function copyRoomLink() {
