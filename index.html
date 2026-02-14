@@ -587,9 +587,21 @@ input:focus, select:focus { outline: none; border-color: var(--primary); box-sha
                         <label style="margin-bottom:8px;">➕ 諸経費 (高速・駐車場など)</label>
                         <div class="extra-item">
                             <div style="flex:1;">
-                                <input type="text" value="高速代(ETC)" style="margin-bottom:4px;" readonly>
+                                <input type="text" value="駐車場代" style="margin-bottom:4px;" readonly>
                                 <div style="display:flex; gap:8px;">
-                                    <input type="text" value="5600" readonly>
+                                    <input type="text" value="200" readonly>
+                                    <div class="type-selector">
+                                        <input type="radio" checked><label style="background:var(--card-bg); color:var(--text-main); box-shadow:0 1px 2px rgba(0,0,0,0.1);">部費</label>
+                                        <label>割勘</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="extra-item">
+                            <div style="flex:1;">
+                                <input type="text" value="温泉代" style="margin-bottom:4px;" readonly>
+                                <div style="display:flex; gap:8px;">
+                                    <input type="text" value="-620" readonly>
                                     <div class="type-selector">
                                         <input type="radio" checked><label style="background:var(--card-bg); color:var(--text-main); box-shadow:0 1px 2px rgba(0,0,0,0.1);">部費</label>
                                         <label>割勘</label>
