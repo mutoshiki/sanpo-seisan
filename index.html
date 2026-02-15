@@ -3,60 +3,69 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v5.7</title>
+<title>山歩会会計精算ツール v5.8</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-    /* --- カラーパレット: Cafe Theme (Light) --- */
-    --primary: #558b2f;       /* メイン：抹茶グリーン */
-    --primary-hover: #33691e;
-    --primary-light: #f1f8e9; /* 背景用：薄い抹茶 */
+    /* --- [Light Mode] 大人っぽいクラシック・ネイビー --- */
+    --primary: #2c3e50;       /* 濃紺：信頼感 */
+    --primary-text: #2c3e50;  /* テキスト用プライマリ */
+    --primary-btn: #2c3e50;   /* ボタン背景 */
+    --primary-btn-text: #fff; /* ボタン文字 */
     
-    --accent: #f9a825;        /* 強調：マスタードイエロー */
-    --danger: #d32f2f;        /* 警告：落ち着いた赤 */
-    --danger-bg: #ffebee;
+    --primary-light: #ecf0f1; /* 薄いグレー（背景アクセント） */
     
-    --bg: #f2efe9;            /* 背景：ラテベージュ */
-    --card-bg: #fdfbf7;       /* カード：クリームホワイト */
+    --accent: #d35400;        /* テラコッタ（強調） */
     
-    --text-main: #4e342e;     /* 文字：エスプレッソ */
-    --text-sub: #8d6e63;      /* サブ文字：ココアブラウン */
+    --bg: #f4f6f7;            /* 全体背景：オフホワイト */
+    --card-bg: #ffffff;       /* カード背景：白 */
     
-    --border: #d7ccc8;        /* 枠線：ミルクココア */
-    --input-bg: #faf8f5;      /* 入力欄背景 */
+    --text-main: #2d3436;     /* 主な文字：濃いグレー */
+    --text-sub: #636e72;      /* 補足文字：グレー */
+    --text-placeholder: #b2bec3;
     
-    --radius: 12px;
-    --shadow: 0 4px 10px rgba(78, 52, 46, 0.08); /* 影：茶色ベースで柔らかく */
+    --border: #dfe6e9;        /* 境界線 */
+    --input-bg: #ffffff;      /* 入力欄背景 */
+    --input-border: #bdc3c7;
+    
+    --radius: 6px;
+    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    
+    --font-head: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        /* --- カラーパレット: Cafe Theme (Dark) --- */
-        --primary: #aed581;       /* メイン：ライトグリーン */
-        --primary-hover: #7cb342;
-        --primary-light: #33691e; /* 背景用：濃い抹茶 */
+        /* --- [Dark Mode] 視認性重視のディープ・ナイト --- */
+        --primary: #8fa6b8;       /* 明るめのスチールブルー（アイコン・見出し用） */
+        --primary-text: #aab7c4;  /* テキスト用はさらに明るく */
+        --primary-btn: #4b6584;   /* ボタンは少し明るい紺色 */
+        --primary-btn-text: #f1f2f6;
         
-        --accent: #ffd54f;
-        --danger: #e57373;
-        --danger-bg: #5d4037;
+        --primary-light: #252f38; /* 選択時の背景など */
         
-        --bg: #251d1a;            /* 背景：ダークコーヒー */
-        --card-bg: #3e2723;       /* カード：ダークロースト */
+        --accent: #e67e22;        /* 落ち着いたオレンジ */
         
-        --text-main: #d7ccc8;     /* 文字：ミルクティー */
-        --text-sub: #a1887f;      /* サブ文字：グレイッシュブラウン */
+        --bg: #0b0e11;            /* 背景：ほぼ黒に近いダークブルーグレー */
+        --card-bg: #192229;       /* カード：濃いチャコール */
         
-        --border: #5d4037;
-        --input-bg: #4e342e;
+        --text-main: #f1f2f6;     /* 文字：ほぼ白（読みやすさ最優先） */
+        --text-sub: #ced6e0;      /* 補足：明るいグレー */
+        --text-placeholder: #747d8c;
         
-        --shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+        --border: #353b48;        /* 境界線：背景より少し明るく */
+        --input-bg: #11151a;      /* 入力欄：カードより暗く（窪んで見えるように） */
+        --input-border: #4a5568;  /* 入力枠：しっかり見えるグレー */
+        
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
     }
 }
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-family: var(--font-body);
     margin: 0; padding: 20px 12px;
     background: var(--bg); color: var(--text-main);
     line-height: 1.6; font-size: 15px;
@@ -66,95 +75,122 @@ body {
 .container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
 
 /* --- ヘッダー周り --- */
-header { position: relative; text-align: center; margin-bottom: 24px; }
-h1 { 
-    font-size: 1.4rem; margin: 0; color: var(--text-main); 
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    font-weight: 800;
+header { 
+    position: relative; 
+    text-align: center; 
+    margin-bottom: 30px; 
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border);
 }
-h1 i { font-size: 1.6rem; color: var(--primary); }
-h1 span { font-size: 0.8rem; color: var(--text-sub); font-weight: normal; margin-top: 4px; display: block;}
+h1 { 
+    font-family: var(--font-head);
+    font-size: 1.5rem; margin: 0; color: var(--primary-text); 
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+h1 i { font-size: 1.4rem; color: var(--accent); }
+h1 span { 
+    font-size: 0.75rem; 
+    background: var(--primary); color: #fff; 
+    padding: 2px 6px; border-radius: 4px;
+    font-weight: normal; margin-top: 2px; display: inline-block;
+    vertical-align: middle;
+    text-shadow: none;
+    background: var(--primary-btn);
+}
 
-/* 新しいシェア促進エリア */
+/* 招待エリア */
 .share-invite-box {
-    background: linear-gradient(135deg, var(--primary), var(--primary-hover));
-    color: #fff;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--accent);
+    color: var(--text-main);
     border-radius: var(--radius);
     padding: 16px;
     margin-bottom: 24px;
-    box-shadow: 0 4px 12px rgba(51, 105, 30, 0.3);
+    box-shadow: var(--shadow);
     text-align: center;
 }
 .share-invite-title {
     font-weight: bold; font-size: 1rem; margin-bottom: 10px;
     display: flex; align-items: center; justify-content: center; gap: 8px;
+    color: var(--primary-text);
 }
 .share-btn-group {
     display: flex; gap: 10px; justify-content: center;
 }
 .btn-share-action {
-    background: rgba(255,255,255,0.2);
-    border: 1px solid rgba(255,255,255,0.4);
-    color: #fff;
+    background: var(--primary-light);
+    border: 1px solid var(--border);
+    color: var(--primary-text);
     padding: 8px 16px;
-    border-radius: 8px;
+    border-radius: var(--radius);
     font-size: 0.85rem;
     cursor: pointer;
     text-decoration: none;
     display: flex; align-items: center; gap: 6px;
-    transition: background 0.2s;
+    transition: all 0.2s;
+    font-weight: 600;
 }
-.btn-share-action:hover { background: rgba(255,255,255,0.3); }
-.btn-share-action:active { transform: scale(0.96); }
-
+.btn-share-action:hover { opacity: 0.8; transform: translateY(-1px); }
+.btn-share-action:active { transform: scale(0.98); }
 
 .room-badge {
-    background: var(--card-bg); color: var(--text-main);
-    padding: 4px 10px; border-radius: 6px; font-family: monospace; font-size: 0.8rem;
-    margin: 8px auto 0; display: inline-flex; align-items: center; gap: 6px; 
-    border: 1px dashed var(--border); opacity: 0.8;
+    background: var(--bg); color: var(--text-sub);
+    padding: 4px 12px; border-radius: 20px; font-family: monospace; font-size: 0.8rem;
+    margin: 12px auto 0; display: inline-flex; align-items: center; gap: 6px; 
+    border: 1px solid var(--border);
 }
 
 .sync-status {
-    font-size: 0.75rem; color: var(--primary); font-weight: 600;
-    display: flex; align-items: center; justify-content: center; gap: 4px;
+    font-size: 0.75rem; color: var(--text-sub); font-weight: 500;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
     margin-top: 8px;
 }
-.sync-dot { width: 8px; height: 8px; background: currentColor; border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
+.sync-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
 
 /* --- ヘルプボタン --- */
 .help-trigger {
-    position: absolute; right: 0; top: 0;
-    background: none; border: none; color: var(--primary);
-    font-size: 1.4rem; cursor: pointer; padding: 5px;
+    position: absolute; right: 0; top: 5px;
+    background: none; border: none; color: var(--text-sub);
+    font-size: 1.2rem; cursor: pointer; padding: 5px;
+    transition: color 0.2s;
 }
+.help-trigger:hover { color: var(--primary); }
 
 /* --- 共通コンポーネント --- */
 .card {
-    background: var(--card-bg); padding: 20px; border-radius: var(--radius);
-    box-shadow: var(--shadow); margin-bottom: 20px; border: 1px solid var(--border);
+    background: var(--card-bg); padding: 24px; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 24px; border: 1px solid var(--border);
 }
 
 h2 { 
-    font-size: 1.1rem; margin: 0 0 16px 0; 
-    display: flex; align-items: center; gap: 8px; 
-    color: var(--text-main); border-bottom: 2px solid var(--border); padding-bottom: 10px;
+    font-family: var(--font-head);
+    font-size: 1.1rem; margin: 0 0 20px 0; 
+    display: flex; align-items: center; gap: 10px; 
+    color: var(--primary-text); 
+    border-bottom: 1px solid var(--border); padding-bottom: 12px;
 }
-h2 i { color: var(--primary); font-size: 1.3rem; }
+h2 i { color: var(--text-sub); font-size: 1.1rem; }
 
 /* 入力フォーム */
-.input-group { margin-bottom: 16px; }
-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
+.input-group { margin-bottom: 18px; }
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
 
 input[type="number"], input[type="text"], select {
     width: 100%; padding: 12px; 
-    border: 1px solid var(--border); border-radius: 8px; 
+    border: 1px solid var(--input-border); border-radius: var(--radius); 
     font-size: 16px; background: var(--input-bg); color: var(--text-main);
-    transition: 0.2s;
+    transition: 0.2s; 
 }
-input:focus, select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(85, 139, 47, 0.2); }
-input::placeholder { color: var(--text-sub); opacity: 0.5; }
+input:focus, select:focus { 
+    outline: none; 
+    border-color: var(--primary); 
+    box-shadow: 0 0 0 2px rgba(100, 150, 200, 0.2); 
+}
+input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
 
 .flex-row { display: flex; gap: 12px; }
 .flex-row > div { flex: 1; }
@@ -162,146 +198,125 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 /* トグルスイッチ */
 .checkbox-card {
     display: flex; align-items: center; justify-content: space-between;
-    background: var(--input-bg); padding: 12px 16px; border-radius: 8px; 
-    cursor: pointer; user-select: none; border: 1px solid var(--border);
+    background: var(--input-bg); padding: 12px 16px; border-radius: var(--radius); 
+    cursor: pointer; user-select: none; border: 1px solid var(--input-border);
 }
 .checkbox-card input { display: none; }
 .toggle-switch {
-    width: 44px; height: 24px; background: var(--border); border-radius: 20px; position: relative; transition: 0.3s;
+    width: 44px; height: 24px; background: var(--text-sub); border-radius: 20px; position: relative; transition: 0.3s;
 }
 .toggle-switch::after {
     content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
-    background: var(--card-bg); border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
+    background: #fff; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
-.checkbox-card input:checked + .toggle-switch { background: var(--primary); }
+.checkbox-card input:checked + .toggle-switch { background: var(--accent); }
 .checkbox-card input:checked + .toggle-switch::after { transform: translateX(20px); }
 
 /* 車両カード */
 .car-card {
-    border: 1px solid var(--border); border-radius: 10px; margin-bottom: 12px;
-    background: var(--card-bg); overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px;
+    background: var(--card-bg); overflow: hidden; 
 }
 .car-header {
-    background: var(--primary-light); padding: 12px 16px;
+    background: var(--bg); padding: 12px 16px;
     display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer; font-weight: 600; font-size: 1rem; color: var(--text-main);
+    cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-main);
+    border-bottom: 1px solid transparent;
+    transition: background 0.2s;
 }
-.car-header i { margin-right: 6px; color: var(--primary); }
-.car-body { padding: 16px; display: none; border-top: 1px solid var(--border); background: var(--card-bg); }
+.car-card.open .car-header { border-bottom-color: var(--border); background: var(--primary-light); color: var(--primary-text); }
+.car-header i { margin-right: 8px; color: var(--text-sub); }
+.car-card.open .car-header i { color: var(--primary); }
+
+.car-body { padding: 20px; display: none; background: var(--card-bg); }
 .car-card.open .car-body { display: block; }
-.toggle-icon { transition: transform 0.3s; font-size: 1.1rem; color: var(--text-sub); }
+
+.toggle-icon { transition: transform 0.3s; font-size: 1rem; color: var(--text-sub); }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
 .btn-icon-only {
-    background: none; border: none; color: var(--text-sub); font-size: 1.1rem; 
+    background: none; border: none; color: var(--text-sub); font-size: 1rem; 
     cursor: pointer; padding: 6px; display: flex; align-items: center; transition: color 0.2s;
 }
-.btn-icon-only:hover { color: var(--danger); }
+.btn-icon-only:hover { color: #d32f2f; }
 
 /* 諸経費セクション */
 .extra-section { 
-    background: var(--input-bg); padding: 12px; border-radius: 8px; margin-top: 16px; 
-    border: 1px dashed var(--border); 
+    background: var(--bg); padding: 16px; border-radius: var(--radius); margin-top: 20px; 
+    border: 1px solid var(--border); 
 }
-.extra-item { display: flex; gap: 6px; margin-bottom: 8px; align-items: center;}
+.extra-item { display: flex; gap: 8px; margin-bottom: 10px; align-items: center;}
 .extra-item .ex-name { flex: 1.5; }
-.extra-item .ex-amount { flex: 1; min-width: 0; /* iPhoneでの幅縮小対策 */ }
+.extra-item .ex-amount { flex: 1; min-width: 0; }
 .extra-item .ex-type { flex: 0.8; font-size: 0.8rem; padding: 10px 4px; }
 
 /* ボタン類 */
 .btn {
-    width: 100%; border: none; border-radius: 50px; font-size: 1rem; font-weight: 700;
+    width: 100%; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 600;
     padding: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-    text-decoration: none;
+    text-decoration: none; letter-spacing: 0.02em;
 }
 .btn-primary { 
-    background: var(--primary); color: #fff; margin-top: 10px; 
-    box-shadow: 0 4px 10px rgba(85, 139, 47, 0.3);
+    background: var(--primary-btn); color: var(--primary-btn-text); margin-top: 10px; 
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
-.btn-primary:hover { background: var(--primary-hover); }
-.btn-primary:active { transform: scale(0.98); }
+.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); }
+.btn-primary:active { transform: translateY(0); }
 
 .btn-outline { 
-    background: transparent; border: 2px dashed var(--border); color: var(--text-main); 
+    background: transparent; border: 1px solid var(--primary-text); color: var(--primary-text); 
     padding: 12px; font-weight: 600;
 }
-.btn-outline:hover { background: var(--primary-light); border-color: var(--primary); color: var(--primary); }
-.btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 6px; }
+.btn-outline:hover { background: var(--primary-light); }
+.btn-sm { padding: 8px 16px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 4px; }
 
-/* --- レシート風デザイン (Receipt Style) --- */
+/* --- レシート風デザイン --- */
 #resultArea { display: none; }
 
 .receipt-wrapper {
-    /* 画像保存用に余白を確保するためのラッパー */
     padding: 20px; 
-    margin: 20px -20px; /* 親のpaddingを相殺して画面幅広く */
+    margin: 20px -20px;
 }
 
 .receipt-paper {
-    background: #fff;
-    color: #2c2c2c;
-    font-family: 'Courier New', Courier, "OCR-B", monospace; /* レシートっぽいフォント */
+    background: #fff; /* 紙は常に白 */
+    color: #333;      /* 文字は常に黒 */
+    font-family: "Courier New", Courier, monospace;
     padding: 30px 25px;
     position: relative;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.15);
-    max-width: 380px;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    max-width: 400px;
     margin: 0 auto;
-    
-    /* ギザギザの縁取り (擬似要素で実装) */
-    margin-top: 10px;
-    margin-bottom: 10px;
-}
-
-.receipt-paper::before, .receipt-paper::after {
-    content: "";
-    position: absolute;
-    left: 0;
-    width: 100%;
-    height: 10px;
-    background-size: 20px 20px;
-    background-repeat: repeat-x;
-}
-
-/* 上部のギザギザ */
-.receipt-paper::before {
-    top: -10px;
-    background-image: linear-gradient(135deg, transparent 50%, #fff 50%), linear-gradient(-135deg, transparent 50%, #fff 50%);
-    background-position: top left, top left;
-}
-
-/* 下部のギザギザ */
-.receipt-paper::after {
-    bottom: -10px;
-    background-image: linear-gradient(-45deg, transparent 50%, #fff 50%), linear-gradient(45deg, transparent 50%, #fff 50%);
-    background-position: bottom left, bottom left;
+    border-top: 1px solid #eee;
+    border-radius: 2px;
 }
 
 .receipt-header {
     text-align: center;
-    border-bottom: 2px dashed #444;
+    border-bottom: 1px solid #333;
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
-.receipt-logo { font-size: 2.5rem; color: #333; margin-bottom: 5px; }
-.receipt-title { font-size: 1.1rem; font-weight: 900; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
-.receipt-meta { font-size: 0.7rem; color: #666; margin-top: 5px; }
+.receipt-logo { font-size: 2rem; color: #333; margin-bottom: 5px; }
+.receipt-title { font-size: 1rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+.receipt-meta { font-size: 0.75rem; color: #666; margin-top: 5px; font-family: sans-serif; }
 
 .receipt-total-section {
     text-align: center;
     padding: 15px 0;
-    border-bottom: 2px dashed #444;
+    border-bottom: 1px solid #333;
 }
-.receipt-label-main { font-size: 0.8rem; font-weight: bold; display: block; margin-bottom: 5px; }
-.receipt-amount-main { font-size: 2.4rem; font-weight: 900; line-height: 1; display: block; }
-.receipt-note { font-size: 0.7rem; color: #666; margin-top: 5px; display: block;}
+.receipt-label-main { font-size: 0.8rem; display: block; margin-bottom: 5px; color: #555; }
+.receipt-amount-main { font-size: 2.2rem; font-weight: bold; line-height: 1; display: block; color: #000; }
+.receipt-note { font-size: 0.75rem; color: #666; margin-top: 8px; display: block;}
 
 .receipt-section {
     padding: 15px 0;
-    border-bottom: 1px dashed #bbb;
+    border-bottom: 1px dashed #ccc;
 }
 .receipt-section-title {
-    font-size: 0.8rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
-    text-transform: uppercase; letter-spacing: 1px;
+    font-size: 0.75rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
+    color: #555;
 }
 
 .receipt-row {
@@ -309,73 +324,94 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     font-size: 0.9rem; margin-bottom: 6px;
     line-height: 1.4;
 }
-.receipt-row.bold { font-weight: 800; font-size: 0.95rem; }
+.receipt-row.bold { font-weight: bold; font-size: 0.95rem; margin-top: 8px; }
 .receipt-row span:last-child { white-space: nowrap; margin-left: 10px; }
-.receipt-detail { font-size: 0.7rem; color: #666; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
+.receipt-detail { font-size: 0.75rem; color: #777; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
 
 .receipt-footer {
-    text-align: center; margin-top: 20px; font-size: 0.7rem; opacity: 0.7;
-    font-weight: bold;
+    text-align: center; margin-top: 30px; font-size: 0.75rem; color: #888;
 }
 
 /* コピーエリア */
 .copy-area {
-    background: var(--text-main); color: var(--card-bg); padding: 15px; border-radius: 8px; margin-top: 20px;
+    background: var(--card-bg); color: var(--text-main); padding: 20px; 
+    border-radius: var(--radius); margin-top: 20px; border: 1px solid var(--border);
 }
-#copyTextarea { width: 100%; background: transparent; border: none; color: inherit; font-family: monospace; height: 120px; resize: none; font-size: 0.8rem; outline: none; opacity: 0.9; }
-.btn-copy { background: rgba(255,255,255,0.1); color: inherit; padding: 10px; width: 100%; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px; margin-top: 10px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; transition: background 0.2s; }
-.btn-copy:hover { background: rgba(255,255,255,0.2); }
+#copyTextarea { 
+    width: 100%; background: var(--input-bg); border: 1px solid var(--border); 
+    color: var(--text-main); font-family: monospace; height: 100px; resize: none; 
+    font-size: 0.85rem; outline: none; padding: 10px; border-radius: var(--radius);
+}
+.btn-copy { 
+    background: var(--bg); color: var(--text-main); padding: 12px; width: 100%; 
+    border: 1px solid var(--border); border-radius: var(--radius); 
+    margin-top: 10px; font-weight: 600; cursor: pointer; 
+    display: flex; align-items: center; justify-content: center; gap: 6px; 
+    transition: all 0.2s; 
+}
+.btn-copy:hover { background: var(--primary-light); color: var(--primary-text); border-color: var(--primary); }
 
 /* 履歴リスト */
-.history-container { margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px; }
+.history-container { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
 .history-item { 
-    background: var(--card-bg); padding: 12px 14px; border-radius: 8px; margin-bottom: 8px;
+    background: var(--card-bg); padding: 16px; border-radius: var(--radius); margin-bottom: 10px;
     display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border);
+    transition: border-color 0.2s;
 }
-.history-meta { font-size: 0.75rem; color: var(--text-sub); }
-.btn-restore { background: var(--primary); color: #fff; border: none; padding: 4px 10px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; }
+.history-item:hover { border-color: var(--text-sub); }
+.history-meta { font-size: 0.75rem; color: var(--text-sub); display: block; margin-bottom: 2px;}
+.btn-restore { 
+    background: var(--primary-btn); color: var(--primary-btn-text); border: none; 
+    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; 
+}
+.btn-restore:hover { opacity: 0.9; }
 
 /* トースト通知 */
 #toast {
-    visibility: hidden; min-width: 250px; background-color: var(--text-main); color: var(--card-bg); text-align: center;
-    border-radius: 50px; padding: 14px; position: fixed; z-index: 100; left: 50%; bottom: 30px;
-    transform: translateX(-50%); font-size: 0.9rem; opacity: 0; transition: opacity 0.3s, bottom 0.3s;
-    display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+    visibility: hidden; min-width: 280px; 
+    background-color: var(--primary-btn); color: var(--primary-btn-text); 
+    text-align: center; border-radius: 4px; padding: 16px; 
+    position: fixed; z-index: 100; left: 50%; bottom: 30px;
+    transform: translateX(-50%); font-size: 0.9rem; opacity: 0; 
+    transition: opacity 0.3s, bottom 0.3s;
+    display: flex; align-items: center; justify-content: center; gap: 10px; 
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
 }
 #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
 /* --- 使い方ガイドモーダル (Hidden Guide) --- */
 .modal {
-    display: none; /* デフォルト非表示 */
-    position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%;
-    overflow: auto; background-color: rgba(0,0,0,0.4);
-    backdrop-filter: blur(4px);
+    display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%;
+    overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
 }
 .modal-content {
     background-color: var(--card-bg); margin: 5% auto; padding: 0;
-    border: 1px solid var(--border); width: 92%; max-width: 600px;
-    border-radius: var(--radius); box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    border: none; width: 92%; max-width: 600px;
+    border-radius: var(--radius); box-shadow: 0 15px 40px rgba(0,0,0,0.4);
     animation: slideIn 0.3s; position: relative;
     max-height: 90vh; display: flex; flex-direction: column;
 }
 @keyframes slideIn { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
 .modal-header {
-    padding: 16px 20px; border-bottom: 1px solid var(--border);
+    padding: 20px 24px; border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
-    background: var(--primary-light); border-radius: var(--radius) var(--radius) 0 0;
+    background: var(--bg); border-radius: var(--radius) var(--radius) 0 0;
 }
-.modal-title { margin: 0; font-size: 1.1rem; color: var(--primary); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+.modal-title { margin: 0; font-size: 1.1rem; color: var(--text-main); font-weight: bold; display: flex; align-items: center; gap: 8px; }
 .close-btn { color: var(--text-sub); font-size: 1.5rem; cursor: pointer; line-height: 1; padding: 5px;}
-.close-btn:hover { color: var(--danger); }
-.modal-body { padding: 20px; overflow-y: auto; font-size: 0.9rem; color: var(--text-main); }
+.close-btn:hover { color: var(--accent); }
+.modal-body { padding: 24px; overflow-y: auto; font-size: 0.95rem; color: var(--text-main); }
 
-.guide-section { margin-bottom: 24px; border-bottom: 1px dashed var(--border); padding-bottom: 16px; }
+.guide-section { margin-bottom: 28px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
 .guide-section:last-child { border-bottom: none; margin-bottom: 0; }
-.guide-h3 { font-size: 1rem; color: var(--text-main); margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+.guide-h3 { font-size: 1rem; color: var(--primary-text); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; font-weight: bold; }
 .guide-h3 i { color: var(--accent); }
-.guide-p { margin: 0 0 8px 0; color: var(--text-sub); line-height: 1.6; }
-.guide-tag { display: inline-block; background: var(--border); color: var(--text-main); padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; margin-right: 4px; }
-
+.guide-p { margin: 0 0 10px 0; color: var(--text-main); line-height: 1.7; }
+.guide-tag { 
+    display: inline-block; background: var(--bg); border: 1px solid var(--border);
+    color: var(--text-main); padding: 2px 8px; border-radius: 4px; 
+    font-size: 0.75rem; font-weight: bold; margin-right: 4px; 
+}
 </style>
 </head>
 <body>
@@ -383,20 +419,20 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 <div id="helpModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title"><i class='fa-solid fa-book-open'></i> 初めての方へ：使い方完全ガイド</h3>
+            <h3 class="modal-title"><i class='fa-solid fa-book-open'></i> 初めての方へ：使い方ガイド</h3>
             <span class="close-btn" onclick="closeHelp()">&times;</span>
         </div>
         <div class="modal-body">
             
             <div class="guide-section">
                 <h3 class="guide-h3"><i class='fa-solid fa-users'></i> 1. メンバーと共有する</h3>
-                <p class="guide-p">このページはリアルタイムで同期されます。</p>
+                <p class="guide-p">入力内容はリアルタイムで共有されます。</p>
                 <p class="guide-p">ページ上部の <span class="guide-tag">LINEで送る</span> や <span class="guide-tag">リンクをコピー</span> を使ってURLをメンバーに送ると、全員が自分のスマホから車両情報などを入力・確認できます。</p>
             </div>
 
             <div class="guide-section">
                 <h3 class="guide-h3"><i class='fa-solid fa-car'></i> 2. 車両情報の入力</h3>
-                <p class="guide-p">車を出してくれた人の情報を入力します。</p>
+                <p class="guide-p">ドライバー（車出し担当）の情報を入力してください。</p>
                 <ul style="padding-left: 20px; margin: 5px 0; color: var(--text-sub);">
                     <li><strong>距離:</strong> 往復の走行距離 (km)</li>
                     <li><strong>燃費:</strong> 車の燃費 (km/L)</li>
@@ -407,7 +443,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
                     高速代や駐車場代を入力します。<br>
                     <span class="guide-tag">割勘</span> 全員で等分します（通常の高速代など）。<br>
                     <span class="guide-tag">部費</span> サークル費等から支払う場合に選択します。<br>
-                    <span style="font-size:0.8rem; color:var(--danger);">※ マイナス（例: -500）を入力すると、クーポンの割引や返金の計算に使えます。</span>
+                    <span style="font-size:0.8rem; color:var(--accent);">※ マイナス（例: -500）を入力すると、クーポンの割引や返金の計算に使えます。</span>
                 </p>
             </div>
 
@@ -415,15 +451,15 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
                 <h3 class="guide-h3"><i class='fa-solid fa-calculator'></i> 3. 計算と精算</h3>
                 <p class="guide-p">参加人数を入力し、<span class="guide-tag">精算を実行する</span> ボタンを押します。</p>
                 <p class="guide-p">
-                    自動的に「1人あたりの支払額」と「ドライバーへの受取額」が計算され、レシート風の画面が表示されます。<br>
-                    ドライバーには<strong>一律1,000円の車出し謝礼</strong>が加算されます。
+                    自動的に「1人あたりの支払額」と「ドライバーへの受取額」が計算され、結果が表示されます。<br>
+                    ドライバーには<strong>一律1,000円の調整費</strong>が加算されます。
                 </p>
             </div>
 
             <div class="guide-section">
                 <h3 class="guide-h3"><i class='fa-solid fa-share-nodes'></i> 4. 結果の保存と履歴</h3>
                 <p class="guide-p">
-                    計算結果は <span class="guide-tag">画像を保存</span> でスマホに保存したり、テキストをコピーしてLINEに貼り付けられます。
+                    結果は <span class="guide-tag">画像を保存</span> で保存したり、テキストをコピーしてLINEに貼り付け可能です。
                 </p>
                 <p class="guide-p">
                     また、一度計算すると自動的に<strong>履歴</strong>に保存されます。ページ下部の「計算履歴」から過去の入力を呼び出すことができます。
@@ -439,7 +475,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.7</span></h1>
+        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.8</span></h1>
         <button class="help-trigger" onclick="openHelp()" title="使い方ガイド">
             <i class='fa-regular fa-circle-question'></i>
         </button>
@@ -454,7 +490,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         <div class="share-invite-title">
             <i class='fa-solid fa-users'></i> メンバーを招待して共同編集
         </div>
-        <p style="margin: 0 0 16px 0; font-size: 0.85rem; opacity: 0.9;">
+        <p style="margin: 0 0 16px 0; font-size: 0.85rem; opacity: 0.8; color:var(--text-main);">
             このURLをシェアすると、全員でリアルタイムに入力・編集ができます。
         </p>
         <div class="share-btn-group">
@@ -472,17 +508,17 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
         </div>
     </div>
 
-    <div class="card" style="background: var(--primary-light); border-color: var(--primary);">
-        <h3 style="margin:0 0 10px 0; font-size:0.95rem; color: var(--primary); display: flex; align-items: center; gap: 6px;">
+    <div class="card" style="background: var(--bg); border-color: var(--primary);">
+        <h3 style="margin:0 0 10px 0; font-size:0.95rem; color: var(--primary-text); display: flex; align-items: center; gap: 6px;">
             <i class='fa-solid fa-circle-info'></i> 使い方
         </h3>
         <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-main);">
-            <li>参加人数、車出ししてくれた方の情報を入力します。</li>
-            <li><strong>諸経費</strong>には高速代などを入力します。マイナス（例: -500）を入力すると、返金や割引として計算されます。</li>
+            <li>参加人数、ドライバー情報を入力します。</li>
+            <li><strong>諸経費</strong>には高速代などを入力します。マイナス（例: -500）も入力可能です。</li>
             <li>「精算を実行」を押すと1人あたりの支払額が計算されます。</li>
         </ul>
         <div style="text-align:right; margin-top:8px;">
-            <button onclick="openHelp()" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer; text-decoration:underline;">
+            <button onclick="openHelp()" style="background:none; border:none; color:var(--primary-text); font-size:0.8rem; cursor:pointer; text-decoration:underline;">
                 <i class='fa-solid fa-book'></i> 詳しいガイドを見る
             </button>
         </div>
@@ -513,7 +549,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
             <label>企画の参加人数 (企画者含む)</label>
             <div style="position: relative;">
                 <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 40px;">
-                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 13px; color: var(--text-sub);"></i>
+                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 12px; color: var(--text-sub);"></i>
             </div>
         </div>
         
@@ -580,7 +616,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
                 <button class="btn-copy" onclick="copyToClipboard()">
                     <i class='fa-solid fa-copy'></i> テキストをコピー
                 </button>
-                <button class="btn" style="background: var(--text-main); color: var(--primary-light); font-size:0.9rem; border: none; border-radius: 6px; width: 100%; margin-top:10px;" onclick="downloadResultImage()">
+                <button class="btn" style="background: var(--primary-btn); color: #fff; font-size:0.9rem; border: none; border-radius: 6px; width: 100%; margin-top:10px;" onclick="downloadResultImage()">
                     <i class='fa-solid fa-download'></i> 画像を保存
                 </button>
             </div>
@@ -588,7 +624,7 @@ input::placeholder { color: var(--text-sub); opacity: 0.5; }
     </div>
 
     <div class="history-container">
-        <details>
+        <details open>
             <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none;">
                 <i class='fa-solid fa-clock-rotate-left'></i> 計算履歴 (保存済み)
             </summary>
@@ -635,7 +671,7 @@ window.copyRoomLink = copyRoomLink;
 window.shareToLine = shareToLine;
 window.copyToClipboard = copyToClipboard;
 
-// --- Help Modal Logic (追加機能) ---
+// --- Help Modal Logic ---
 window.openHelp = function() {
     document.getElementById('helpModal').style.display = 'block';
 }
@@ -1028,19 +1064,19 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
             <div class="input-group">
                 <label>ドライバー名（任意）</label>
                 <div style="position:relative;">
-                    <i class='fa-solid fa-user' style="position:absolute; left:12px; top:13px; color:var(--text-sub);"></i>
+                    <i class='fa-solid fa-user' style="position:absolute; left:12px; top:12px; color:var(--text-sub);"></i>
                     <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:36px;">
                 </div>
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離 (km)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>燃費 (km/L)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>価格 (円)<span style="color:var(--danger)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
+                <div class="input-group"><label>距離 (km)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>燃費 (km/L)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>価格 (円)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場・割引など）</label>
                 <div id="${extrasId}"></div>
-                <button class="btn-reset" style="background:none; border:none; color:var(--primary); font-size:0.8rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
+                <button class="btn-reset" style="background:none; border:none; color:var(--primary-text); font-size:0.8rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
                     + 経費を追加
                 </button>
             </div>
@@ -1199,7 +1235,7 @@ function calculate() {
                     <span>¥${d.totalPay.toLocaleString()}</span>
                 </div>
                 <span class="receipt-detail">- ガソリン代: ¥${d.gasCost.toLocaleString()}</span>
-                <span class="receipt-detail">- ドライバー調整費: ¥${d.reward.toLocaleString()}</span>
+                <span class="receipt-detail">- 調整費: ¥${d.reward.toLocaleString()}</span>
                 ${extrasHtml}
             </div>
         `;
