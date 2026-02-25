@@ -153,23 +153,28 @@ h2 i { color: var(--text-sub); font-size: 1.1rem; }
 
 /* 入力フォーム */
 .input-group { margin-bottom: 18px; }
-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+label { display: block; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
 
 input[type="number"], input[type="text"], select {
-    width: 100%; padding: 12px; 
+    width: 100%; padding: 14px; 
     border: 1px solid var(--input-border); border-radius: var(--radius); 
-    font-size: 16px; background: var(--input-bg); color: var(--text-main);
+    font-size: 18px; background: var(--input-bg); color: var(--text-main);
     transition: 0.2s; 
+    font-weight: bold; /* 入力された文字を太文字に */
 }
 input:focus, select:focus { 
     outline: none; 
     border-color: var(--primary); 
     box-shadow: 0 0 0 2px rgba(100, 150, 200, 0.2); 
 }
-input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
+input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: normal; /* プレースホルダーは通常の太さ */ }
+
+.inp-name, .inp-dist, .inp-eco, .inp-price {
+    font-size: 1.15rem !important;
+}
 
 .flex-row { display: flex; gap: 12px; }
-.flex-row > div { flex: 1; }
+.flex-row > div { flex: 1; min-width: 0; }
 
 /* トグルスイッチ */
 .checkbox-card {
@@ -211,20 +216,25 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
 .btn-icon-only {
-    background: none; border: none; color: var(--text-sub); font-size: 1rem; 
+    background: none; border: none; color: var(--text-sub); font-size: 1.2rem; 
     cursor: pointer; padding: 6px; display: flex; align-items: center; transition: color 0.2s;
 }
 .btn-icon-only:hover { color: #d32f2f; }
 
-/* 諸経費セクション */
+/* 諸経費セクション (フラット＆1行レイアウト) */
 .extra-section { 
-    background: var(--bg); padding: 16px; border-radius: var(--radius); margin-top: 20px; 
-    border: 1px solid var(--border); 
+    margin-top: 18px; /* 枠や背景を消し、フラットに並べる */
 }
-.extra-item { display: flex; gap: 8px; margin-bottom: 10px; align-items: center;}
-.extra-item .ex-name { flex: 1.5; }
-.extra-item .ex-amount { flex: 1; min-width: 0; }
-.extra-item .ex-type { flex: 0.8; font-size: 0.8rem; padding: 10px 4px; }
+.extra-item { 
+    display: flex; flex-wrap: nowrap; gap: 8px; margin-bottom: 12px; align-items: center; /* nowrapで1行に強制 */
+}
+.extra-item .ex-name { flex: 2; min-width: 0; font-size: 1.15rem; }
+.extra-item .ex-amount { flex: 2; min-width: 0; font-size: 1.15rem; }
+.extra-item .ex-type { flex: 1.2; min-width: 0; font-size: 1rem; padding: 14px 4px; border-radius: var(--radius); text-align: center; }
+
+/* 種別セレクトの塗りつぶしカラー */
+.ex-type.club-color { background-color: var(--primary); color: #fff; border-color: var(--primary); }
+.ex-type.split-color { background-color: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* ボタン類 */
 .btn {
@@ -255,8 +265,8 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
 }
 
 .receipt-paper {
-    background: #fff; /* 紙は常に白 */
-    color: #333;      /* 文字は常に黒 */
+    background: #fff;
+    color: #333;
     font-family: "Courier New", Courier, monospace;
     padding: 30px 25px;
     position: relative;
@@ -274,38 +284,38 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
     margin-bottom: 15px;
 }
 .receipt-logo { font-size: 2rem; color: #333; margin-bottom: 5px; }
-.receipt-title { font-size: 1rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
-.receipt-meta { font-size: 0.75rem; color: #666; margin-top: 5px; font-family: sans-serif; }
+.receipt-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+.receipt-meta { font-size: 0.85rem; color: #666; margin-top: 5px; font-family: sans-serif; }
 
 .receipt-total-section {
     text-align: center;
     padding: 15px 0;
     border-bottom: 1px solid #333;
 }
-.receipt-label-main { font-size: 0.8rem; display: block; margin-bottom: 5px; color: #555; }
-.receipt-amount-main { font-size: 2.2rem; font-weight: bold; line-height: 1; display: block; color: #000; }
-.receipt-note { font-size: 0.75rem; color: #666; margin-top: 8px; display: block;}
+.receipt-label-main { font-size: 0.95rem; display: block; margin-bottom: 5px; color: #555; }
+.receipt-amount-main { font-size: 2.5rem; font-weight: bold; line-height: 1; display: block; color: #000; }
+.receipt-note { font-size: 0.85rem; color: #666; margin-top: 8px; display: block;}
 
 .receipt-section {
     padding: 15px 0;
     border-bottom: 1px dashed #ccc;
 }
 .receipt-section-title {
-    font-size: 0.75rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
+    font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
     color: #555;
 }
 
 .receipt-row {
     display: flex; justify-content: space-between; align-items: baseline;
-    font-size: 0.9rem; margin-bottom: 6px;
+    font-size: 1.05rem; margin-bottom: 6px;
     line-height: 1.4;
 }
-.receipt-row.bold { font-weight: bold; font-size: 0.95rem; margin-top: 8px; }
+.receipt-row.bold { font-weight: bold; font-size: 1.1rem; margin-top: 8px; }
 .receipt-row span:last-child { white-space: nowrap; margin-left: 10px; }
-.receipt-detail { font-size: 0.75rem; color: #777; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
+.receipt-detail { font-size: 0.9rem; color: #777; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
 
 .receipt-footer {
-    text-align: center; margin-top: 30px; font-size: 0.75rem; color: #888;
+    text-align: center; margin-top: 30px; font-size: 0.85rem; color: #888;
 }
 
 /* コピーエリア */
@@ -315,7 +325,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
 }
 #copyTextarea { 
     width: 100%; background: var(--input-bg); border: 1px solid var(--border); 
-    color: var(--text-main); font-family: monospace; height: 100px; resize: none; 
+    color: var(--text-main); font-family: monospace; height: 180px; resize: none; 
     font-size: 0.85rem; outline: none; padding: 10px; border-radius: var(--radius);
 }
 .btn-copy { 
@@ -355,7 +365,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
 }
 #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
-/* --- 使い方ガイドモーダル (Hidden Guide) --- */
+/* --- 使い方ガイドモーダル --- */
 .modal {
     display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%;
     overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
@@ -510,7 +520,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
             <label>企画の参加人数 (企画者含む)</label>
             <div style="position: relative;">
                 <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 40px;">
-                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 12px; color: var(--text-sub);"></i>
+                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 15px; color: var(--text-sub);"></i>
             </div>
         </div>
         
@@ -530,6 +540,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
             <div class="receipt-paper">
                 <div class="receipt-header">
                     <div class="receipt-logo"><i class='fa-solid fa-mountain-sun'></i></div>
+                    <div id="receiptRoomName" style="font-size: 1.15rem; font-weight: bold; margin-bottom: 5px; color: #111;"></div>
                     <h3 class="receipt-title">ガソリン代精算書</h3>
                     <div class="receipt-meta" id="receiptDate">2024.01.01 12:00</div>
                 </div>
@@ -621,7 +632,7 @@ window.pushData = debounce(pushDataToFirebase, 500);
 window.handleAddCarBtn = handleAddCarBtn;
 window.resetRoom = resetRoom;
 window.loadFromHistory = loadFromHistory;
-window.deleteHistory = deleteHistory;
+window.deleteHistory = fillTestData;
 window.fillTestData = fillTestData;
 window.downloadResultImage = downloadResultImage;
 window.addCarToDOM = addCarToDOM;
@@ -639,7 +650,6 @@ window.openHelp = function() {
 window.closeHelp = function() {
     document.getElementById('helpModal').style.display = 'none';
 }
-// モーダル外クリックで閉じる
 window.onclick = function(event) {
     const modal = document.getElementById('helpModal');
     if (event.target == modal) {
@@ -656,8 +666,9 @@ function applyRoomColor(id) {
     }
     const hue = Math.abs(hash % 360);
     const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-    const lightness = isDark ? 70 : 40; 
-    const color = `hsl(${hue}, 80%, ${lightness}%)`;
+    
+    // ライトモード時は濃い黄色に固定、ダークモード時はそのままの色相で明るめ
+    const color = isDark ? `hsl(${hue}, 80%, 70%)` : '#a67c00';
     
     const inputEl = document.getElementById('roomName');
     if(inputEl) {
@@ -723,7 +734,6 @@ try {
     showToast("初期化エラーが発生しました");
 }
 
-// 画像保存用関数
 function downloadResultImage() {
     const target = document.getElementById('captureTarget');
     showToast("画像を生成中...");
@@ -809,7 +819,10 @@ function renderForm(data) {
             
             if(document.activeElement !== nameInp) nameInp.value = exData.name || "";
             if(document.activeElement !== amtInp) amtInp.value = exData.amount || "";
-            if(document.activeElement !== typeSel) typeSel.value = exData.type || "club";
+            if(document.activeElement !== typeSel) {
+                typeSel.value = exData.type || "club";
+                typeSel.className = 'ex-type ' + (typeSel.value === 'split' ? 'split-color' : 'club-color');
+            }
         });
     });
 }
@@ -828,7 +841,7 @@ function setCheckIfDiff(id, val) {
 }
 
 function pushDataToFirebase() {
-    if(!roomRef) return; // Guard against init failure
+    if(!roomRef) return; 
     const data = getFormData();
     const syncText = document.getElementById("syncText");
     if(syncText) syncText.textContent = "保存中...";
@@ -993,7 +1006,7 @@ function renderHistoryList() {
             </div>
             <div style="display:flex; gap:8px;">
                 <button class="btn-restore" onclick="loadFromHistory(${index})">復元</button>
-                <button class="btn-icon-only" style="color:var(--text-sub); font-size:1rem;" onclick="deleteHistory(${index})"><i class='fa-solid fa-xmark'></i></button>
+                <button class="btn-icon-only" style="color:var(--text-sub); font-size:1rem;" onclick="window.deleteHistory(${index})"><i class='fa-solid fa-xmark'></i></button>
             </div>
         `;
         list.appendChild(li);
@@ -1014,7 +1027,7 @@ function loadFromHistory(index) {
     } catch(e) { console.error(e); }
 }
 
-function deleteHistory(index) {
+window.deleteHistory = function(index) {
     if(!confirm("この履歴を削除しますか？")) return;
     try {
         const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
@@ -1054,8 +1067,8 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
             <div class="input-group">
                 <label>ドライバー名（任意）</label>
                 <div style="position:relative;">
-                    <i class='fa-solid fa-user' style="position:absolute; left:12px; top:12px; color:var(--text-sub);"></i>
-                    <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:36px;">
+                    <i class='fa-solid fa-user' style="position:absolute; left:14px; top:17px; color:var(--text-sub);"></i>
+                    <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:40px;">
                 </div>
             </div>
             <div class="flex-row">
@@ -1064,9 +1077,9 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
                 <div class="input-group"><label>価格 (円)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.8rem; color:var(--text-sub);">➕ 諸経費（高速・駐車場・割引など）</label>
+                <label style="margin-bottom:8px; display:block; font-size:0.95rem; font-weight: 600; color: var(--text-main);">➕ 諸経費（高速・駐車場・割引など）</label>
                 <div id="${extrasId}"></div>
-                <button class="btn-reset" style="background:none; border:none; color:var(--primary-text); font-size:0.8rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
+                <button class="btn-reset" style="background:none; border:none; color:var(--primary-text); font-size:0.95rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
                     + 経費を追加
                 </button>
             </div>
@@ -1095,11 +1108,12 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     
     const isSplit = (type === 'split') ? 'selected' : '';
     const isClub = (type === 'club') ? 'selected' : '';
+    const colorClass = (type === 'split') ? 'split-color' : 'club-color';
 
     div.innerHTML = `
         <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
-        <input type="text" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
-        <select class="ex-type" onchange="window.pushData()">
+        <input type="number" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
+        <select class="ex-type ${colorClass}" onchange="this.className='ex-type ' + (this.value==='split'?'split-color':'club-color'); window.pushData()">
             <option value="club" ${isClub}>部費</option>
             <option value="split" ${isSplit}>割勘</option>
         </select>
@@ -1190,6 +1204,7 @@ function calculate() {
 
 
     document.getElementById('receiptDate').textContent = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
+    document.getElementById('receiptRoomName').textContent = data.roomName ? data.roomName : "ルーム名未設定";
 
     document.getElementById('resPerPerson').textContent = "¥ " + perPersonPay.toLocaleString();
     
@@ -1244,30 +1259,33 @@ function calculate() {
 
     saveToHistory();
 
-    const roomText = data.roomName ? `【${data.roomName}】\n` : "";
-    let lineText = `【山歩会 精算報告 ⛰️】\n${roomText}`;
-    lineText += `■徴収額（1人あたり）\n`;
+    // 共有用テキストの詳細化
+    const roomText = data.roomName ? `【${data.roomName}】\n` : "【ルーム名未設定】\n";
+    let lineText = `【山歩会 精算報告 ⛰️】\n${roomText}\n`;
+    lineText += `■ 1人あたりの徴収額\n`;
     lineText += `${perPersonPay.toLocaleString()}円\n`;
-    if(isOrgFree) lineText += `（※企画者は免除）\n`;
+    lineText += `(対象: ${payers}名 / 実費計: ${totalCollectionTarget.toLocaleString()}円`;
+    if (totalExtrasSplit > 0) lineText += ` 内:諸経費${totalExtrasSplit.toLocaleString()}円`;
+    lineText += `)\n`;
+    if(isOrgFree) lineText += `※企画者は免除\n`;
     
-    lineText += `\n■ドライバーへの支払額\n`;
+    lineText += `\n■ ドライバーへの支払額\n`;
     driverResults.forEach(d => {
-        lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
-        let details = [`ガス:${d.gasCost}`];
-        const splitEx = d.extras.filter(e => e.type === 'split').reduce((s,e)=>s+e.amount,0);
-        const clubEx  = d.extras.filter(e => e.type !== 'split').reduce((s,e)=>s+e.amount,0);
-        
-        if(splitEx !== 0) details.push(`割勘経費:${splitEx}`);
-        if(clubEx !== 0) details.push(`部費経費:${clubEx}`);
-        details.push(`調整:${d.reward}`);
-        
-        lineText += `  (${details.join('/')})\n`;
+        lineText += `[${d.name} さん] : ${d.totalPay.toLocaleString()}円\n`;
+        lineText += `  - ガソリン代: ${d.gasCost.toLocaleString()}円\n`;
+        lineText += `  - 調整費: ${d.reward.toLocaleString()}円\n`;
+        d.extras.forEach(ex => {
+            const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
+            lineText += `  - ${ex.name} ${mark}: ${ex.amount.toLocaleString()}円\n`;
+        });
     });
     
-    lineText += `\n■サークル会計からの支出\n計：${circleNeed.toLocaleString()}円\n`;
-    if(surplus > 0) lineText += `(端数余剰 ${surplus}円充当済み)\n`;
+    lineText += `\n■ サークル会計からの支出\n`;
+    lineText += `部費負担分の経費合計: ${(totalExtrasClub + totalReward).toLocaleString()}円\n`;
+    lineText += `端数調整の余り充当: -${surplus.toLocaleString()}円\n`;
+    lineText += `【会計からの実支出】: ${circleNeed.toLocaleString()}円\n`;
 
-    lineText += `\n\n▼計算・編集URL\n${window.location.href}`;
+    lineText += `\n▼計算・編集URL\n${window.location.href}`;
 
     document.getElementById('copyTextarea').value = lineText;
 
