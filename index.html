@@ -277,6 +277,11 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     border-radius: 2px;
 }
 
+/* ★追加: レシート内の相関関係カラー ★ */
+.color-circle { color: #0288d1 !important; } /* サークル負担 (青) */
+.color-split { color: #e64a19 !important; }  /* 個人負担・割勘 (オレンジ) */
+.receipt-underline-circle { border-bottom: 2px solid #0288d1; padding-bottom: 2px; display: inline-block;}
+
 .receipt-header {
     text-align: center;
     border-bottom: 1px solid #333;
@@ -293,7 +298,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     border-bottom: 1px solid #333;
 }
 .receipt-label-main { font-size: 0.95rem; display: block; margin-bottom: 5px; color: #555; }
-.receipt-amount-main { font-size: 2.5rem; font-weight: bold; line-height: 1; display: block; color: #000; }
+.receipt-amount-main { font-size: 2.5rem; font-weight: bold; line-height: 1; display: block; }
 .receipt-note { font-size: 0.85rem; color: #666; margin-top: 8px; display: block;}
 
 .receipt-section {
@@ -547,7 +552,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
                 <div class="receipt-total-section">
                     <span class="receipt-label-main">1人あたりの徴収額</span>
-                    <span class="receipt-amount-main" id="resPerPerson">0</span>
+                    <span class="receipt-amount-main color-split" id="resPerPerson">0</span>
                     <span class="receipt-note" id="resTargetDetail">--</span>
                 </div>
 
@@ -559,16 +564,16 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                 <div class="receipt-section">
                     <span class="receipt-section-title">サークル会計情報</span>
                     <div class="receipt-row">
-                        <span>部費負担分の経費合計</span>
-                        <span id="resCircleExpense">0</span>
+                        <span class="color-circle">部費負担分の経費合計</span>
+                        <span id="resCircleExpense" class="color-circle">0</span>
                     </div>
                     <div class="receipt-row">
-                        <span>端数調整の余り (サークル費へ)</span>
-                        <span id="resGasSurplus">0</span>
+                        <span class="color-circle">端数調整の余り (サークル費へ)</span>
+                        <span id="resGasSurplus" class="color-circle">0</span>
                     </div>
-                    <div class="receipt-row bold">
-                        <span>会計からの実支出</span>
-                        <span id="resWithdraw">0</span>
+                    <div class="receipt-row bold" style="margin-top: 12px;">
+                        <span class="color-circle receipt-underline-circle">会計からの実支出</span>
+                        <span id="resWithdraw" class="color-circle">0</span>
                     </div>
                 </div>
 
@@ -1228,19 +1233,21 @@ function calculate() {
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
-                const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
-                extrasHtml += `<span class="receipt-detail">- ${ex.name} ${mark}: ¥${ex.amount.toLocaleString()}</span>`;
+                const isSplit = ex.type === 'split';
+                const mark = isSplit ? '[割勘]' : '[部費]';
+                const colorClass = isSplit ? 'color-split' : 'color-circle';
+                extrasHtml += `<span class="receipt-detail">- ${ex.name} ${mark}: <span class="${colorClass}">¥${ex.amount.toLocaleString()}</span></span>`;
             });
         }
 
         row.innerHTML = `
             <div style="flex:1;">
-                <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:4px;">
                     <span>${d.name} さん</span>
                     <span>¥${d.totalPay.toLocaleString()}</span>
                 </div>
-                <span class="receipt-detail">- ガソリン代: ¥${d.gasCost.toLocaleString()}</span>
-                <span class="receipt-detail">- 調整費: ¥${d.reward.toLocaleString()}</span>
+                <span class="receipt-detail">- ガソリン代: <span class="color-split">¥${d.gasCost.toLocaleString()}</span></span>
+                <span class="receipt-detail">- 調整費: <span class="color-circle">¥${d.reward.toLocaleString()}</span></span>
                 ${extrasHtml}
             </div>
         `;
