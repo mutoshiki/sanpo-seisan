@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>山歩会会計精算ツール v5.8</title>
+<title>山歩会会計精算ツール</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
@@ -16,7 +16,7 @@
     
     --primary-light: #ecf0f1; /* 薄いグレー（背景アクセント） */
     
-    --accent: #d35400;        /* テラコッタ（強調） */
+    --accent: #2e7d32;        /* 落ち着いた緑（ネプチューングリーン） */
     
     --bg: #f4f6f7;            /* 全体背景：オフホワイト */
     --card-bg: #ffffff;       /* カード背景：白 */
@@ -46,7 +46,7 @@
         
         --primary-light: #252f38; /* 選択時の背景など */
         
-        --accent: #e67e22;        /* 落ち着いたオレンジ */
+        --accent: #66bb6a;        /* 明るめの落ち着いた緑 */
         
         --bg: #0b0e11;            /* 背景：ほぼ黒に近いダークブルーグレー */
         --card-bg: #192229;       /* カード：濃いチャコール */
@@ -77,30 +77,20 @@ body {
 /* --- ヘッダー周り --- */
 header { 
     position: relative; 
-    text-align: center; 
-    margin-bottom: 30px; 
+    text-align: left; 
+    margin-bottom: 20px; 
     padding-bottom: 15px;
     border-bottom: 1px solid var(--border);
 }
 h1 { 
     font-family: var(--font-head);
     font-size: 1.5rem; margin: 0; color: var(--primary-text); 
-    display: flex; align-items: center; justify-content: center; gap: 10px;
+    display: flex; align-items: center; justify-content: flex-start; gap: 10px;
     font-weight: 700;
-    letter-spacing: 0.05em;
 }
 h1 i { font-size: 1.4rem; color: var(--accent); }
-h1 span { 
-    font-size: 0.75rem; 
-    background: var(--primary); color: #fff; 
-    padding: 2px 6px; border-radius: 4px;
-    font-weight: normal; margin-top: 2px; display: inline-block;
-    vertical-align: middle;
-    text-shadow: none;
-    background: var(--primary-btn);
-}
 
-/* 招待エリア */
+/* 招待・ガイドエリア */
 .share-invite-box {
     background: var(--card-bg);
     border: 1px solid var(--border);
@@ -110,15 +100,9 @@ h1 span {
     padding: 16px;
     margin-bottom: 24px;
     box-shadow: var(--shadow);
-    text-align: center;
-}
-.share-invite-title {
-    font-weight: bold; font-size: 1rem; margin-bottom: 10px;
-    display: flex; align-items: center; justify-content: center; gap: 8px;
-    color: var(--primary-text);
 }
 .share-btn-group {
-    display: flex; gap: 10px; justify-content: center;
+    display: flex; gap: 10px; flex-wrap: wrap;
 }
 .btn-share-action {
     background: var(--primary-light);
@@ -129,9 +113,11 @@ h1 span {
     font-size: 0.85rem;
     cursor: pointer;
     text-decoration: none;
-    display: flex; align-items: center; gap: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 6px;
     transition: all 0.2s;
     font-weight: 600;
+    flex: 1;
+    min-width: 100px;
 }
 .btn-share-action:hover { opacity: 0.8; transform: translateY(-1px); }
 .btn-share-action:active { transform: scale(0.98); }
@@ -139,26 +125,16 @@ h1 span {
 .room-badge {
     background: var(--bg); color: var(--text-sub);
     padding: 4px 12px; border-radius: 20px; font-family: monospace; font-size: 0.8rem;
-    margin: 12px auto 0; display: inline-flex; align-items: center; gap: 6px; 
+    display: inline-flex; align-items: center; gap: 6px; 
     border: 1px solid var(--border);
 }
 
 .sync-status {
     font-size: 0.75rem; color: var(--text-sub); font-weight: 500;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    margin-top: 8px;
+    display: flex; align-items: center; justify-content: flex-end; gap: 6px;
 }
 .sync-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
 @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.4; } 100% { opacity: 1; } }
-
-/* --- ヘルプボタン --- */
-.help-trigger {
-    position: absolute; right: 0; top: 5px;
-    background: none; border: none; color: var(--text-sub);
-    font-size: 1.2rem; cursor: pointer; padding: 5px;
-    transition: color 0.2s;
-}
-.help-trigger:hover { color: var(--primary); }
 
 /* --- 共通コンポーネント --- */
 .card {
@@ -427,7 +403,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
             <div class="guide-section">
                 <h3 class="guide-h3"><i class='fa-solid fa-users'></i> 1. メンバーと共有する</h3>
                 <p class="guide-p">入力内容はリアルタイムで共有されます。</p>
-                <p class="guide-p">ページ上部の <span class="guide-tag">LINEで送る</span> や <span class="guide-tag">リンクをコピー</span> を使ってURLをメンバーに送ると、全員が自分のスマホから車両情報などを入力・確認できます。</p>
+                <p class="guide-p">ページ上部の <span class="guide-tag">LINEで送る</span> や <span class="guide-tag">リンク</span> を使ってURLをメンバーに送ると、全員が自分のスマホから車両情報などを入力・確認できます。</p>
             </div>
 
             <div class="guide-section">
@@ -475,51 +451,36 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; }
 
 <div class="container">
     <header>
-        <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール<span>v5.8</span></h1>
-        <button class="help-trigger" onclick="openHelp()" title="使い方ガイド">
-            <i class='fa-regular fa-circle-question'></i>
-        </button>
-        
-        <div class="sync-status">
-            <span class="sync-dot"></span>
-            <span id="syncText">同期中...</span>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div style="flex: 1;">
+                <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール</h1>
+                <input type="text" id="roomName" placeholder="ルーム名を入力..." style="margin-top: 10px; font-size: 1.1rem; font-weight: bold; border: none; background: transparent; outline: none; width: 100%; border-bottom: 1px dashed var(--border); padding-bottom: 4px; transition: color 0.3s;" oninput="window.pushData()">
+            </div>
+            <div class="sync-status" style="margin-top: 5px; margin-left: 10px; white-space: nowrap;">
+                <span class="sync-dot"></span>
+                <span id="syncText">同期中...</span>
+            </div>
         </div>
     </header>
 
     <div class="share-invite-box">
-        <div class="share-invite-title">
-            <i class='fa-solid fa-users'></i> メンバーを招待して共同編集
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+            <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary-text);">
+                <i class='fa-solid fa-users'></i> メンバーを招待・共同編集
+            </div>
+            <div class="room-badge" onclick="copyRoomLink()" style="margin: 0;">
+                ID: <span id="dispRoomId">...</span>
+            </div>
         </div>
-        <p style="margin: 0 0 16px 0; font-size: 0.85rem; opacity: 0.8; color:var(--text-main);">
-            このURLをシェアすると、全員でリアルタイムに入力・編集ができます。
-        </p>
         <div class="share-btn-group">
             <button class="btn-share-action" onclick="copyRoomLink()">
-                <i class='fa-regular fa-copy'></i> リンクをコピー
+                <i class='fa-regular fa-copy'></i> リンク
             </button>
             <button class="btn-share-action" onclick="shareToLine()">
-                <i class='fa-brands fa-line'></i> LINEで送る
+                <i class='fa-brands fa-line'></i> LINE
             </button>
-        </div>
-        
-        <div class="room-badge" onclick="copyRoomLink()">
-            <span class="room-badge-label">Room ID:</span>
-            <span id="dispRoomId">...</span>
-        </div>
-    </div>
-
-    <div class="card" style="background: var(--bg); border-color: var(--primary);">
-        <h3 style="margin:0 0 10px 0; font-size:0.95rem; color: var(--primary-text); display: flex; align-items: center; gap: 6px;">
-            <i class='fa-solid fa-circle-info'></i> 使い方
-        </h3>
-        <ul style="margin: 0; padding-left: 20px; font-size: 0.85rem; color: var(--text-main);">
-            <li>参加人数、ドライバー情報を入力します。</li>
-            <li><strong>諸経費</strong>には高速代などを入力します。マイナス（例: -500）も入力可能です。</li>
-            <li>「精算を実行」を押すと1人あたりの支払額が計算されます。</li>
-        </ul>
-        <div style="text-align:right; margin-top:8px;">
-            <button onclick="openHelp()" style="background:none; border:none; color:var(--primary-text); font-size:0.8rem; cursor:pointer; text-decoration:underline;">
-                <i class='fa-solid fa-book'></i> 詳しいガイドを見る
+            <button class="btn-share-action" style="background: var(--bg); border-color: var(--primary);" onclick="openHelp()">
+                <i class='fa-solid fa-book'></i> ガイドを見る
             </button>
         </div>
     </div>
@@ -686,6 +647,29 @@ window.onclick = function(event) {
     }
 }
 
+// --- Room Color Generator ---
+function applyRoomColor(id) {
+    if (!id) return;
+    let hash = 0;
+    for (let i = 0; i < id.length; i++) {
+        hash = id.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    const hue = Math.abs(hash % 360);
+    const isDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const lightness = isDark ? 70 : 40; 
+    const color = `hsl(${hue}, 80%, ${lightness}%)`;
+    
+    const inputEl = document.getElementById('roomName');
+    if(inputEl) {
+        inputEl.style.color = color;
+    }
+}
+if (window.matchMedia) {
+    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+        if(roomId) applyRoomColor(roomId);
+    });
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyAypqRPRn-YHWLwjT3lQ6pN6_bWBqzUvp4",
   authDomain: "sanpo-seisan.firebaseapp.com",
@@ -711,6 +695,8 @@ try {
     }
     const dispEl = document.getElementById('dispRoomId');
     if(dispEl) dispEl.textContent = roomId;
+    
+    applyRoomColor(roomId);
 
     roomRef = ref(db, 'sessions/' + roomId);
 
@@ -767,6 +753,7 @@ function downloadResultImage() {
 }
 
 function renderForm(data) {
+    setValIfDiff('roomName', data.roomName);
     setValIfDiff('totalPeople', data.total);
     setCheckIfDiff('organizerFree', data.org);
     setValIfDiff('roundingUnit', data.rounding);
@@ -876,6 +863,7 @@ function getFormData() {
         }))
     }));
     return {
+        roomName: document.getElementById('roomName').value,
         total: document.getElementById('totalPeople').value,
         org: document.getElementById('organizerFree').checked,
         rounding: document.getElementById('roundingUnit').value,
@@ -899,6 +887,7 @@ function fillTestData() {
     document.getElementById('carList').innerHTML = "";
 
     const totalPeople = 11;
+    document.getElementById('roomName').value = "御嶽スキー場 スキー企画";
     document.getElementById('totalPeople').value = totalPeople;
     document.getElementById('roundingUnit').value = "100";
     document.getElementById('organizerFree').checked = true;
@@ -962,7 +951,8 @@ function saveToHistory() {
             if(JSON.stringify(last) === JSON.stringify(data)) return; 
         }
 
-        const summary = `${data.total || "?"}名 / 車${data.cars.length}台`;
+        const roomN = data.roomName ? `[${data.roomName}] ` : "";
+        const summary = `${roomN}${data.total || "?"}名 / 車${data.cars.length}台`;
         history.unshift({ 
             date: new Date().toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }), 
             summary: summary,
@@ -1254,7 +1244,8 @@ function calculate() {
 
     saveToHistory();
 
-    let lineText = `【山歩会 精算報告 ⛰️】\n`;
+    const roomText = data.roomName ? `【${data.roomName}】\n` : "";
+    let lineText = `【山歩会 精算報告 ⛰️】\n${roomText}`;
     lineText += `■徴収額（1人あたり）\n`;
     lineText += `${perPersonPay.toLocaleString()}円\n`;
     if(isOrgFree) lineText += `（※企画者は免除）\n`;
