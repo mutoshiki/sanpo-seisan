@@ -8,58 +8,56 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-    /* --- [Light Mode] 大人っぽいクラシック・ネイビー --- */
-    --primary: #2c3e50;       /* 濃紺：信頼感 */
-    --primary-text: #2c3e50;  /* テキスト用プライマリ */
-    --primary-btn: #2c3e50;   /* ボタン背景 */
-    --primary-btn-text: #fff; /* ボタン文字 */
+    /* --- [Light Mode] クリーンでプロフェッショナルなSaaS風 --- */
+    --primary: #0f172a;       /* スレート900：引き締まった印象 */
+    --primary-text: #0f172a;
+    --primary-btn: #0f172a;
+    --primary-btn-text: #ffffff;
+    --primary-light: #f8fafc; /* ごく薄いグレー */
+    --accent: #2563eb;        /* 信頼感のあるクリアなブルー */
     
-    --primary-light: #ecf0f1; /* 薄いグレー（背景アクセント） */
-    
-    --accent: #2e7d32;        /* 落ち着いた緑（ネプチューングリーン） */
-    
-    --bg: #f4f6f7;            /* 全体背景：オフホワイト */
+    --bg: #f1f5f9;            /* 背景：少し落ち着いたライトグレー */
     --card-bg: #ffffff;       /* カード背景：白 */
     
-    --text-main: #2d3436;     /* 主な文字：濃いグレー */
-    --text-sub: #636e72;      /* 補足文字：グレー */
-    --text-placeholder: #b2bec3;
+    --text-main: #1e293b;     /* 主な文字：濃いスレート */
+    --text-sub: #64748b;      /* 補足文字：スレート */
+    --text-placeholder: #94a3b8;
     
-    --border: #dfe6e9;        /* 境界線 */
-    --input-bg: #ffffff;      /* 入力欄背景 */
-    --input-border: #bdc3c7;
+    --border: #e2e8f0;        /* 境界線：繊細なグレー */
+    --input-bg: #ffffff;
+    --input-border: #cbd5e1;
     
-    --radius: 6px;
-    --shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+    --radius: 6px;            /* 丸みを少し抑えてシャープに */
+    --shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* フラットデザイン寄りの微細な影 */
     
-    --font-head: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", sans-serif;
-    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-head: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 }
 
 @media (prefers-color-scheme: dark) {
     :root {
-        /* --- [Dark Mode] 視認性重視のディープ・ナイト --- */
-        --primary: #8fa6b8;       /* 明るめのスチールブルー（アイコン・見出し用） */
-        --primary-text: #aab7c4;  /* テキスト用はさらに明るく */
-        --primary-btn: #4b6584;   /* ボタンは少し明るい紺色 */
-        --primary-btn-text: #f1f2f6;
+        /* --- [Dark Mode] 視認性と没入感を高めたモダン・ダーク --- */
+        --primary: #e2e8f0;       
+        --primary-text: #f8fafc;  
+        --primary-btn: #2563eb;   /* アクションを明確にするブルー */
+        --primary-btn-text: #ffffff;
         
-        --primary-light: #252f38; /* 選択時の背景など */
+        --primary-light: #1e293b; /* 選択時背景 */
         
-        --accent: #66bb6a;        /* 明るめの落ち着いた緑 */
+        --accent: #10b981;        /* クリスプなグリーン */
         
-        --bg: #0b0e11;            /* 背景：ほぼ黒に近いダークブルーグレー */
-        --card-bg: #192229;       /* カード：濃いチャコール */
+        --bg: #0f172a;            /* 背景：深いスレート */
+        --card-bg: #1e293b;       /* カード：一段階明るいスレート */
         
-        --text-main: #f1f2f6;     /* 文字：ほぼ白（読みやすさ最優先） */
-        --text-sub: #ced6e0;      /* 補足：明るいグレー */
-        --text-placeholder: #747d8c;
+        --text-main: #f1f5f9;     
+        --text-sub: #94a3b8;      
+        --text-placeholder: #64748b;
         
-        --border: #353b48;        /* 境界線：背景より少し明るく */
-        --input-bg: #11151a;      /* 入力欄：カードより暗く（窪んで見えるように） */
-        --input-border: #4a5568;  /* 入力枠：しっかり見えるグレー */
+        --border: #334155;        /* 境界線：悪目立ちしない太さ */
+        --input-bg: #0f172a;      /* 入力欄：背景と同化させて窪みを表現 */
+        --input-border: #475569;  
         
-        --shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+        --shadow: none;           /* ダークモード時は影を無くしボーダーで区切る */
     }
 }
 
@@ -84,17 +82,16 @@ header {
 }
 h1 { 
     font-family: var(--font-head);
-    font-size: 1.5rem; margin: 0; color: var(--primary-text); 
-    display: flex; align-items: center; justify-content: flex-start; gap: 10px;
+    font-size: 1.25rem; margin: 0; color: var(--primary-text); 
+    display: flex; align-items: center; justify-content: flex-start; gap: 8px;
     font-weight: 700;
 }
-h1 i { font-size: 1.4rem; color: var(--accent); }
+h1 i { font-size: 1.2rem; color: var(--accent); }
 
 /* 招待・ガイドエリア */
 .share-invite-box {
     background: var(--card-bg);
     border: 1px solid var(--border);
-    border-left: 4px solid var(--accent);
     color: var(--text-main);
     border-radius: var(--radius);
     padding: 16px;
@@ -102,12 +99,12 @@ h1 i { font-size: 1.4rem; color: var(--accent); }
     box-shadow: var(--shadow);
 }
 .share-btn-group {
-    display: flex; gap: 10px; flex-wrap: wrap;
+    display: flex; gap: 8px; flex-wrap: wrap;
 }
 .btn-share-action {
-    background: var(--primary-light);
+    background: var(--bg);
     border: 1px solid var(--border);
-    color: var(--primary-text);
+    color: var(--text-main);
     padding: 8px 16px;
     border-radius: var(--radius);
     font-size: 0.85rem;
@@ -115,16 +112,16 @@ h1 i { font-size: 1.4rem; color: var(--accent); }
     text-decoration: none;
     display: flex; align-items: center; justify-content: center; gap: 6px;
     transition: all 0.2s;
-    font-weight: 600;
+    font-weight: 500;
     flex: 1;
     min-width: 100px;
 }
-.btn-share-action:hover { opacity: 0.8; transform: translateY(-1px); }
+.btn-share-action:hover { background: var(--border); color: var(--primary-text); }
 .btn-share-action:active { transform: scale(0.98); }
 
 .room-badge {
     background: var(--bg); color: var(--text-sub);
-    padding: 4px 12px; border-radius: 20px; font-family: monospace; font-size: 0.8rem;
+    padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 0.8rem;
     display: inline-flex; align-items: center; gap: 6px; 
     border: 1px solid var(--border);
 }
@@ -138,123 +135,124 @@ h1 i { font-size: 1.4rem; color: var(--accent); }
 
 /* --- 共通コンポーネント --- */
 .card {
-    background: var(--card-bg); padding: 24px; border-radius: var(--radius);
+    background: var(--card-bg); padding: 20px; border-radius: var(--radius);
     box-shadow: var(--shadow); margin-bottom: 24px; border: 1px solid var(--border);
 }
 
 h2 { 
     font-family: var(--font-head);
-    font-size: 1.1rem; margin: 0 0 20px 0; 
-    display: flex; align-items: center; gap: 10px; 
+    font-size: 1rem; margin: 0 0 16px 0; 
+    display: flex; align-items: center; gap: 8px; 
     color: var(--primary-text); 
-    border-bottom: 1px solid var(--border); padding-bottom: 12px;
+    border-bottom: 1px solid var(--border); padding-bottom: 10px;
 }
-h2 i { color: var(--text-sub); font-size: 1.1rem; }
+h2 i { color: var(--text-sub); font-size: 1rem; }
 
 /* 入力フォーム */
-.input-group { margin-bottom: 18px; }
-label { display: block; font-size: 0.95rem; font-weight: 600; margin-bottom: 8px; color: var(--text-main); }
+.input-group { margin-bottom: 16px; }
+label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
 
 input[type="number"], input[type="text"], select {
-    width: 100%; padding: 14px; 
+    width: 100%; padding: 10px 12px; 
     border: 1px solid var(--input-border); border-radius: var(--radius); 
-    font-size: 18px; background: var(--input-bg); color: var(--text-main);
+    font-size: 16px; background: var(--input-bg); color: var(--text-main);
     transition: 0.2s; 
-    font-weight: bold; /* 入力された文字を太文字に */
+    font-weight: 500; /* AI特有の太字すぎる文字をスタイリッシュに */
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
 }
 input:focus, select:focus { 
     outline: none; 
-    border-color: var(--primary); 
-    box-shadow: 0 0 0 2px rgba(100, 150, 200, 0.2); 
+    border-color: var(--accent); 
+    box-shadow: 0 0 0 1px var(--accent); 
 }
-input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: normal; /* プレースホルダーは通常の太さ */ }
+input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: normal; }
 
 .inp-name, .inp-dist, .inp-eco, .inp-price {
-    font-size: 1.15rem !important;
+    font-size: 1rem !important;
 }
 
-.flex-row { display: flex; gap: 12px; }
+.flex-row { display: flex; gap: 10px; }
 .flex-row > div { flex: 1; min-width: 0; }
 
 /* トグルスイッチ */
 .checkbox-card {
     display: flex; align-items: center; justify-content: space-between;
-    background: var(--input-bg); padding: 12px 16px; border-radius: var(--radius); 
+    background: var(--input-bg); padding: 12px 14px; border-radius: var(--radius); 
     cursor: pointer; user-select: none; border: 1px solid var(--input-border);
 }
+.checkbox-card span { font-size: 0.95rem; font-weight: 500; }
 .checkbox-card input { display: none; }
 .toggle-switch {
-    width: 44px; height: 24px; background: var(--text-sub); border-radius: 20px; position: relative; transition: 0.3s;
+    width: 40px; height: 22px; background: var(--border); border-radius: 20px; position: relative; transition: 0.3s;
 }
 .toggle-switch::after {
-    content: ''; position: absolute; top: 2px; left: 2px; width: 20px; height: 20px;
+    content: ''; position: absolute; top: 2px; left: 2px; width: 18px; height: 18px;
     background: #fff; border-radius: 50%; transition: 0.3s; box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 .checkbox-card input:checked + .toggle-switch { background: var(--accent); }
-.checkbox-card input:checked + .toggle-switch::after { transform: translateX(20px); }
+.checkbox-card input:checked + .toggle-switch::after { transform: translateX(18px); }
 
 /* 車両カード */
 .car-card {
     border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px;
-    background: var(--card-bg); overflow: hidden; 
+    background: var(--card-bg); overflow: hidden; box-shadow: var(--shadow);
 }
 .car-header {
-    background: var(--bg); padding: 12px 16px;
+    background: var(--card-bg); padding: 12px 16px;
     display: flex; justify-content: space-between; align-items: center;
     cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-main);
     border-bottom: 1px solid transparent;
     transition: background 0.2s;
 }
-.car-card.open .car-header { border-bottom-color: var(--border); background: var(--primary-light); color: var(--primary-text); }
+.car-card.open .car-header { border-bottom-color: var(--border); background: var(--bg); color: var(--primary-text); }
 .car-header i { margin-right: 8px; color: var(--text-sub); }
-.car-card.open .car-header i { color: var(--primary); }
+.car-card.open .car-header i { color: var(--text-main); }
 
-.car-body { padding: 20px; display: none; background: var(--card-bg); }
+.car-body { padding: 16px; display: none; background: var(--card-bg); }
 .car-card.open .car-body { display: block; }
 
-.toggle-icon { transition: transform 0.3s; font-size: 1rem; color: var(--text-sub); }
+.toggle-icon { transition: transform 0.3s; font-size: 0.9rem; color: var(--text-sub); }
 .car-card.open .toggle-icon { transform: rotate(180deg); }
 
 .btn-icon-only {
-    background: none; border: none; color: var(--text-sub); font-size: 1.2rem; 
-    cursor: pointer; padding: 6px; display: flex; align-items: center; transition: color 0.2s;
+    background: none; border: none; color: var(--text-sub); font-size: 1.1rem; 
+    cursor: pointer; padding: 4px; display: flex; align-items: center; transition: color 0.2s;
 }
 .btn-icon-only:hover { color: #d32f2f; }
 
-/* 諸経費セクション (フラット＆1行レイアウト) */
+/* 諸経費セクション */
 .extra-section { 
-    margin-top: 18px; /* 枠や背景を消し、フラットに並べる */
+    margin-top: 16px; 
 }
 .extra-item { 
-    display: flex; flex-wrap: nowrap; gap: 8px; margin-bottom: 12px; align-items: center; /* nowrapで1行に強制 */
+    display: flex; flex-wrap: nowrap; gap: 8px; margin-bottom: 10px; align-items: center; 
 }
-.extra-item .ex-name { flex: 2; min-width: 0; font-size: 1.15rem; }
-.extra-item .ex-amount { flex: 2; min-width: 0; font-size: 1.15rem; }
-.extra-item .ex-type { flex: 1.2; min-width: 0; font-size: 1rem; padding: 14px 4px; border-radius: var(--radius); text-align: center; }
+.extra-item .ex-name { flex: 2; min-width: 0; font-size: 1rem; }
+.extra-item .ex-amount { flex: 2; min-width: 0; font-size: 1rem; }
+.extra-item .ex-type { flex: 1.2; min-width: 0; font-size: 0.9rem; padding: 10px 4px; border-radius: var(--radius); text-align: center; }
 
 /* 種別セレクトの塗りつぶしカラー */
-.ex-type.club-color { background-color: var(--primary); color: #fff; border-color: var(--primary); }
+.ex-type.club-color { background-color: var(--bg); color: var(--text-main); border-color: var(--border); }
 .ex-type.split-color { background-color: var(--accent); color: #fff; border-color: var(--accent); }
 
 /* ボタン類 */
 .btn {
-    width: 100%; border: none; border-radius: var(--radius); font-size: 1rem; font-weight: 600;
-    padding: 14px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
+    width: 100%; border: none; border-radius: var(--radius); font-size: 0.95rem; font-weight: 600;
+    padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
     text-decoration: none; letter-spacing: 0.02em;
 }
 .btn-primary { 
     background: var(--primary-btn); color: var(--primary-btn-text); margin-top: 10px; 
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
-.btn-primary:hover { opacity: 0.9; transform: translateY(-1px); box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25); }
-.btn-primary:active { transform: translateY(0); }
+.btn-primary:hover { opacity: 0.9; }
+.btn-primary:active { transform: scale(0.98); }
 
 .btn-outline { 
-    background: transparent; border: 1px solid var(--primary-text); color: var(--primary-text); 
-    padding: 12px; font-weight: 600;
+    background: transparent; border: 1px dashed var(--border); color: var(--text-main); 
+    padding: 10px; font-weight: 500;
 }
-.btn-outline:hover { background: var(--primary-light); }
-.btn-sm { padding: 8px 16px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 4px; }
+.btn-outline:hover { background: var(--bg); color: var(--primary-text); border-style: solid;}
+.btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 4px; }
 
 /* --- レシート風デザイン --- */
 #resultArea { display: none; }
@@ -270,16 +268,15 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     font-family: "Courier New", Courier, monospace;
     padding: 30px 25px;
     position: relative;
-    box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1);
     max-width: 400px;
     margin: 0 auto;
     border-top: 1px solid #eee;
     border-radius: 2px;
 }
 
-/* ★追加: レシート内の相関関係カラー ★ */
-.color-circle { color: #0288d1 !important; } /* サークル負担 (青) */
-.color-split { color: #e64a19 !important; }  /* 個人負担・割勘 (オレンジ) */
+.color-circle { color: #0288d1 !important; }
+.color-split { color: #e64a19 !important; }
 .receipt-underline-circle { border-bottom: 2px solid #0288d1; padding-bottom: 2px; display: inline-block;}
 
 .receipt-header {
@@ -288,18 +285,18 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
-.receipt-logo { font-size: 2rem; color: #333; margin-bottom: 5px; }
-.receipt-title { font-size: 1.2rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
-.receipt-meta { font-size: 0.85rem; color: #666; margin-top: 5px; font-family: sans-serif; }
+.receipt-logo { font-size: 1.8rem; color: #333; margin-bottom: 5px; }
+.receipt-title { font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
+.receipt-meta { font-size: 0.8rem; color: #666; margin-top: 5px; font-family: sans-serif; }
 
 .receipt-total-section {
     text-align: center;
     padding: 15px 0;
     border-bottom: 1px solid #333;
 }
-.receipt-label-main { font-size: 0.95rem; display: block; margin-bottom: 5px; color: #555; }
-.receipt-amount-main { font-size: 2.5rem; font-weight: bold; line-height: 1; display: block; }
-.receipt-note { font-size: 0.85rem; color: #666; margin-top: 8px; display: block;}
+.receipt-label-main { font-size: 0.9rem; display: block; margin-bottom: 5px; color: #555; font-weight: bold; }
+.receipt-amount-main { font-size: 2.2rem; font-weight: bold; line-height: 1; display: block; }
+.receipt-note { font-size: 0.8rem; color: #666; margin-top: 8px; display: block;}
 
 .receipt-section {
     padding: 15px 0;
@@ -312,12 +309,12 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
 .receipt-row {
     display: flex; justify-content: space-between; align-items: baseline;
-    font-size: 1.05rem; margin-bottom: 6px;
+    font-size: 1rem; margin-bottom: 6px;
     line-height: 1.4;
 }
-.receipt-row.bold { font-weight: bold; font-size: 1.1rem; margin-top: 8px; }
+.receipt-row.bold { font-weight: bold; font-size: 1.05rem; margin-top: 8px; }
 .receipt-row span:last-child { white-space: nowrap; margin-left: 10px; }
-.receipt-detail { font-size: 0.9rem; color: #777; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
+.receipt-detail { font-size: 0.85rem; color: #777; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
 
 .receipt-footer {
     text-align: center; margin-top: 30px; font-size: 0.85rem; color: #888;
@@ -325,27 +322,27 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
 /* コピーエリア */
 .copy-area {
-    background: var(--card-bg); color: var(--text-main); padding: 20px; 
+    background: var(--card-bg); color: var(--text-main); padding: 16px; 
     border-radius: var(--radius); margin-top: 20px; border: 1px solid var(--border);
 }
 #copyTextarea { 
-    width: 100%; background: var(--input-bg); border: 1px solid var(--border); 
-    color: var(--text-main); font-family: monospace; height: 180px; resize: none; 
+    width: 100%; background: var(--bg); border: 1px solid var(--border); 
+    color: var(--text-main); font-family: monospace; height: 160px; resize: none; 
     font-size: 0.85rem; outline: none; padding: 10px; border-radius: var(--radius);
 }
 .btn-copy { 
-    background: var(--bg); color: var(--text-main); padding: 12px; width: 100%; 
+    background: var(--card-bg); color: var(--text-main); padding: 10px; width: 100%; 
     border: 1px solid var(--border); border-radius: var(--radius); 
-    margin-top: 10px; font-weight: 600; cursor: pointer; 
+    margin-top: 10px; font-weight: 500; cursor: pointer; 
     display: flex; align-items: center; justify-content: center; gap: 6px; 
     transition: all 0.2s; 
 }
-.btn-copy:hover { background: var(--primary-light); color: var(--primary-text); border-color: var(--primary); }
+.btn-copy:hover { background: var(--bg); color: var(--primary-text); border-color: var(--border); }
 
 /* 履歴リスト */
 .history-container { margin-top: 40px; border-top: 1px solid var(--border); padding-top: 20px; }
 .history-item { 
-    background: var(--card-bg); padding: 16px; border-radius: var(--radius); margin-bottom: 10px;
+    background: var(--card-bg); padding: 12px 16px; border-radius: var(--radius); margin-bottom: 10px;
     display: flex; justify-content: space-between; align-items: center; border: 1px solid var(--border);
     transition: border-color 0.2s;
 }
@@ -353,20 +350,20 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .history-meta { font-size: 0.75rem; color: var(--text-sub); display: block; margin-bottom: 2px;}
 .btn-restore { 
     background: var(--primary-btn); color: var(--primary-btn-text); border: none; 
-    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; 
+    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;
 }
 .btn-restore:hover { opacity: 0.9; }
 
 /* トースト通知 */
 #toast {
     visibility: hidden; min-width: 280px; 
-    background-color: var(--primary-btn); color: var(--primary-btn-text); 
-    text-align: center; border-radius: 4px; padding: 16px; 
+    background-color: var(--primary-text); color: var(--bg); 
+    text-align: center; border-radius: 4px; padding: 12px 16px; 
     position: fixed; z-index: 100; left: 50%; bottom: 30px;
-    transform: translateX(-50%); font-size: 0.9rem; opacity: 0; 
+    transform: translateX(-50%); font-size: 0.9rem; font-weight: 500; opacity: 0; 
     transition: opacity 0.3s, bottom 0.3s;
     display: flex; align-items: center; justify-content: center; gap: 10px; 
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
@@ -377,31 +374,31 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 }
 .modal-content {
     background-color: var(--card-bg); margin: 5% auto; padding: 0;
-    border: none; width: 92%; max-width: 600px;
+    border: 1px solid var(--border); width: 92%; max-width: 600px;
     border-radius: var(--radius); box-shadow: 0 15px 40px rgba(0,0,0,0.4);
     animation: slideIn 0.3s; position: relative;
     max-height: 90vh; display: flex; flex-direction: column;
 }
 @keyframes slideIn { from {opacity: 0; transform: translateY(20px);} to {opacity: 1; transform: translateY(0);} }
 .modal-header {
-    padding: 20px 24px; border-bottom: 1px solid var(--border);
+    padding: 16px 20px; border-bottom: 1px solid var(--border);
     display: flex; justify-content: space-between; align-items: center;
     background: var(--bg); border-radius: var(--radius) var(--radius) 0 0;
 }
-.modal-title { margin: 0; font-size: 1.1rem; color: var(--text-main); font-weight: bold; display: flex; align-items: center; gap: 8px; }
-.close-btn { color: var(--text-sub); font-size: 1.5rem; cursor: pointer; line-height: 1; padding: 5px;}
-.close-btn:hover { color: var(--accent); }
-.modal-body { padding: 24px; overflow-y: auto; font-size: 0.95rem; color: var(--text-main); }
+.modal-title { margin: 0; font-size: 1rem; color: var(--text-main); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+.close-btn { color: var(--text-sub); font-size: 1.2rem; cursor: pointer; line-height: 1; padding: 5px;}
+.close-btn:hover { color: var(--text-main); }
+.modal-body { padding: 20px; overflow-y: auto; font-size: 0.95rem; color: var(--text-main); }
 
-.guide-section { margin-bottom: 28px; border-bottom: 1px solid var(--border); padding-bottom: 20px; }
+.guide-section { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
 .guide-section:last-child { border-bottom: none; margin-bottom: 0; }
-.guide-h3 { font-size: 1rem; color: var(--primary-text); margin: 0 0 12px 0; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+.guide-h3 { font-size: 0.95rem; color: var(--primary-text); margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; font-weight: bold; }
 .guide-h3 i { color: var(--accent); }
-.guide-p { margin: 0 0 10px 0; color: var(--text-main); line-height: 1.7; }
+.guide-p { margin: 0 0 10px 0; color: var(--text-sub); line-height: 1.6; }
 .guide-tag { 
     display: inline-block; background: var(--bg); border: 1px solid var(--border);
-    color: var(--text-main); padding: 2px 8px; border-radius: 4px; 
-    font-size: 0.75rem; font-weight: bold; margin-right: 4px; 
+    color: var(--text-main); padding: 2px 6px; border-radius: 4px; 
+    font-size: 0.75rem; font-weight: 600; margin-right: 4px; 
 }
 </style>
 </head>
@@ -469,7 +466,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
         <div style="display: flex; justify-content: space-between; align-items: flex-start;">
             <div style="flex: 1;">
                 <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール</h1>
-                <input type="text" id="roomName" placeholder="ルーム名を入力..." style="margin-top: 10px; font-size: 1.1rem; font-weight: bold; border: none; background: transparent; outline: none; width: 100%; border-bottom: 1px dashed var(--border); padding-bottom: 4px; transition: color 0.3s;" oninput="window.pushData()">
+                <input type="text" id="roomName" placeholder="ルーム名を入力..." style="margin-top: 10px; font-size: 1rem; font-weight: 600; border: none; background: transparent; outline: none; width: 100%; border-bottom: 1px dashed var(--border); padding-bottom: 4px; transition: color 0.3s; box-shadow: none;" oninput="window.pushData()">
             </div>
             <div class="sync-status" style="margin-top: 5px; margin-left: 10px; white-space: nowrap;">
                 <span class="sync-dot"></span>
@@ -480,10 +477,10 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
     <div class="share-invite-box">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <div style="font-weight: bold; font-size: 0.95rem; color: var(--primary-text);">
+            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">
                 <i class='fa-solid fa-users'></i> メンバーを招待・共同編集
             </div>
-            <div class="room-badge" onclick="copyRoomLink()" style="margin: 0;">
+            <div class="room-badge" onclick="copyRoomLink()" style="margin: 0; cursor: pointer;">
                 ID: <span id="dispRoomId">...</span>
             </div>
         </div>
@@ -494,8 +491,8 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
             <button class="btn-share-action" onclick="shareToLine()">
                 <i class='fa-brands fa-line'></i> LINE
             </button>
-            <button class="btn-share-action" style="background: var(--bg); border-color: var(--primary);" onclick="openHelp()">
-                <i class='fa-solid fa-book'></i> ガイドを見る
+            <button class="btn-share-action" style="background: transparent;" onclick="openHelp()">
+                <i class='fa-solid fa-book'></i> ガイド
             </button>
         </div>
     </div>
@@ -524,8 +521,8 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
         <div class="input-group">
             <label>企画の参加人数 (企画者含む)</label>
             <div style="position: relative;">
-                <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 40px;">
-                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 15px; color: var(--text-sub);"></i>
+                <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 36px;">
+                <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 12px; color: var(--text-sub);"></i>
             </div>
         </div>
         
@@ -585,15 +582,15 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
         </div>
 
         <div class="copy-area">
-            <h3 style="margin:0 0 10px 0; font-size:1rem; display:flex; align-items:center; gap:8px;">
+            <h3 style="margin:0 0 10px 0; font-size:0.95rem; display:flex; align-items:center; gap:8px;">
                 <i class='fa-solid fa-share-nodes'></i> 結果の共有
             </h3>
             <textarea id="copyTextarea" readonly></textarea>
-            <div style="display: flex; gap: 10px;">
+            <div style="display: flex; gap: 8px;">
                 <button class="btn-copy" onclick="copyToClipboard()">
-                    <i class='fa-solid fa-copy'></i> テキストをコピー
+                    <i class='fa-solid fa-copy'></i> コピー
                 </button>
-                <button class="btn" style="background: var(--primary-btn); color: #fff; font-size:0.9rem; border: none; border-radius: 6px; width: 100%; margin-top:10px;" onclick="downloadResultImage()">
+                <button class="btn" style="background: var(--primary-btn); color: var(--primary-btn-text); font-size:0.9rem; border: none; border-radius: var(--radius); width: 100%; margin-top:10px;" onclick="downloadResultImage()">
                     <i class='fa-solid fa-download'></i> 画像を保存
                 </button>
             </div>
@@ -602,21 +599,21 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
     <div class="history-container">
         <details open>
-            <summary style="cursor: pointer; color: var(--text-sub); font-weight: bold; outline:none;">
+            <summary style="cursor: pointer; color: var(--text-sub); font-weight: 600; outline:none; font-size: 0.95rem;">
                 <i class='fa-solid fa-clock-rotate-left'></i> 計算履歴 (保存済み)
             </summary>
             <div style="margin-top: 15px;">
-                <ul id="historyList" style="list-style: none; padding: 0;">
+                <ul id="historyList" style="list-style: none; padding: 0; margin: 0;">
                     <li style="text-align:center; color:var(--text-sub); padding:10px; font-size:0.85rem;">履歴はありません</li>
                 </ul>
-                <button class="btn btn-outline btn-sm" style="width:100%; margin-top:10px; font-weight:normal;" onclick="resetRoom()">
+                <button class="btn btn-outline btn-sm" style="width:100%; margin-top:10px; font-weight:500; font-size: 0.8rem;" onclick="resetRoom()">
                     <i class='fa-solid fa-trash'></i> 入力を全てクリア
                 </button>
             </div>
         </details>
     </div>
     <div style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
-        <button class="btn btn-sm" style="background: var(--text-sub); color: var(--card-bg); width: auto; margin: 0 auto;" onclick="fillTestData()">
+        <button class="btn btn-sm" style="background: var(--bg); color: var(--text-sub); border: 1px solid var(--border); width: auto; margin: 0 auto;" onclick="fillTestData()">
             <i class='fa-solid fa-flask'></i> デバッグ用データを投入
         </button>
         <p style="font-size: 0.7rem; color: var(--text-sub); margin-top: 8px;">
@@ -1072,8 +1069,8 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
             <div class="input-group">
                 <label>ドライバー名（任意）</label>
                 <div style="position:relative;">
-                    <i class='fa-solid fa-user' style="position:absolute; left:14px; top:17px; color:var(--text-sub);"></i>
-                    <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:40px;">
+                    <i class='fa-solid fa-user' style="position:absolute; left:12px; top:13px; color:var(--text-sub);"></i>
+                    <input type="text" class="inp-name" placeholder="氏名" ${onInput} style="padding-left:36px;">
                 </div>
             </div>
             <div class="flex-row">
@@ -1082,9 +1079,9 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
                 <div class="input-group"><label>価格 (円)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.95rem; font-weight: 600; color: var(--text-main);">➕ 諸経費（高速・駐車場・割引など）</label>
+                <label style="margin-bottom:8px; display:block; font-size:0.85rem; font-weight: 600; color: var(--text-sub);">➕ 諸経費（高速・駐車場・割引など）</label>
                 <div id="${extrasId}"></div>
-                <button class="btn-reset" style="background:none; border:none; color:var(--primary-text); font-size:0.95rem; cursor:pointer; padding:0; margin-top:5px; font-weight:bold;" onclick="handleAddExtra(this)">
+                <button class="btn-reset" style="background:none; border:none; color:var(--text-main); font-size:0.9rem; cursor:pointer; padding:0; margin-top:5px; font-weight:500;" onclick="handleAddExtra(this)">
                     + 経費を追加
                 </button>
             </div>
