@@ -8,27 +8,31 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 <style>
 :root {
-    /* --- [Light Mode] クリーンでプロフェッショナルなSaaS風 --- */
-    --primary: #0f172a;       /* スレート900：引き締まった印象 */
-    --primary-text: #0f172a;
-    --primary-btn: #0f172a;
+    /* --- Classic settlement ledger theme --- */
+    --primary: #22382f;
+    --primary-text: #16241f;
+    --primary-btn: #2f4a3d;
     --primary-btn-text: #ffffff;
-    --primary-light: #f8fafc; /* ごく薄いグレー */
-    --accent: #2563eb;        /* 信頼感のあるクリアなブルー */
+    --primary-light: #edf2ee;
+    --accent: #486b59;
+    --accent-dark: #2f4a3d;
+    --accent-soft: #d9e4dc;
+    --gold: #8a6f3d;
+    --danger: #9f3a2f;
     
-    --bg: #f1f5f9;            /* 背景：少し落ち着いたライトグレー */
-    --card-bg: #ffffff;       /* カード背景：白 */
+    --bg: #f3f4f1;
+    --card-bg: #fffefa;
     
-    --text-main: #1e293b;     /* 主な文字：濃いスレート */
-    --text-sub: #64748b;      /* 補足文字：スレート */
-    --text-placeholder: #94a3b8;
+    --text-main: #1f2f28;
+    --text-sub: #617267;
+    --text-placeholder: #9aa59e;
     
-    --border: #e2e8f0;        /* 境界線：繊細なグレー */
-    --input-bg: #ffffff;
-    --input-border: #cbd5e1;
+    --border: #d8ddd6;
+    --input-bg: #fffefa;
+    --input-border: #c9d1c8;
     
-    --radius: 6px;            /* 丸みを少し抑えてシャープに */
-    --shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* フラットデザイン寄りの微細な影 */
+    --radius: 6px;
+    --shadow: 0 1px 2px rgba(34, 56, 47, 0.06);
     
     --font-head: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
     --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -37,14 +41,18 @@
 @media (prefers-color-scheme: dark) {
     :root {
         /* --- [Dark Mode] 視認性と没入感を高めたモダン・ダーク --- */
-        --primary: #e2e8f0;       
+        --primary: #e2e8f0;
         --primary-text: #f8fafc;  
-        --primary-btn: #2563eb;   /* アクションを明確にするブルー */
+        --primary-btn: #486b59;
         --primary-btn-text: #ffffff;
         
-        --primary-light: #1e293b; /* 選択時背景 */
+        --primary-light: rgba(72, 107, 89, 0.18);
         
-        --accent: #10b981;        /* クリスプなグリーン */
+        --accent: #8db49d;
+        --accent-dark: #a9c7b6;
+        --accent-soft: rgba(141, 180, 157, 0.18);
+        --gold: #c4a66a;
+        --danger: #f59c8d;
         
         --bg: #0f172a;            /* 背景：深いスレート */
         --card-bg: #1e293b;       /* カード：一段階明るいスレート */
@@ -63,30 +71,73 @@
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
-    font-family: var(--font-body);
-    margin: 0; padding: 20px 12px;
-    background: var(--bg); color: var(--text-main);
-    line-height: 1.6; font-size: 15px;
+    font-family: "Yu Gothic", "YuGothic", "Meiryo", var(--font-body);
+    margin: 0; padding: 10px;
+    background:
+        linear-gradient(180deg, rgba(47, 74, 61, 0.08), transparent 240px),
+        var(--bg);
+    color: var(--text-main);
+    line-height: 1.45; font-size: 14px;
     transition: background-color 0.3s, color 0.3s;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
+.container { max-width: 600px; margin: 0 auto; padding-bottom: 56px; }
 
 /* --- ヘッダー周り --- */
 header { 
-    position: relative; 
-    text-align: left; 
-    margin-bottom: 20px; 
-    padding-bottom: 15px;
-    border-bottom: 1px solid var(--border);
+    margin-bottom: 10px;
+}
+.app-hero {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    box-shadow: var(--shadow);
+}
+.hero-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+}
+.brand-block {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    min-width: 0;
+}
+.brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius);
+    background: var(--primary-btn);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.18);
 }
 h1 { 
     font-family: var(--font-head);
-    font-size: 1.25rem; margin: 0; color: var(--primary-text); 
+    font-size: 1.1rem; margin: 0; color: var(--primary-text);
     display: flex; align-items: center; justify-content: flex-start; gap: 8px;
     font-weight: 700;
+    line-height: 1.25;
+    letter-spacing: 0.02em;
 }
 h1 i { font-size: 1.2rem; color: var(--accent); }
+.room-name-input {
+    margin-top: 10px;
+    font-size: 0.95rem !important;
+    font-weight: 700 !important;
+    border: 1px solid var(--border) !important;
+    background: var(--bg) !important;
+    outline: none;
+    width: 100%;
+    padding: 8px 10px !important;
+    box-shadow: none !important;
+}
 
 /* 招待・ガイドエリア */
 .share-invite-box {
@@ -94,25 +145,59 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
     border: 1px solid var(--border);
     color: var(--text-main);
     border-radius: var(--radius);
-    padding: 16px;
-    margin-bottom: 24px;
+    padding: 12px;
+    margin-bottom: 10px;
     box-shadow: var(--shadow);
 }
+.share-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+}
+.share-title {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--text-main);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.share-title i { color: var(--accent); }
 .share-btn-group {
     display: flex; gap: 8px; flex-wrap: wrap;
+}
+.share-warning {
+    display: none;
+    margin-top: 8px;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text-sub);
+    font-size: 0.76rem;
+    line-height: 1.45;
+}
+@media (prefers-color-scheme: dark) {
+    .share-warning {
+        background: var(--bg);
+        border-color: var(--border);
+        color: var(--text-sub);
+    }
 }
 .btn-share-action {
     background: var(--bg);
     border: 1px solid var(--border);
     color: var(--text-main);
-    padding: 8px 16px;
+    padding: 7px 12px;
     border-radius: var(--radius);
     font-size: 0.85rem;
     cursor: pointer;
     text-decoration: none;
     display: flex; align-items: center; justify-content: center; gap: 6px;
     transition: all 0.2s;
-    font-weight: 500;
+    font-weight: 650;
     flex: 1;
     min-width: 100px;
 }
@@ -120,10 +205,10 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
 .btn-share-action:active { transform: scale(0.98); }
 
 .room-badge {
-    background: var(--bg); color: var(--text-sub);
+    background: var(--primary-light); color: var(--accent-dark);
     padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 0.8rem;
     display: inline-flex; align-items: center; gap: 6px; 
-    border: 1px solid var(--border);
+    border: 1px solid var(--accent-soft);
 }
 
 .sync-status {
@@ -135,35 +220,36 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
 
 /* --- 共通コンポーネント --- */
 .card {
-    background: var(--card-bg); padding: 20px; border-radius: var(--radius);
-    box-shadow: var(--shadow); margin-bottom: 24px; border: 1px solid var(--border);
+    background: var(--card-bg); padding: 14px; border-radius: var(--radius);
+    box-shadow: var(--shadow); margin-bottom: 10px; border: 1px solid var(--border);
 }
 
 h2 { 
     font-family: var(--font-head);
-    font-size: 1rem; margin: 0 0 16px 0; 
+    font-size: 0.98rem; margin: 0 0 12px 0; 
     display: flex; align-items: center; gap: 8px; 
-    color: var(--primary-text); 
-    border-bottom: 1px solid var(--border); padding-bottom: 10px;
+    color: var(--primary-text);
+    border-bottom: 1px solid var(--border); padding-bottom: 8px;
+    letter-spacing: 0.02em;
 }
-h2 i { color: var(--text-sub); font-size: 1rem; }
+h2 i { color: var(--gold); font-size: 1rem; }
 
 /* 入力フォーム */
-.input-group { margin-bottom: 16px; }
+.input-group { margin-bottom: 10px; }
 label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
 
 input[type="number"], input[type="text"], select {
-    width: 100%; padding: 10px 12px; 
+    width: 100%; padding: 8px 10px; 
     border: 1px solid var(--input-border); border-radius: var(--radius); 
     font-size: 16px; background: var(--input-bg); color: var(--text-main);
     transition: 0.2s; 
-    font-weight: 500; /* AI特有の太字すぎる文字をスタイリッシュに */
+    font-weight: 500;
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
 }
 input:focus, select:focus { 
     outline: none; 
     border-color: var(--accent); 
-    box-shadow: 0 0 0 1px var(--accent); 
+    box-shadow: 0 0 0 2px var(--accent-soft); 
 }
 input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: normal; }
 
@@ -171,13 +257,13 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     font-size: 1rem !important;
 }
 
-.flex-row { display: flex; gap: 10px; }
+.flex-row { display: flex; gap: 8px; }
 .flex-row > div { flex: 1; min-width: 0; }
 
 /* トグルスイッチ */
 .checkbox-card {
     display: flex; align-items: center; justify-content: space-between;
-    background: var(--input-bg); padding: 12px 14px; border-radius: var(--radius); 
+    background: var(--input-bg); padding: 10px 12px; border-radius: var(--radius); 
     cursor: pointer; user-select: none; border: 1px solid var(--input-border);
 }
 .checkbox-card span { font-size: 0.95rem; font-weight: 500; }
@@ -194,21 +280,21 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
 /* 車両カード */
 .car-card {
-    border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 16px;
+    border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 10px;
     background: var(--card-bg); overflow: hidden; box-shadow: var(--shadow);
 }
 .car-header {
-    background: var(--card-bg); padding: 12px 16px;
+    background: var(--card-bg); padding: 9px 12px;
     display: flex; justify-content: space-between; align-items: center;
     cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-main);
     border-bottom: 1px solid transparent;
     transition: background 0.2s;
 }
-.car-card.open .car-header { border-bottom-color: var(--border); background: var(--bg); color: var(--primary-text); }
+.car-card.open .car-header { border-bottom-color: var(--border); background: var(--primary-light); color: var(--primary-text); }
 .car-header i { margin-right: 8px; color: var(--text-sub); }
 .car-card.open .car-header i { color: var(--text-main); }
 
-.car-body { padding: 16px; display: none; background: var(--card-bg); }
+.car-body { padding: 12px; display: none; background: var(--card-bg); }
 .car-card.open .car-body { display: block; }
 
 .toggle-icon { transition: transform 0.3s; font-size: 0.9rem; color: var(--text-sub); }
@@ -222,18 +308,18 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
 /* 諸経費セクション */
 .extra-section { 
-    margin-top: 16px; 
+    margin-top: 10px; 
 }
 .extra-item { 
-    display: flex; flex-wrap: nowrap; gap: 8px; margin-bottom: 10px; align-items: center; 
+    display: flex; flex-wrap: nowrap; gap: 6px; margin-bottom: 8px; align-items: center; 
 }
 .extra-item .ex-name { flex: 2; min-width: 0; font-size: 1rem; }
 .extra-item .ex-amount { flex: 2; min-width: 0; font-size: 1rem; }
-.extra-item .ex-type { flex: 1.2; min-width: 0; font-size: 0.9rem; padding: 10px 4px; border-radius: var(--radius); text-align: center; }
+.extra-item .ex-type { flex: 1.2; min-width: 0; font-size: 0.86rem; padding: 8px 4px; border-radius: var(--radius); text-align: center; }
 
 /* 種別セレクトの塗りつぶしカラー */
 .ex-type.club-color { background-color: var(--bg); color: var(--text-main); border-color: var(--border); }
-.ex-type.split-color { background-color: var(--accent); color: #fff; border-color: var(--accent); }
+.ex-type.split-color { background-color: var(--primary-btn); color: #fff; border-color: var(--primary-btn); }
 
 /* ボタン類 */
 .btn {
@@ -244,80 +330,283 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .btn-primary { 
     background: var(--primary-btn); color: var(--primary-btn-text); margin-top: 10px; 
 }
-.btn-primary:hover { opacity: 0.9; }
+.btn-primary:hover { background: var(--accent-dark); }
 .btn-primary:active { transform: scale(0.98); }
 
 .btn-outline { 
     background: transparent; border: 1px dashed var(--border); color: var(--text-main); 
     padding: 10px; font-weight: 500;
 }
-.btn-outline:hover { background: var(--bg); color: var(--primary-text); border-style: solid;}
+.btn-outline:hover { background: var(--primary-light); color: var(--primary-text); border-style: solid;}
+.sticky-calc {
+    position: static;
+    box-shadow: var(--shadow);
+    margin-bottom: 16px;
+}
 .btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 4px; }
 
-/* --- レシート風デザイン --- */
+/* --- 精算結果ダッシュボード --- */
 #resultArea { display: none; }
 
 .receipt-wrapper {
-    padding: 20px; 
-    margin: 20px -20px;
+    padding: 0;
+    margin: 22px 0;
 }
 
 .receipt-paper {
-    background: #fff;
-    color: #333;
-    font-family: "Courier New", Courier, monospace;
-    padding: 30px 25px;
-    position: relative;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05), 0 10px 15px rgba(0,0,0,0.1);
-    max-width: 400px;
+    background: var(--card-bg);
+    color: var(--text-main);
+    font-family: var(--font-body);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    max-width: 600px;
     margin: 0 auto;
-    border-top: 1px solid #eee;
-    border-radius: 2px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
 }
 
-.color-circle { color: #0288d1 !important; }
-.color-split { color: #e64a19 !important; }
-.receipt-underline-circle { border-bottom: 2px solid #0288d1; padding-bottom: 2px; display: inline-block;}
+.color-circle { color: var(--accent-dark) !important; }
+.color-split { color: #7c6232 !important; }
 
 .receipt-header {
-    text-align: center;
-    border-bottom: 1px solid #333;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
 }
-.receipt-logo { font-size: 1.8rem; color: #333; margin-bottom: 5px; }
-.receipt-title { font-size: 1.1rem; font-weight: bold; letter-spacing: 2px; text-transform: uppercase; margin: 0; }
-.receipt-meta { font-size: 0.8rem; color: #666; margin-top: 5px; font-family: sans-serif; }
-
-.receipt-total-section {
-    text-align: center;
-    padding: 15px 0;
-    border-bottom: 1px solid #333;
+.receipt-logo {
+    width: 38px; height: 38px; border-radius: 8px;
+    background: var(--primary-btn); color: var(--primary-btn-text);
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex: 0 0 auto;
 }
-.receipt-label-main { font-size: 0.9rem; display: block; margin-bottom: 5px; color: #555; font-weight: bold; }
-.receipt-amount-main { font-size: 2.2rem; font-weight: bold; line-height: 1; display: block; }
-.receipt-note { font-size: 0.8rem; color: #666; margin-top: 8px; display: block;}
+.receipt-title-group { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
+.receipt-title { font-size: 1.05rem; font-weight: 700; margin: 0; line-height: 1.25; }
+.receipt-room { font-size: 0.9rem; font-weight: 600; color: var(--primary-text); margin-top: 4px; word-break: break-word; }
+.receipt-meta { font-size: 0.75rem; color: var(--text-sub); white-space: nowrap; margin-top: 2px; }
+.money-block {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: #fff;
+    padding: 14px;
+    margin: 14px 0 12px;
+}
+.money-block.primary {
+    background: var(--primary-btn);
+    border-color: var(--primary-btn);
+    color: var(--primary-btn-text);
+}
+.money-block h4 {
+    margin: 0 0 10px;
+    font-size: 0.92rem;
+    font-weight: 700;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.money-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 14px;
+    padding: 8px 0;
+    border-top: 1px solid var(--border);
+}
+.money-block.primary .money-row { border-color: rgba(255,255,255,0.24); }
+.money-row:first-of-type { border-top: 0; padding-top: 0; }
+.money-label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-sub);
+    line-height: 1.3;
+}
+.money-block.primary .money-label { color: rgba(255,255,255,0.78); }
+.money-value {
+    font-size: 1.18rem;
+    font-weight: 700;
+    white-space: nowrap;
+}
+.money-value.big { font-size: 2rem; letter-spacing: 0; }
+.money-note {
+    font-size: 0.76rem;
+    color: var(--text-sub);
+    line-height: 1.45;
+    margin-top: 7px;
+}
+.money-block.primary .money-note { color: rgba(255,255,255,0.78); }
+.money-equation {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 8px;
+    align-items: stretch;
+    margin: 12px 0 16px;
+}
+.equation-cell {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 10px;
+    background: var(--bg);
+    text-align: center;
+}
+.equation-cell span {
+    display: block;
+    color: var(--text-sub);
+    font-size: 0.72rem;
+    font-weight: 600;
+}
+.equation-cell strong {
+    display: block;
+    margin-top: 4px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--primary-text);
+}
+.equation-symbol {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-sub);
+    font-weight: 700;
+}
+.settlement-check {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+}
+.settlement-check-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0 0 8px;
+    color: var(--primary-text);
+    font-size: 0.86rem;
+    font-weight: 700;
+}
+.settlement-check-title i {
+    color: var(--accent);
+}
+.breakdown-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    align-items: baseline;
+    font-size: 0.86rem;
+    padding: 6px 0;
+    border-top: 1px dashed var(--border);
+}
+.breakdown-row:first-of-type { border-top: 0; }
+.breakdown-label { color: var(--text-sub); font-weight: 500; }
+.breakdown-value { font-weight: 700; text-align: right; white-space: nowrap; }
+.breakdown-row.total {
+    margin-top: 4px;
+    padding-top: 9px;
+    border-top: 1px solid var(--border);
+    font-size: 0.92rem;
+}
+.breakdown-row.total .breakdown-label,
+.breakdown-row.total .breakdown-value {
+    color: var(--primary-text);
+    font-weight: 700;
+}
+.driver-list {
+    display: grid;
+    gap: 10px;
+}
+.section-caption {
+    margin: -4px 0 10px;
+    color: var(--text-sub);
+    font-size: 0.78rem;
+    line-height: 1.45;
+}
 
 .receipt-section {
-    padding: 15px 0;
-    border-bottom: 1px dashed #ccc;
+    padding: 16px 0;
+    border-top: 1px solid var(--border);
 }
 .receipt-section-title {
-    font-size: 0.9rem; font-weight: bold; margin-bottom: 8px; display: block; text-align: left;
-    color: #555;
+    font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    color: var(--primary-text);
 }
 
 .receipt-row {
-    display: flex; justify-content: space-between; align-items: baseline;
-    font-size: 1rem; margin-bottom: 6px;
-    line-height: 1.4;
+    display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
+    font-size: 0.92rem; margin-bottom: 6px; line-height: 1.4;
 }
 .receipt-row.bold { font-weight: bold; font-size: 1.05rem; margin-top: 8px; }
-.receipt-row span:last-child { white-space: nowrap; margin-left: 10px; }
-.receipt-detail { font-size: 0.85rem; color: #777; margin-left: 10px; margin-bottom: 8px; display: block; line-height: 1.3;}
+.receipt-row span:last-child { white-space: nowrap; margin-left: 10px; font-weight: 800; }
+.driver-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+    background: var(--card-bg);
+}
+.driver-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.driver-name { font-weight: 700; min-width: 0; word-break: break-word; }
+.driver-name small {
+    display: block;
+    color: var(--text-sub);
+    font-size: 0.72rem;
+    font-weight: 500;
+    margin-top: 2px;
+}
+.driver-total {
+    font-size: 1.15rem;
+    font-weight: 700;
+    white-space: nowrap;
+    color: var(--accent-dark);
+}
+.receipt-detail {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 0.82rem;
+    color: var(--text-sub);
+    padding: 4px 0;
+    border-top: 1px dashed var(--border);
+    line-height: 1.35;
+}
+.receipt-detail:first-of-type { border-top: 0; }
+.receipt-detail span:last-child { font-weight: 650; white-space: nowrap; }
+.accounting-panel {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 12px;
+}
+.accounting-total {
+    margin-top: 10px;
+    padding-top: 10px;
+    border-top: 1px solid var(--border);
+    font-size: 1rem;
+}
 
 .receipt-footer {
-    text-align: center; margin-top: 30px; font-size: 0.85rem; color: #888;
+    text-align: center; padding-top: 14px; margin-top: 4px; font-size: 0.8rem; color: var(--text-sub);
+    border-top: 1px solid var(--border);
+}
+
+@media (max-width: 460px) {
+    body { padding: 12px 10px; }
+    .app-hero { padding: 12px; }
+    .hero-top { align-items: flex-start; }
+    .brand-mark { width: 34px; height: 34px; }
+    .share-header { align-items: flex-start; }
+    .receipt-paper { padding: 14px; }
+    .receipt-header { flex-direction: column; }
+    .receipt-meta { white-space: normal; }
+    .money-equation { grid-template-columns: 1fr; }
+    .equation-symbol { padding: 0; }
+    .money-value.big { font-size: 1.75rem; }
 }
 
 /* コピーエリア */
@@ -327,7 +616,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 }
 #copyTextarea { 
     width: 100%; background: var(--bg); border: 1px solid var(--border); 
-    color: var(--text-main); font-family: monospace; height: 160px; resize: none; 
+    color: var(--text-main); font-family: monospace; min-height: 220px; resize: vertical; 
     font-size: 0.85rem; outline: none; padding: 10px; border-radius: var(--radius);
 }
 .btn-copy { 
@@ -389,16 +678,164 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .close-btn { color: var(--text-sub); font-size: 1.2rem; cursor: pointer; line-height: 1; padding: 5px;}
 .close-btn:hover { color: var(--text-main); }
 .modal-body { padding: 20px; overflow-y: auto; font-size: 0.95rem; color: var(--text-main); }
+.modal-footer {
+    position: sticky;
+    bottom: 0;
+    background: var(--card-bg);
+    border-top: 1px solid var(--border);
+    padding: 12px 20px;
+    text-align: center;
+}
 
 .guide-section { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
 .guide-section:last-child { border-bottom: none; margin-bottom: 0; }
 .guide-h3 { font-size: 0.95rem; color: var(--primary-text); margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; font-weight: bold; }
 .guide-h3 i { color: var(--accent); }
 .guide-p { margin: 0 0 10px 0; color: var(--text-sub); line-height: 1.6; }
+.guide-map {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr auto 1fr;
+    gap: 8px;
+    align-items: center;
+    margin-top: 10px;
+}
+.guide-node {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    padding: 10px;
+    text-align: center;
+    min-height: 72px;
+}
+.guide-node i {
+    display: block;
+    color: var(--accent);
+    font-size: 1.1rem;
+    margin-bottom: 5px;
+}
+.guide-node strong {
+    display: block;
+    font-size: 0.82rem;
+    color: var(--text-main);
+    line-height: 1.35;
+}
+.guide-node span {
+    display: block;
+    font-size: 0.72rem;
+    color: var(--text-sub);
+    line-height: 1.3;
+}
+.guide-arrow {
+    color: var(--text-sub);
+    font-size: 0.85rem;
+}
+.guide-mini-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+.guide-mini {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 9px;
+    background: var(--card-bg);
+}
+.guide-mini strong {
+    display: block;
+    color: var(--text-main);
+    font-size: 0.82rem;
+}
+.guide-mini span {
+    color: var(--text-sub);
+    font-size: 0.74rem;
+}
+.guide-screens {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.guide-screen {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    padding: 10px;
+}
+.guide-screen-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-main);
+    font-size: 0.8rem;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+.guide-screen-title i { color: var(--accent); }
+.guide-field {
+    border: 1px solid var(--border);
+    background: var(--card-bg);
+    border-radius: 5px;
+    padding: 7px 8px;
+    margin-bottom: 6px;
+    font-size: 0.74rem;
+    color: var(--text-sub);
+}
+.guide-field strong {
+    display: block;
+    color: var(--text-main);
+    font-size: 0.8rem;
+    margin-top: 2px;
+}
+.guide-field-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 5px;
+}
+.guide-field-row .guide-field { margin-bottom: 0; padding: 6px; }
+.guide-result-card {
+    border-radius: 6px;
+    padding: 10px;
+    background: var(--primary-btn);
+    color: var(--primary-btn-text);
+    margin-bottom: 7px;
+}
+.guide-result-card span,
+.guide-pay-row span {
+    display: block;
+    font-size: 0.72rem;
+    opacity: 0.8;
+}
+.guide-result-card strong {
+    display: block;
+    font-size: 1.25rem;
+    line-height: 1.15;
+    margin-top: 2px;
+}
+.guide-pay-row {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--card-bg);
+    padding: 7px 8px;
+    margin-top: 6px;
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+}
+.guide-pay-row strong {
+    color: var(--accent-dark);
+    white-space: nowrap;
+}
 .guide-tag { 
     display: inline-block; background: var(--bg); border: 1px solid var(--border);
     color: var(--text-main); padding: 2px 6px; border-radius: 4px; 
     font-size: 0.75rem; font-weight: 600; margin-right: 4px; 
+}
+@media (max-width: 460px) {
+    .guide-map { grid-template-columns: 1fr; }
+    .guide-arrow { text-align: center; transform: rotate(90deg); }
+    .guide-screens { grid-template-columns: 1fr; }
+    .guide-mini-grid { grid-template-columns: 1fr; }
 }
 </style>
 </head>
@@ -407,54 +844,65 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 <div id="helpModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title"><i class='fa-solid fa-book-open'></i> 初めての方へ：使い方ガイド</h3>
+            <h3 class="modal-title"><i class='fa-solid fa-book-open'></i> 使い方ガイド</h3>
             <span class="close-btn" onclick="closeHelp()">&times;</span>
         </div>
         <div class="modal-body">
             
             <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-users'></i> 1. メンバーと共有する</h3>
-                <p class="guide-p">入力内容はリアルタイムで共有されます。</p>
-                <p class="guide-p">ページ上部の <span class="guide-tag">LINEで送る</span> や <span class="guide-tag">リンク</span> を使ってURLをメンバーに送ると、全員が自分のスマホから車両情報などを入力・確認できます。</p>
+                <h3 class="guide-h3"><i class='fa-solid fa-route'></i> お金の流れ</h3>
+                <div class="guide-map">
+                    <div class="guide-node"><i class='fa-solid fa-car-side'></i><strong>ドライバー</strong><span>立替を入力</span></div>
+                    <div class="guide-arrow"><i class='fa-solid fa-chevron-right'></i></div>
+                    <div class="guide-node"><i class='fa-solid fa-users'></i><strong>部員</strong><span>1人分を払う</span></div>
+                    <div class="guide-arrow"><i class='fa-solid fa-chevron-right'></i></div>
+                    <div class="guide-node"><i class='fa-solid fa-building-columns'></i><strong>会計</strong><span>集めて渡す</span></div>
+                </div>
             </div>
 
             <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-car'></i> 2. 車両情報の入力</h3>
-                <p class="guide-p">ドライバー（車出し担当）の情報を入力してください。</p>
-                <ul style="padding-left: 20px; margin: 5px 0; color: var(--text-sub);">
-                    <li><strong>距離:</strong> 往復の走行距離 (km)</li>
-                    <li><strong>燃費:</strong> 車の燃費 (km/L)</li>
-                    <li><strong>価格:</strong> ガソリン単価 (円/L)</li>
-                </ul>
-                <p class="guide-p" style="margin-top:8px;">
-                    <i class='fa-solid fa-circle-plus' style="color:var(--primary)"></i> <strong>諸経費の追加:</strong><br>
-                    高速代や駐車場代を入力します。<br>
-                    <span class="guide-tag">割勘</span> 全員で等分します（通常の高速代など）。<br>
-                    <span class="guide-tag">部費</span> サークル費等から支払う場合に選択します。<br>
-                    <span style="font-size:0.8rem; color:var(--accent);">※ マイナス（例: -500）を入力すると、クーポンの割引や返金の計算に使えます。</span>
-                </p>
+                <h3 class="guide-h3"><i class='fa-solid fa-pen-to-square'></i> 入力する場所</h3>
+                <div class="guide-screens">
+                    <div class="guide-screen">
+                        <div class="guide-screen-title"><span><i class='fa-solid fa-car'></i> 車両情報</span></div>
+                        <div class="guide-field">ドライバー名<strong>例：山田</strong></div>
+                        <div class="guide-field-row">
+                            <div class="guide-field">移動距離</div>
+                            <div class="guide-field">燃費</div>
+                            <div class="guide-field">ガソリン価格</div>
+                        </div>
+                        <div class="guide-field" style="margin-top:6px;">諸経費<strong>駐車場・レンタカー代など</strong></div>
+                    </div>
+                    <div class="guide-screen">
+                        <div class="guide-screen-title"><span><i class='fa-solid fa-gear'></i> 設定</span></div>
+                        <div class="guide-field">参加人数<strong>企画者を含む人数</strong></div>
+                        <div class="guide-field">端数処理<strong>100円単位など</strong></div>
+                        <div class="guide-field">企画者の集金免除<strong>必要な時だけON</strong></div>
+                    </div>
+                </div>
             </div>
 
             <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-calculator'></i> 3. 計算と精算</h3>
-                <p class="guide-p">参加人数を入力し、<span class="guide-tag">精算を実行する</span> ボタンを押します。</p>
-                <p class="guide-p">
-                    自動的に「1人あたりの支払額」と「ドライバーへの受取額」が計算され、結果が表示されます。<br>
-                    ドライバーには<strong>一律1,000円の調整費</strong>が加算されます。
-                </p>
+                <h3 class="guide-h3"><i class='fa-solid fa-chart-simple'></i> 結果で見る場所</h3>
+                <div class="guide-screens">
+                    <div class="guide-screen">
+                        <div class="guide-result-card"><span>部員に伝える金額</span><strong>1人あたり</strong></div>
+                        <div class="guide-pay-row"><span>会計で確認</span><strong>集金 → 支払い</strong></div>
+                    </div>
+                    <div class="guide-screen">
+                        <div class="guide-screen-title"><span><i class='fa-solid fa-hand-holding-yen'></i> ドライバーへの支払い</span></div>
+                        <div class="guide-pay-row"><span>山田さん</span><strong>¥12,000</strong></div>
+                        <div class="guide-pay-row"><span>佐藤さん</span><strong>¥8,500</strong></div>
+                    </div>
+                </div>
             </div>
 
             <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-share-nodes'></i> 4. 結果の保存と履歴</h3>
-                <p class="guide-p">
-                    結果は <span class="guide-tag">画像を保存</span> で保存したり、テキストをコピーしてLINEに貼り付け可能です。
-                </p>
-                <p class="guide-p">
-                    また、一度計算すると自動的に<strong>履歴</strong>に保存されます。ページ下部の「計算履歴」から過去の入力を呼び出すことができます。
-                </p>
+                <h3 class="guide-h3"><i class='fa-solid fa-share-nodes'></i> 共有</h3>
+                <p class="guide-p"><span class="guide-tag">リンク</span><span class="guide-tag">コピー</span><span class="guide-tag">画像保存</span></p>
             </div>
             
-            <div style="text-align:center; margin-top:20px;">
+            <div class="modal-footer">
                 <button class="btn btn-primary btn-sm" onclick="closeHelp()">閉じる</button>
             </div>
         </div>
@@ -463,24 +911,29 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
 <div class="container">
     <header>
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div style="flex: 1;">
-                <h1><i class='fa-solid fa-mountain'></i> 山歩会 精算ツール</h1>
-                <input type="text" id="roomName" placeholder="ルーム名を入力..." style="margin-top: 10px; font-size: 1rem; font-weight: 600; border: none; background: transparent; outline: none; width: 100%; border-bottom: 1px dashed var(--border); padding-bottom: 4px; transition: color 0.3s; box-shadow: none;" oninput="window.pushData()">
+        <div class="app-hero">
+            <div class="hero-top">
+                <div class="brand-block">
+                    <div class="brand-mark"><i class='fa-solid fa-mountain-sun'></i></div>
+                    <div>
+                        <h1>山歩会 精算ツール</h1>
+                    </div>
+                </div>
+                <div class="sync-status">
+                    <span class="sync-dot"></span>
+                    <span id="syncText">同期中...</span>
+                </div>
             </div>
-            <div class="sync-status" style="margin-top: 5px; margin-left: 10px; white-space: nowrap;">
-                <span class="sync-dot"></span>
-                <span id="syncText">同期中...</span>
-            </div>
+            <input type="text" id="roomName" class="room-name-input" placeholder="企画名を入力..." oninput="window.pushData()">
         </div>
     </header>
 
     <div class="share-invite-box">
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-            <div style="font-weight: 600; font-size: 0.9rem; color: var(--text-main);">
-                <i class='fa-solid fa-users'></i> メンバーを招待・共同編集
+        <div class="share-header">
+            <div class="share-title">
+                <i class='fa-solid fa-users'></i> 共同編集
             </div>
-            <div class="room-badge" onclick="copyRoomLink()" style="margin: 0; cursor: pointer;">
+            <div class="room-badge" onclick="copyRoomLink()" style="cursor: pointer;">
                 ID: <span id="dispRoomId">...</span>
             </div>
         </div>
@@ -491,9 +944,15 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
             <button class="btn-share-action" onclick="shareToLine()">
                 <i class='fa-brands fa-line'></i> LINE
             </button>
-            <button class="btn-share-action" style="background: transparent;" onclick="openHelp()">
+            <button class="btn-share-action" onclick="openHelp()">
                 <i class='fa-solid fa-book'></i> ガイド
             </button>
+            <button class="btn-share-action" onclick="scrollToResult()">
+                <i class='fa-solid fa-receipt'></i> 結果へ
+            </button>
+        </div>
+        <div id="shareWarning" class="share-warning">
+            ローカルファイルで開いています。リンク・LINE共有は公開URLで開いた時に使えます。
         </div>
     </div>
 
@@ -527,50 +986,101 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
         </div>
         
         <label class="checkbox-card">
-            <span>企画者はガソリン代を支払わない</span>
+            <span>企画者は割勘分を支払わない</span>
             <input type="checkbox" id="organizerFree" onchange="pushData()">
             <div class="toggle-switch"></div>
         </label>
     </div>
 
-    <button class="btn btn-primary" onclick="calculate()">
-        <i class='fa-solid fa-calculator'></i> 精算を実行する
-    </button>
-
    <div id="resultArea">
         <div id="captureTarget" class="receipt-wrapper">
             <div class="receipt-paper">
                 <div class="receipt-header">
-                    <div class="receipt-logo"><i class='fa-solid fa-mountain-sun'></i></div>
-                    <div id="receiptRoomName" style="font-size: 1.15rem; font-weight: bold; margin-bottom: 5px; color: #111;"></div>
-                    <h3 class="receipt-title">ガソリン代精算書</h3>
+                    <div class="receipt-title-group">
+                        <div class="receipt-logo"><i class='fa-solid fa-mountain-sun'></i></div>
+                        <div>
+                            <h3 class="receipt-title">精算結果</h3>
+                            <div id="receiptRoomName" class="receipt-room"></div>
+                        </div>
+                    </div>
                     <div class="receipt-meta" id="receiptDate">2024.01.01 12:00</div>
                 </div>
 
-                <div class="receipt-total-section">
-                    <span class="receipt-label-main">1人あたりの徴収額</span>
-                    <span class="receipt-amount-main color-split" id="resPerPerson">0</span>
-                    <span class="receipt-note" id="resTargetDetail">--</span>
+                <div class="money-block primary">
+                    <h4><i class='fa-solid fa-users'></i> 部員に伝える</h4>
+                    <div class="money-row">
+                        <span class="money-label">1人あたり</span>
+                        <span class="money-value big" id="resPerPerson">0</span>
+                    </div>
+                    <div class="money-row">
+                        <span class="money-label">集金対象</span>
+                        <span class="money-value"><span id="resPayers">0名</span> × <span id="resRoutePerPerson">0</span></span>
+                    </div>
+                    <div class="money-note" id="resTargetDetail">--</div>
+                </div>
+
+                <div class="money-block">
+                    <h4><i class='fa-solid fa-building-columns'></i> 会計が用意する</h4>
+                    <div class="money-row">
+                        <span class="money-label" id="resAccountingLabel">会計が追加で出す金額</span>
+                        <span class="money-value big" id="resWithdrawCard">0</span>
+                    </div>
+                    <div class="money-row">
+                        <span class="money-label">部費分</span>
+                        <span class="money-value" id="resClubBurdenCard">0</span>
+                    </div>
+                    <div class="money-row">
+                        <span class="money-label">集金端数として会計に入る分</span>
+                        <span class="money-value" id="resSurplusCard">0</span>
+                    </div>
+                    <div class="money-note" id="resWithdrawNote">部費分から集金端数を差し引いた額</div>
+                </div>
+
+                <div class="money-equation">
+                    <div class="equation-cell"><span>集金総額</span><strong id="resTotalCollected">0</strong></div>
+                    <div class="equation-symbol" id="resEquationSign">＋</div>
+                    <div class="equation-cell"><span id="resEquationMiddleLabel">会計が追加で出す</span><strong id="resAccountingNet">0</strong></div>
+                    <div class="equation-symbol">＝</div>
+                    <div class="equation-cell"><span>ドライバーへ渡す合計</span><strong id="resDriverPayTotal">0</strong></div>
                 </div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title">ドライバーへの支払い</span>
-                    <div id="resDriverList"></div>
+                    <span class="receipt-section-title"><i class='fa-solid fa-hand-holding-yen'></i> ドライバーへの支払い</span>
+                    <p class="section-caption">会計係は、この表の金額を各ドライバーへ渡します。</p>
+                    <div id="resDriverList" class="driver-list"></div>
                 </div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title">サークル会計情報</span>
-                    <div class="receipt-row">
-                        <span class="color-circle">部費負担分の経費合計</span>
-                        <span id="resCircleExpense" class="color-circle">0</span>
-                    </div>
-                    <div class="receipt-row">
-                        <span class="color-circle">端数調整の余り (サークル費へ)</span>
-                        <span id="resGasSurplus" class="color-circle">0</span>
-                    </div>
-                    <div class="receipt-row bold" style="margin-top: 12px;">
-                        <span class="color-circle receipt-underline-circle">会計からの実支出</span>
-                        <span id="resWithdraw" class="color-circle">0</span>
+                    <div class="settlement-check">
+                        <div class="settlement-check-title"><i class='fa-solid fa-list-check'></i> 確認用の内訳</div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">部員から集める総額</span>
+                            <span class="breakdown-value" id="resTotalCollectedDetail">0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">割勘の実費</span>
+                            <span class="breakdown-value" id="resTotalTarget">0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">会計に入る端数</span>
+                            <span class="breakdown-value" id="resSurplusOffset">0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">部費の経費</span>
+                            <span class="breakdown-value" id="resClubExtras">0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">運転者調整費</span>
+                            <span class="breakdown-value" id="resDriverReward">0</span>
+                        </div>
+                        <div class="breakdown-row total">
+                            <span class="breakdown-label" id="resAccountingTotalLabel">会計が追加で出す金額</span>
+                            <span class="breakdown-value" id="resAccountingNetDetail">0</span>
+                        </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">端数処理</span>
+                            <span class="breakdown-value" id="resRoundUnit">--</span>
+                        </div>
                     </div>
                 </div>
 
@@ -591,7 +1101,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                     <i class='fa-solid fa-copy'></i> コピー
                 </button>
                 <button class="btn" style="background: var(--primary-btn); color: var(--primary-btn-text); font-size:0.9rem; border: none; border-radius: var(--radius); width: 100%; margin-top:10px;" onclick="downloadResultImage()">
-                    <i class='fa-solid fa-download'></i> 画像を保存
+                    <i class='fa-solid fa-download'></i> 精算結果を画像保存
                 </button>
             </div>
         </div>
@@ -630,7 +1140,11 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebas
 import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
 // --- Global Assignments ---
-window.pushData = debounce(pushDataToFirebase, 500);
+const debouncedPushDataToFirebase = debounce(pushDataToFirebase, 500);
+window.pushData = () => {
+    scheduleLiveCalculation();
+    debouncedPushDataToFirebase();
+};
 window.handleAddCarBtn = handleAddCarBtn;
 window.resetRoom = resetRoom;
 window.loadFromHistory = loadFromHistory;
@@ -644,6 +1158,8 @@ window.calculate = calculate;
 window.copyRoomLink = copyRoomLink;
 window.shareToLine = shareToLine;
 window.copyToClipboard = copyToClipboard;
+window.scrollToResult = scrollToResult;
+window.removeExtra = removeExtra;
 
 // --- Help Modal Logic ---
 window.openHelp = function() {
@@ -695,6 +1211,26 @@ const firebaseConfig = {
 
 let app, db, roomRef, roomId;
 
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, (char) => ({
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+    }[char]));
+}
+
+function getShareableUrl() {
+    if (window.location.protocol === 'file:') return null;
+    return window.location.href;
+}
+
+function updateShareWarning() {
+    const warning = document.getElementById('shareWarning');
+    if (warning) warning.style.display = getShareableUrl() ? 'none' : 'block';
+}
+
 try {
     app = initializeApp(firebaseConfig);
     db = getDatabase(app);
@@ -708,6 +1244,7 @@ try {
     }
     const dispEl = document.getElementById('dispRoomId');
     if(dispEl) dispEl.textContent = roomId;
+    updateShareWarning();
     
     applyRoomColor(roomId);
 
@@ -757,7 +1294,7 @@ function downloadResultImage() {
         link.download = `receipt_${roomId}_${Date.now()}.png`;
         link.href = canvas.toDataURL('image/png');
         link.click();
-        showToast("✅ 画像を保存しました");
+        showToast("✅ 精算結果を画像保存しました");
     }).catch(err => {
         console.error(err);
         showToast("エラーが発生しました");
@@ -775,7 +1312,7 @@ function renderForm(data) {
     const currentCards = carList.getElementsByClassName('car-card');
     
     while(currentCards.length < remoteCars.length) {
-        addCarToDOM(null, currentCards.length, true);
+        addCarToDOM(null, currentCards.length, currentCards.length === 0);
     }
     while(currentCards.length > remoteCars.length) {
         carList.removeChild(carList.lastChild);
@@ -798,12 +1335,18 @@ function renderForm(data) {
         
         const title = card.querySelector('.car-title-text');
         const dName = cData.name || `車両 ${i + 1}`;
-        title.innerHTML = `<i class='fa-solid fa-car'></i> ${dName}`;
+        title.innerHTML = `<i class='fa-solid fa-car'></i> ${escapeHtml(dName)}`;
 
         const extrasBox = card.querySelector('.extra-section div[id^="extras-"]');
         if(!extrasBox) return;
 
-        const remoteExtras = cData.extras || [];
+        const remoteExtrasRaw = cData.extras || [];
+        const meaningfulRemoteExtras = remoteExtrasRaw.filter(ex =>
+            String(ex.name ?? "").trim() || String(ex.amount ?? "").trim()
+        );
+        const remoteExtras = meaningfulRemoteExtras.length > 0
+            ? meaningfulRemoteExtras
+            : [{ name: "", amount: "", type: "club" }];
         const currentExtras = extrasBox.getElementsByClassName('extra-item');
 
         while(currentExtras.length < remoteExtras.length) {
@@ -827,6 +1370,7 @@ function renderForm(data) {
             }
         });
     });
+    scheduleLiveCalculation();
 }
 
 function setValIfDiff(id, val) {
@@ -845,6 +1389,7 @@ function setCheckIfDiff(id, val) {
 function pushDataToFirebase() {
     if(!roomRef) return; 
     const data = getFormData();
+    scheduleLiveCalculation();
     const syncText = document.getElementById("syncText");
     if(syncText) syncText.textContent = "保存中...";
     set(roomRef, data).then(() => {
@@ -854,6 +1399,10 @@ function pushDataToFirebase() {
         console.error(e);
     });
 }
+
+const scheduleLiveCalculation = debounce(() => {
+    calculate({ silent: true, scroll: false, saveHistory: true, showToast: false });
+}, 250);
 
 function debounce(func, wait) {
     let timeout;
@@ -871,11 +1420,13 @@ function getFormData() {
         dist: card.querySelector('.inp-dist').value,
         eco: card.querySelector('.inp-eco').value, 
         price: card.querySelector('.inp-price').value,
-        extras: Array.from(card.querySelectorAll('.extra-item')).map(row => ({ 
-            name: row.querySelector('.ex-name').value, 
-            amount: row.querySelector('.ex-amount').value,
-            type: row.querySelector('.ex-type').value 
-        }))
+        extras: Array.from(card.querySelectorAll('.extra-item'))
+            .map(row => ({ 
+                name: row.querySelector('.ex-name').value, 
+                amount: row.querySelector('.ex-amount').value,
+                type: row.querySelector('.ex-type').value 
+            }))
+            .filter(ex => String(ex.name ?? "").trim() || String(ex.amount ?? "").trim())
     }));
     return {
         roomName: document.getElementById('roomName').value,
@@ -944,6 +1495,7 @@ function fillTestData() {
         card.querySelector('.inp-price').value = rand(d.price[0], d.price[1]);
 
         const extraBox = card.querySelector('.extra-section > div');
+        extraBox.innerHTML = "";
         d.extras.forEach(ex => {
             addExtraToDOM(extraBox, ex[0], ex[1], ex[2]);
         });
@@ -960,19 +1512,22 @@ function saveToHistory() {
     
     try {
         const history = JSON.parse(localStorage.getItem('sanpo_history_v5') || "[]");
-        
-        if(history.length > 0) {
-            const last = history[0].data;
-            if(JSON.stringify(last) === JSON.stringify(data)) return; 
-        }
 
         const roomN = data.roomName ? `[${data.roomName}] ` : "";
         const summary = `${roomN}${data.total || "?"}名 / 車${data.cars.length}台`;
-        history.unshift({ 
+        const item = { 
+            roomId,
             date: new Date().toLocaleString('ja-JP', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' }), 
             summary: summary,
             data: data 
-        });
+        };
+
+        const sameRoomIndex = history.findIndex(h => h.roomId === roomId);
+        if (sameRoomIndex >= 0) {
+            history[sameRoomIndex] = item;
+        } else {
+            history.unshift(item);
+        }
         
         localStorage.setItem('sanpo_history_v5', JSON.stringify(history.slice(0, 10)));
         renderHistoryList();
@@ -1003,8 +1558,8 @@ function renderHistoryList() {
         li.className = 'history-item';
         li.innerHTML = `
             <div>
-                <span class="history-meta">${item.date}</span>
-                <div style="font-weight:600; font-size:0.9rem;">${item.summary}</div>
+                <span class="history-meta">${escapeHtml(item.date)}</span>
+                <div style="font-weight:600; font-size:0.9rem;">${escapeHtml(item.summary)}</div>
             </div>
             <div style="display:flex; gap:8px;">
                 <button class="btn-restore" onclick="loadFromHistory(${index})">復元</button>
@@ -1040,7 +1595,7 @@ window.deleteHistory = function(index) {
 }
 
 function handleAddCarBtn() {
-    addCarToDOM();
+    addCarToDOM(null, -1, true);
     pushDataToFirebase();
 }
 
@@ -1052,7 +1607,7 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
     if(list.children[idx]) return;
 
     const div = document.createElement('div');
-    const isOpen = forceOpen ? 'open' : 'open';
+    const isOpen = forceOpen ? 'open' : '';
     div.className = `car-card ${isOpen}`;
     const onInput = `oninput="window.pushData()"`;
     const extrasId = `extras-${Date.now()}-${Math.random().toString(36).substr(2,5)}`;
@@ -1061,7 +1616,7 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
         <div class="car-header" onclick="this.parentElement.classList.toggle('open')">
             <span class="car-title-text"><i class='fa-solid fa-car'></i> 車両 ${idx + 1}</span>
             <div style="display:flex; align-items:center; gap:8px;">
-                <button class="btn-icon-only" onclick="removeCar(event, this)" title="削除"><i class='fa-solid fa-trash'></i></button>
+                <button class="btn-icon-only" onclick="removeCar(event, this)" title="削除" aria-label="車両を削除"><i class='fa-solid fa-trash'></i></button>
                 <i class='fa-solid fa-chevron-down toggle-icon'></i>
             </div>
         </div>
@@ -1074,12 +1629,12 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
                 </div>
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>距離 (km)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>燃費 (km/L)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>価格 (円)<span style="color:var(--accent)">*</span></label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
+                <div class="input-group"><label>移動距離</label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>燃費</label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>ガソリン価格</label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
-                <label style="margin-bottom:8px; display:block; font-size:0.85rem; font-weight: 600; color: var(--text-sub);">➕ 諸経費（高速・駐車場・割引など）</label>
+                <label style="margin-bottom:8px; display:block; font-size:0.85rem; font-weight: 600; color: var(--text-sub);">諸経費（駐車場・レンタカー代など）</label>
                 <div id="${extrasId}"></div>
                 <button class="btn-reset" style="background:none; border:none; color:var(--text-main); font-size:0.9rem; cursor:pointer; padding:0; margin-top:5px; font-weight:500;" onclick="handleAddExtra(this)">
                     + 経費を追加
@@ -1088,6 +1643,7 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
         </div>
     `;
     list.appendChild(div);
+    addExtraToDOM(div.querySelector(`#${extrasId}`));
 }
 
 function removeCar(e, btn){ 
@@ -1113,18 +1669,24 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     const colorClass = (type === 'split') ? 'split-color' : 'club-color';
 
     div.innerHTML = `
-        <input type="text" class="ex-name" placeholder="項目" value="${name}" oninput="window.pushData()">
-        <input type="number" class="ex-amount" placeholder="金額" value="${amount}" oninput="window.pushData()">
+        <input type="text" class="ex-name" placeholder="項目" value="${escapeHtml(name)}" oninput="window.pushData()">
+        <input type="number" class="ex-amount" placeholder="金額" value="${escapeHtml(amount)}" oninput="window.pushData()">
         <select class="ex-type ${colorClass}" onchange="this.className='ex-type ' + (this.value==='split'?'split-color':'club-color'); window.pushData()">
             <option value="club" ${isClub}>部費</option>
             <option value="split" ${isSplit}>割勘</option>
         </select>
-        <button class="btn-icon-only" style="color:var(--text-sub);" onclick="this.parentElement.remove(); window.pushData();"><i class='fa-solid fa-xmark'></i></button>
+        <button class="btn-icon-only" style="color:var(--text-sub);" onclick="removeExtra(this)" aria-label="諸経費を削除"><i class='fa-solid fa-xmark'></i></button>
     `;
     container.appendChild(div);
 }
 
-function calculate() {
+function calculate(options = {}) {
+    const {
+        silent = false,
+        scroll = true,
+        saveHistory: shouldSaveHistory = true,
+        showToast: shouldShowToast = true
+    } = options;
     const data = getFormData();
     const totalPeople = parseInt(data.total);
     const isOrgFree = data.org;
@@ -1135,12 +1697,44 @@ function calculate() {
 
     data.cars.forEach((c, index) => {
         const dName = c.name || `車両 ${index + 1}`;
-        if(!c.dist) errorMsgs.push(`${dName}: 走行距離が未入力です`);
-        if(!c.eco) errorMsgs.push(`${dName}: 燃費が未入力です`);
-        if(!c.price) errorMsgs.push(`${dName}: ガソリン価格が未入力です`);
+        const dist = parseFloat(c.dist);
+        const eco = parseFloat(c.eco);
+        const price = parseFloat(c.price);
+        const gasFields = [c.dist, c.eco, c.price].map(v => String(v ?? "").trim());
+        const hasAnyGasInput = gasFields.some(Boolean);
+        const hasAllGasInput = gasFields.every(Boolean);
+        if (hasAnyGasInput && !hasAllGasInput) {
+            errorMsgs.push(`${dName}: ガソリン代を計算する場合は、移動距離・燃費・ガソリン価格をすべて入力してください`);
+        }
+        if (hasAllGasInput) {
+            if (!Number.isFinite(dist) || dist <= 0) {
+                errorMsgs.push(`${dName}: 移動距離は0より大きい数値にしてください`);
+            }
+            if (!Number.isFinite(eco) || eco <= 0) {
+                errorMsgs.push(`${dName}: 燃費は0より大きい数値にしてください`);
+            }
+            if (!Number.isFinite(price) || price <= 0) {
+                errorMsgs.push(`${dName}: ガソリン価格は0より大きい数値にしてください`);
+            }
+        }
+        c.extras.forEach((ex, exIndex) => {
+            const rawAmount = String(ex.amount ?? "").trim();
+            const amount = Number(rawAmount);
+            if(rawAmount !== "" && !Number.isFinite(amount)) {
+                errorMsgs.push(`${dName}: 諸経費${exIndex + 1}の金額は数値で入力してください`);
+            }
+        });
     });
 
-    if (errorMsgs.length > 0) { alert("⚠️ エラー:\n・" + errorMsgs.join("\n・")); return; }
+    if (isOrgFree && totalPeople <= 1) {
+        errorMsgs.push("企画者を免除する場合は、参加人数を2名以上にしてください");
+    }
+
+    if (errorMsgs.length > 0) {
+        document.getElementById('resultArea').style.display = 'none';
+        if (!silent) alert("⚠️ エラー:\n・" + errorMsgs.join("\n・"));
+        return false;
+    }
 
     let totalGas = 0; 
     let totalExtrasSplit = 0; 
@@ -1151,10 +1745,12 @@ function calculate() {
 
     data.cars.forEach((c) => {
         const name = c.name || "ドライバー";
+        const gasFields = [c.dist, c.eco, c.price].map(v => String(v ?? "").trim());
+        const hasGasInput = gasFields.every(Boolean);
         const dist = parseFloat(c.dist) || 0;
         const eco = parseFloat(c.eco) || 1;
         const price = parseFloat(c.price) || 0;
-        const gasCost = Math.round((dist / eco) * price);
+        const gasCost = hasGasInput ? Math.round((dist / eco) * price) : 0;
         
         let driverExtrasTotal = 0; 
         let exs = [];
@@ -1186,6 +1782,7 @@ function calculate() {
             totalPay: gasCost + driverExtrasTotal + reward, 
             gasCost,
             reward,
+            hasGasInput,
             extras: exs,
             extrasTotal: driverExtrasTotal
         });
@@ -1203,21 +1800,36 @@ function calculate() {
     const surplus = totalCollected - totalCollectionTarget;
 
     const circleNeed = (totalExtrasClub + totalReward) - surplus;
+    const clubBurden = totalExtrasClub + totalReward;
+    const totalDriverPay = driverResults.reduce((sum, d) => sum + d.totalPay, 0);
+    const yen = (value) => "¥" + value.toLocaleString();
 
 
     document.getElementById('receiptDate').textContent = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
     document.getElementById('receiptRoomName').textContent = data.roomName ? data.roomName : "ルーム名未設定";
 
-    document.getElementById('resPerPerson').textContent = "¥ " + perPersonPay.toLocaleString();
+    document.getElementById('resPerPerson').textContent = yen(perPersonPay);
+    document.getElementById('resRoutePerPerson').textContent = yen(perPersonPay);
+    document.getElementById('resDriverPayTotal').textContent = yen(totalDriverPay);
+    document.getElementById('resClubBurdenCard').textContent = yen(clubBurden);
     
-    // 日本語表記にし、必要なら諸経費の内訳も表示
-    let detailText = `対象: ${payers}名 / 実費計: ¥${totalCollectionTarget.toLocaleString()}`;
-    
-    if (totalExtrasSplit > 0) {
-        detailText += ` (内:諸経費${totalExtrasSplit.toLocaleString()})`;
-    }
-
-    document.getElementById('resTargetDetail').textContent = detailText;
+    document.getElementById('resTargetDetail').textContent = `${payers}名から集めて、合計 ${yen(totalCollected)} を会計へ`;
+    document.getElementById('resPayers').textContent = `${payers}名`;
+    document.getElementById('resRoundUnit').textContent = `${roundUnit.toLocaleString()}円単位`;
+    document.getElementById('resSurplusCard').textContent = yen(surplus);
+    document.getElementById('resAccountingLabel').textContent = circleNeed >= 0
+        ? '会計が追加で出す金額'
+        : '会計に残る金額';
+    document.getElementById('resWithdrawCard').textContent = yen(Math.abs(circleNeed));
+    document.getElementById('resWithdrawNote').textContent = circleNeed >= 0
+        ? `部費分 ${yen(clubBurden)} から、集金端数 ${yen(surplus)} を差し引きます`
+        : `集金端数 ${yen(surplus)} が部費分 ${yen(clubBurden)} を上回ります`;
+    document.getElementById('resEquationSign').textContent = circleNeed >= 0 ? '＋' : '－';
+    document.getElementById('resEquationMiddleLabel').textContent = circleNeed >= 0 ? '会計が追加で出す' : '会計に残す分';
+    document.getElementById('resAccountingNet').textContent = yen(Math.abs(circleNeed));
+    document.getElementById('resTotalCollected').textContent = yen(totalCollected);
+    document.getElementById('resTotalCollectedDetail').textContent = yen(totalCollected);
+    document.getElementById('resTotalTarget').textContent = yen(totalCollectionTarget);
     
     
     
@@ -1225,7 +1837,7 @@ function calculate() {
     dList.innerHTML = "";
     driverResults.forEach(d => {
         const row = document.createElement('div'); 
-        row.className = 'receipt-row';
+        row.className = 'driver-card';
         
         let extrasHtml = "";
         if(d.extras.length > 0) {
@@ -1233,18 +1845,18 @@ function calculate() {
                 const isSplit = ex.type === 'split';
                 const mark = isSplit ? '[割勘]' : '[部費]';
                 const colorClass = isSplit ? 'color-split' : 'color-circle';
-                extrasHtml += `<span class="receipt-detail">- ${ex.name} ${mark}: <span class="${colorClass}">¥${ex.amount.toLocaleString()}</span></span>`;
+                extrasHtml += `<div class="receipt-detail"><span>${escapeHtml(ex.name)} ${mark}</span><span class="${colorClass}">${yen(ex.amount)}</span></div>`;
             });
         }
 
         row.innerHTML = `
-            <div style="flex:1;">
-                <div style="display:flex; justify-content:space-between; font-weight:bold; margin-bottom:4px;">
-                    <span>${d.name} さん</span>
-                    <span>¥${d.totalPay.toLocaleString()}</span>
-                </div>
-                <span class="receipt-detail">- ガソリン代: <span class="color-split">¥${d.gasCost.toLocaleString()}</span></span>
-                <span class="receipt-detail">- 調整費: <span class="color-circle">¥${d.reward.toLocaleString()}</span></span>
+            <div class="driver-card-header">
+                <span class="driver-name">${escapeHtml(d.name)} さん<small>この金額を会計から渡す</small></span>
+                <span class="driver-total">${yen(d.totalPay)}</span>
+            </div>
+            <div>
+                ${d.hasGasInput ? `<div class="receipt-detail"><span>ガソリン代</span><span class="color-split">${yen(d.gasCost)}</span></div>` : ''}
+                ${d.reward ? `<div class="receipt-detail"><span>運転者調整費</span><span class="color-circle">${yen(d.reward)}</span></div>` : ''}
                 ${extrasHtml}
             </div>
         `;
@@ -1253,51 +1865,66 @@ function calculate() {
 
 
 
-    document.getElementById('resCircleExpense').textContent = "¥" + (totalExtrasClub + totalReward).toLocaleString();
-    document.getElementById('resGasSurplus').textContent = "-¥" + surplus.toLocaleString();
-    document.getElementById('resWithdraw').textContent = "¥" + circleNeed.toLocaleString();
+    document.getElementById('resClubExtras').textContent = yen(totalExtrasClub);
+    document.getElementById('resDriverReward').textContent = yen(totalReward);
+    document.getElementById('resSurplusOffset').textContent = yen(surplus);
+    document.getElementById('resAccountingTotalLabel').textContent = circleNeed >= 0
+        ? '会計が追加で出す金額'
+        : '会計に残る金額';
+    document.getElementById('resAccountingNetDetail').textContent = yen(Math.abs(circleNeed));
     
     const resultArea = document.getElementById('resultArea');
     resultArea.style.display = 'block';
-    resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    if (scroll) resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
 
-    saveToHistory();
+    if (shouldSaveHistory) saveToHistory();
 
     // 共有用テキストの詳細化
-    const roomText = data.roomName ? `【${data.roomName}】\n` : "【ルーム名未設定】\n";
-    let lineText = `【山歩会 精算報告 ⛰️】\n${roomText}\n`;
-    lineText += `■ 1人あたりの徴収額\n`;
-    lineText += `${perPersonPay.toLocaleString()}円\n`;
-    lineText += `(対象: ${payers}名 / 実費計: ${totalCollectionTarget.toLocaleString()}円`;
-    if (totalExtrasSplit > 0) lineText += ` 内:諸経費${totalExtrasSplit.toLocaleString()}円`;
-    lineText += `)\n`;
-    if(isOrgFree) lineText += `※企画者は免除\n`;
+    const roomText = data.roomName ? `【${data.roomName}】\n` : "";
+    let lineText = `【山歩会 精算】\n${roomText}`;
+    lineText += `\n■ 部員向け\n`;
+    lineText += `1人あたり: ${perPersonPay.toLocaleString()}円\n`;
+    lineText += `集金対象: ${payers}名`;
+    if(isOrgFree) lineText += `（企画者は免除）`;
+    lineText += `\n集金総額: ${totalCollected.toLocaleString()}円\n`;
+
+    lineText += `\n■ 会計向け\n`;
+    lineText += circleNeed >= 0
+        ? `会計が追加で出す: ${circleNeed.toLocaleString()}円\n`
+        : `会計に残る: ${Math.abs(circleNeed).toLocaleString()}円\n`;
+    lineText += `部費分: ${clubBurden.toLocaleString()}円\n`;
+    lineText += `集金端数: ${surplus.toLocaleString()}円\n`;
+    lineText += `ドライバーへ渡す合計: ${totalDriverPay.toLocaleString()}円\n`;
     
-    lineText += `\n■ ドライバーへの支払額\n`;
+    lineText += `\n■ ドライバーへの支払い\n`;
     driverResults.forEach(d => {
         lineText += `[${d.name} さん] : ${d.totalPay.toLocaleString()}円\n`;
-        lineText += `  - ガソリン代: ${d.gasCost.toLocaleString()}円\n`;
-        lineText += `  - 調整費: ${d.reward.toLocaleString()}円\n`;
+        if (d.hasGasInput) lineText += `  - ガソリン代: ${d.gasCost.toLocaleString()}円\n`;
+        if (d.reward) lineText += `  - 調整費: ${d.reward.toLocaleString()}円\n`;
         d.extras.forEach(ex => {
             const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
             lineText += `  - ${ex.name} ${mark}: ${ex.amount.toLocaleString()}円\n`;
         });
     });
-    
-    lineText += `\n■ サークル会計からの支出\n`;
-    lineText += `部費負担分の経費合計: ${(totalExtrasClub + totalReward).toLocaleString()}円\n`;
-    lineText += `端数調整の余り充当: -${surplus.toLocaleString()}円\n`;
-    lineText += `【会計からの実支出】: ${circleNeed.toLocaleString()}円\n`;
-
-    lineText += `\n▼計算・編集URL\n${window.location.href}`;
+    const shareableUrl = getShareableUrl();
+    if (shareableUrl) {
+        lineText += `\n▼計算・編集URL\n${shareableUrl}`;
+    } else {
+        lineText += `\n※この画面はローカルファイルで開いているため、編集URLは共有できません。公開URLで開いてから共有してください。`;
+    }
 
     document.getElementById('copyTextarea').value = lineText;
 
-    showToast("✅ 精算完了！履歴に保存しました");
+    if (shouldShowToast) showToast("✅ 精算を更新しました");
+    return true;
 }
 
 function copyRoomLink() {
-    const url = window.location.href;
+    const url = getShareableUrl();
+    if (!url) {
+        showToast("公開URLで開いてからリンク共有してください");
+        return;
+    }
     if (navigator.clipboard) {
         navigator.clipboard.writeText(url).then(() => showToast("URLをコピーしました！"));
     } else {
@@ -1312,7 +1939,11 @@ function copyRoomLink() {
 }
 
 function shareToLine() {
-    const url = window.location.href;
+    const url = getShareableUrl();
+    if (!url) {
+        showToast("公開URLで開いてからLINE共有してください");
+        return;
+    }
     const text = "精算ツールのリンクです。入力をお願いします！";
     window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text + "\n" + url)}`, '_blank');
 }
@@ -1321,6 +1952,26 @@ function copyToClipboard() {
     const textarea = document.getElementById('copyTextarea');
     textarea.select(); document.execCommand('copy');
     showToast("テキストをコピーしました！");
+}
+
+function scrollToResult() {
+    const resultArea = document.getElementById('resultArea');
+    if (!resultArea || getComputedStyle(resultArea).display === 'none') {
+        showToast("入力すると精算結果が表示されます");
+        return;
+    }
+    resultArea.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+function removeExtra(btn) {
+    const item = btn.closest('.extra-item');
+    if (!item) return;
+    const name = item.querySelector('.ex-name')?.value?.trim();
+    const amount = item.querySelector('.ex-amount')?.value?.trim();
+    const hasValue = Boolean(name || amount);
+    if (hasValue && !confirm("この諸経費を削除しますか？")) return;
+    item.remove();
+    window.pushData();
 }
 
 function showToast(msg) {
