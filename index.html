@@ -9,33 +9,42 @@
 <style>
 :root {
     /* --- Classic settlement ledger theme --- */
-    --primary: #22382f;
+    --primary: #173b31;
     --primary-text: #16241f;
-    --primary-btn: #2f4a3d;
+    --primary-btn: #17644f;
     --primary-btn-text: #ffffff;
     --primary-light: #edf2ee;
-    --accent: #486b59;
-    --accent-dark: #2f4a3d;
-    --accent-soft: #d9e4dc;
-    --gold: #8a6f3d;
+    --accent: #218064;
+    --accent-dark: #17644f;
+    --accent-soft: #e0f0ea;
+    --gold: #6f8a45;
     --danger: #9f3a2f;
     
-    --bg: #f3f4f1;
-    --card-bg: #fffefa;
+    --bg: #f7faf9;
+    --card-bg: #ffffff;
     
     --text-main: #1f2f28;
     --text-sub: #617267;
     --text-placeholder: #9aa59e;
     
-    --border: #d8ddd6;
-    --input-bg: #fffefa;
-    --input-border: #c9d1c8;
+    --border: #dde7e2;
+    --input-bg: #ffffff;
+    --input-border: #c9d6d0;
     
     --radius: 6px;
-    --shadow: 0 1px 2px rgba(34, 56, 47, 0.06);
+    --shadow: 0 1px 2px rgba(20, 47, 38, 0.05), 0 10px 28px rgba(20, 47, 38, 0.045);
     
-    --font-head: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-    --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    --font-head: "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", "Meiryo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-body: "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", "Meiryo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --fs-xs: 0.72rem;
+    --fs-sm: 0.8rem;
+    --fs-md: 0.9rem;
+    --fs-base: 0.95rem;
+    --fs-lg: 1.05rem;
+    --fw-normal: 500;
+    --fw-medium: 600;
+    --fw-bold: 700;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -71,17 +80,20 @@
 
 * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
 body {
-    font-family: "Yu Gothic", "YuGothic", "Meiryo", var(--font-body);
-    margin: 0; padding: 10px;
+    font-family: var(--font-body);
+    margin: 0; padding: 12px 10px;
     background:
-        linear-gradient(180deg, rgba(47, 74, 61, 0.08), transparent 240px),
+        linear-gradient(180deg, rgba(47, 128, 102, 0.08), transparent 220px),
         var(--bg);
     color: var(--text-main);
-    line-height: 1.45; font-size: 14px;
+    line-height: 1.5;
+    font-size: 14.5px;
+    font-weight: var(--fw-normal);
+    letter-spacing: 0;
     transition: background-color 0.3s, color 0.3s;
 }
 
-.container { max-width: 600px; margin: 0 auto; padding-bottom: 56px; }
+.container { max-width: 620px; margin: 0 auto; padding-bottom: 56px; }
 
 /* --- ヘッダー周り --- */
 header { 
@@ -91,7 +103,7 @@ header {
     background: var(--card-bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 12px;
+    padding: 12px 14px;
     box-shadow: var(--shadow);
 }
 .hero-top {
@@ -120,17 +132,17 @@ header {
 }
 h1 { 
     font-family: var(--font-head);
-    font-size: 1.1rem; margin: 0; color: var(--primary-text);
+    font-size: 1.08rem; margin: 0; color: var(--primary-text);
     display: flex; align-items: center; justify-content: flex-start; gap: 8px;
-    font-weight: 700;
+    font-weight: var(--fw-bold);
     line-height: 1.25;
-    letter-spacing: 0.02em;
+    letter-spacing: 0;
 }
 h1 i { font-size: 1.2rem; color: var(--accent); }
 .room-name-input {
     margin-top: 10px;
-    font-size: 0.95rem !important;
-    font-weight: 700 !important;
+    font-size: var(--fs-base) !important;
+    font-weight: var(--fw-medium) !important;
     border: 1px solid var(--border) !important;
     background: var(--bg) !important;
     outline: none;
@@ -145,7 +157,7 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
     border: 1px solid var(--border);
     color: var(--text-main);
     border-radius: var(--radius);
-    padding: 12px;
+    padding: 10px 12px;
     margin-bottom: 10px;
     box-shadow: var(--shadow);
 }
@@ -157,8 +169,8 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
     margin-bottom: 8px;
 }
 .share-title {
-    font-weight: 700;
-    font-size: 0.9rem;
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-md);
     color: var(--text-main);
     display: flex;
     align-items: center;
@@ -166,7 +178,8 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
 }
 .share-title i { color: var(--accent); }
 .share-btn-group {
-    display: flex; gap: 8px; flex-wrap: wrap;
+    display: flex;
+    gap: 6px;
 }
 .share-warning {
     display: none;
@@ -176,8 +189,8 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
     border-radius: var(--radius);
     background: var(--bg);
     color: var(--text-sub);
-    font-size: 0.76rem;
-    line-height: 1.45;
+    font-size: var(--fs-xs);
+    line-height: 1.5;
 }
 @media (prefers-color-scheme: dark) {
     .share-warning {
@@ -185,34 +198,80 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
         border-color: var(--border);
         color: var(--text-sub);
     }
+    .btn-share-action {
+        background: var(--input-bg);
+        box-shadow: none;
+    }
+    .btn-share-action:hover {
+        background: var(--primary-light);
+    }
 }
 .btn-share-action {
-    background: var(--bg);
-    border: 1px solid var(--border);
+    background: var(--card-bg);
+    border: 1px solid var(--input-border);
     color: var(--text-main);
-    padding: 7px 12px;
+    padding: 8px 7px;
     border-radius: var(--radius);
-    font-size: 0.85rem;
+    font-size: var(--fs-sm);
     cursor: pointer;
     text-decoration: none;
-    display: flex; align-items: center; justify-content: center; gap: 6px;
+    display: flex; align-items: center; justify-content: center; gap: 7px;
     transition: all 0.2s;
-    font-weight: 650;
-    flex: 1;
-    min-width: 100px;
+    font-weight: var(--fw-medium);
+    min-height: 38px;
+    flex: 1 1 0;
+    min-width: 0;
+    box-shadow: none;
+    text-align: center;
 }
-.btn-share-action:hover { background: var(--border); color: var(--primary-text); }
+.btn-share-action:hover {
+    border-color: var(--accent);
+    background: #fff;
+    color: var(--primary-text);
+    transform: translateY(-1px);
+}
 .btn-share-action:active { transform: scale(0.98); }
+.btn-share-action i {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--accent-dark);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+}
+.btn-share-action.share-primary { border-color: var(--accent); color: var(--accent-dark); }
+.btn-share-action.share-primary i { color: var(--accent-dark); }
+@media (prefers-color-scheme: dark) {
+    .btn-share-action:hover {
+        background: var(--primary-light);
+    }
+    .btn-share-action.share-primary:hover {
+        background: var(--primary-btn);
+    }
+}
+.share-action-text {
+    display: block;
+    min-width: 0;
+}
+.share-action-text strong {
+    display: block;
+    font-size: 0.76rem;
+    line-height: 1.2;
+    white-space: normal;
+}
 
 .room-badge {
     background: var(--primary-light); color: var(--accent-dark);
-    padding: 4px 10px; border-radius: 4px; font-family: monospace; font-size: 0.8rem;
+    padding: 4px 10px; border-radius: 4px; font-family: var(--font-mono); font-size: var(--fs-sm);
     display: inline-flex; align-items: center; gap: 6px; 
     border: 1px solid var(--accent-soft);
 }
 
 .sync-status {
-    font-size: 0.75rem; color: var(--text-sub); font-weight: 500;
+    font-size: var(--fs-xs); color: var(--text-sub); font-weight: var(--fw-normal);
     display: flex; align-items: center; justify-content: flex-end; gap: 6px;
 }
 .sync-dot { width: 8px; height: 8px; background: var(--accent); border-radius: 50%; display: inline-block; animation: pulse 2s infinite; }
@@ -226,24 +285,25 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
 
 h2 { 
     font-family: var(--font-head);
-    font-size: 0.98rem; margin: 0 0 12px 0; 
+    font-size: var(--fs-lg); margin: 0 0 12px 0; 
     display: flex; align-items: center; gap: 8px; 
     color: var(--primary-text);
     border-bottom: 1px solid var(--border); padding-bottom: 8px;
-    letter-spacing: 0.02em;
+    font-weight: var(--fw-bold);
+    letter-spacing: 0;
 }
-h2 i { color: var(--gold); font-size: 1rem; }
+h2 i { color: var(--accent); font-size: 1rem; }
 
 /* 入力フォーム */
 .input-group { margin-bottom: 10px; }
-label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 6px; color: var(--text-sub); }
+label { display: block; font-size: var(--fs-sm); font-weight: var(--fw-medium); margin-bottom: 5px; color: var(--text-sub); }
 
 input[type="number"], input[type="text"], select {
     width: 100%; padding: 8px 10px; 
     border: 1px solid var(--input-border); border-radius: var(--radius); 
-    font-size: 16px; background: var(--input-bg); color: var(--text-main);
+    font-size: 15.5px; background: var(--input-bg); color: var(--text-main);
     transition: 0.2s; 
-    font-weight: 500;
+    font-weight: var(--fw-normal);
     box-shadow: inset 0 1px 2px rgba(0,0,0,0.02);
 }
 input:focus, select:focus { 
@@ -254,7 +314,7 @@ input:focus, select:focus {
 input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: normal; }
 
 .inp-name, .inp-dist, .inp-eco, .inp-price {
-    font-size: 1rem !important;
+    font-size: 15.5px !important;
 }
 
 .flex-row { display: flex; gap: 8px; }
@@ -266,7 +326,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     background: var(--input-bg); padding: 10px 12px; border-radius: var(--radius); 
     cursor: pointer; user-select: none; border: 1px solid var(--input-border);
 }
-.checkbox-card span { font-size: 0.95rem; font-weight: 500; }
+.checkbox-card span { font-size: var(--fs-base); font-weight: var(--fw-normal); }
 .checkbox-card input { display: none; }
 .toggle-switch {
     width: 40px; height: 22px; background: var(--border); border-radius: 20px; position: relative; transition: 0.3s;
@@ -286,7 +346,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .car-header {
     background: var(--card-bg); padding: 9px 12px;
     display: flex; justify-content: space-between; align-items: center;
-    cursor: pointer; font-weight: 600; font-size: 0.95rem; color: var(--text-main);
+    cursor: pointer; font-weight: var(--fw-medium); font-size: var(--fs-base); color: var(--text-main);
     border-bottom: 1px solid transparent;
     transition: background 0.2s;
 }
@@ -313,9 +373,9 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .extra-item { 
     display: flex; flex-wrap: nowrap; gap: 6px; margin-bottom: 8px; align-items: center; 
 }
-.extra-item .ex-name { flex: 2; min-width: 0; font-size: 1rem; }
-.extra-item .ex-amount { flex: 2; min-width: 0; font-size: 1rem; }
-.extra-item .ex-type { flex: 1.2; min-width: 0; font-size: 0.86rem; padding: 8px 4px; border-radius: var(--radius); text-align: center; }
+.extra-item .ex-name { flex: 2; min-width: 0; font-size: 15px; }
+.extra-item .ex-amount { flex: 2; min-width: 0; font-size: 15px; }
+.extra-item .ex-type { flex: 1.2; min-width: 0; font-size: var(--fs-sm); padding: 8px 4px; border-radius: var(--radius); text-align: center; }
 
 /* 種別セレクトの塗りつぶしカラー */
 .ex-type.club-color { background-color: var(--bg); color: var(--text-main); border-color: var(--border); }
@@ -323,9 +383,9 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
 /* ボタン類 */
 .btn {
-    width: 100%; border: none; border-radius: var(--radius); font-size: 0.95rem; font-weight: 600;
+    width: 100%; border: none; border-radius: var(--radius); font-size: var(--fs-md); font-weight: var(--fw-medium);
     padding: 12px; cursor: pointer; transition: all 0.2s; display: flex; align-items: center; justify-content: center; gap: 8px;
-    text-decoration: none; letter-spacing: 0.02em;
+    text-decoration: none; letter-spacing: 0;
 }
 .btn-primary { 
     background: var(--primary-btn); color: var(--primary-btn-text); margin-top: 10px; 
@@ -335,7 +395,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 
 .btn-outline { 
     background: transparent; border: 1px dashed var(--border); color: var(--text-main); 
-    padding: 10px; font-weight: 500;
+    padding: 10px; font-weight: var(--fw-normal);
 }
 .btn-outline:hover { background: var(--primary-light); color: var(--primary-text); border-style: solid;}
 .sticky-calc {
@@ -343,7 +403,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     box-shadow: var(--shadow);
     margin-bottom: 16px;
 }
-.btn-sm { padding: 6px 12px; font-size: 0.85rem; width: auto; display: inline-flex; border-radius: 4px; }
+.btn-sm { padding: 6px 12px; font-size: var(--fs-sm); width: auto; display: inline-flex; border-radius: 4px; }
 
 /* --- 精算結果ダッシュボード --- */
 #resultArea { display: none; }
@@ -357,7 +417,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     background: var(--card-bg);
     color: var(--text-main);
     font-family: var(--font-body);
-    padding: 18px;
+    padding: 16px;
     box-shadow: var(--shadow);
     max-width: 600px;
     margin: 0 auto;
@@ -376,6 +436,20 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     padding-bottom: 16px;
     border-bottom: 1px solid var(--border);
 }
+.receipt-intro {
+    margin: 12px 0 0;
+    padding: 10px 12px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text-sub);
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+}
+.receipt-intro strong {
+    color: var(--primary-text);
+    font-weight: var(--fw-bold);
+}
 .receipt-logo {
     width: 38px; height: 38px; border-radius: 8px;
     background: var(--primary-btn); color: var(--primary-btn-text);
@@ -383,15 +457,23 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     font-size: 1rem; flex: 0 0 auto;
 }
 .receipt-title-group { display: flex; gap: 12px; align-items: flex-start; min-width: 0; }
-.receipt-title { font-size: 1.05rem; font-weight: 700; margin: 0; line-height: 1.25; }
-.receipt-room { font-size: 0.9rem; font-weight: 600; color: var(--primary-text); margin-top: 4px; word-break: break-word; }
-.receipt-meta { font-size: 0.75rem; color: var(--text-sub); white-space: nowrap; margin-top: 2px; }
+.receipt-title { font-size: var(--fs-lg); font-weight: var(--fw-bold); margin: 0; line-height: 1.25; }
+.receipt-room { font-size: var(--fs-md); font-weight: var(--fw-medium); color: var(--primary-text); margin-top: 4px; word-break: break-word; }
+.receipt-meta { font-size: var(--fs-xs); color: var(--text-sub); white-space: nowrap; margin-top: 2px; }
 .money-block {
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    background: #fff;
-    padding: 14px;
+    background: var(--input-bg);
+    padding: 13px;
     margin: 14px 0 12px;
+}
+.money-stack {
+    display: grid;
+    gap: 10px;
+    margin-top: 12px;
+}
+.money-block {
+    margin: 0;
 }
 .money-block.primary {
     background: var(--primary-btn);
@@ -400,11 +482,27 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 }
 .money-block h4 {
     margin: 0 0 10px;
-    font-size: 0.92rem;
-    font-weight: 700;
+    font-size: var(--fs-md);
+    font-weight: var(--fw-bold);
     display: flex;
     gap: 8px;
     align-items: center;
+}
+.step-badge {
+    width: 22px;
+    height: 22px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+}
+.money-block.primary .step-badge {
+    background: rgba(255,255,255,0.16);
+    color: #fff;
 }
 .money-row {
     display: flex;
@@ -418,20 +516,20 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .money-row:first-of-type { border-top: 0; padding-top: 0; }
 .money-label {
     display: block;
-    font-size: 0.78rem;
-    font-weight: 600;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
     color: var(--text-sub);
     line-height: 1.3;
 }
 .money-block.primary .money-label { color: rgba(255,255,255,0.78); }
 .money-value {
-    font-size: 1.18rem;
-    font-weight: 700;
+    font-size: 1.08rem;
+    font-weight: var(--fw-bold);
     white-space: nowrap;
 }
-.money-value.big { font-size: 2rem; letter-spacing: 0; }
+.money-value.big { font-size: 1.8rem; letter-spacing: 0; }
 .money-note {
-    font-size: 0.76rem;
+    font-size: var(--fs-xs);
     color: var(--text-sub);
     line-height: 1.45;
     margin-top: 7px;
@@ -454,14 +552,14 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .equation-cell span {
     display: block;
     color: var(--text-sub);
-    font-size: 0.72rem;
-    font-weight: 600;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-medium);
 }
 .equation-cell strong {
     display: block;
     margin-top: 4px;
-    font-size: 1.05rem;
-    font-weight: 700;
+    font-size: var(--fs-base);
+    font-weight: var(--fw-bold);
     color: var(--primary-text);
 }
 .equation-symbol {
@@ -469,7 +567,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     align-items: center;
     justify-content: center;
     color: var(--text-sub);
-    font-weight: 700;
+    font-weight: var(--fw-bold);
 }
 .settlement-check {
     background: var(--bg);
@@ -483,8 +581,8 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     gap: 8px;
     margin: 0 0 8px;
     color: var(--primary-text);
-    font-size: 0.86rem;
-    font-weight: 700;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
 }
 .settlement-check-title i {
     color: var(--accent);
@@ -494,23 +592,23 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     justify-content: space-between;
     gap: 12px;
     align-items: baseline;
-    font-size: 0.86rem;
+    font-size: var(--fs-sm);
     padding: 6px 0;
     border-top: 1px dashed var(--border);
 }
 .breakdown-row:first-of-type { border-top: 0; }
-.breakdown-label { color: var(--text-sub); font-weight: 500; }
-.breakdown-value { font-weight: 700; text-align: right; white-space: nowrap; }
+.breakdown-label { color: var(--text-sub); font-weight: var(--fw-normal); }
+.breakdown-value { font-weight: var(--fw-bold); text-align: right; white-space: nowrap; }
 .breakdown-row.total {
     margin-top: 4px;
     padding-top: 9px;
     border-top: 1px solid var(--border);
-    font-size: 0.92rem;
+    font-size: var(--fs-md);
 }
 .breakdown-row.total .breakdown-label,
 .breakdown-row.total .breakdown-value {
     color: var(--primary-text);
-    font-weight: 700;
+    font-weight: var(--fw-bold);
 }
 .driver-list {
     display: grid;
@@ -519,7 +617,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 .section-caption {
     margin: -4px 0 10px;
     color: var(--text-sub);
-    font-size: 0.78rem;
+    font-size: var(--fs-xs);
     line-height: 1.45;
 }
 
@@ -528,16 +626,16 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     border-top: 1px solid var(--border);
 }
 .receipt-section-title {
-    font-size: 0.85rem; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
+    font-size: var(--fs-sm); font-weight: var(--fw-bold); margin-bottom: 10px; display: flex; align-items: center; gap: 8px;
     color: var(--primary-text);
 }
 
 .receipt-row {
     display: flex; justify-content: space-between; align-items: baseline; gap: 12px;
-    font-size: 0.92rem; margin-bottom: 6px; line-height: 1.4;
+    font-size: var(--fs-md); margin-bottom: 6px; line-height: 1.45;
 }
-.receipt-row.bold { font-weight: bold; font-size: 1.05rem; margin-top: 8px; }
-.receipt-row span:last-child { white-space: nowrap; margin-left: 10px; font-weight: 800; }
+.receipt-row.bold { font-weight: var(--fw-bold); font-size: var(--fs-base); margin-top: 8px; }
+.receipt-row span:last-child { white-space: nowrap; margin-left: 10px; font-weight: var(--fw-bold); }
 .driver-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
@@ -551,17 +649,17 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     gap: 12px;
     margin-bottom: 8px;
 }
-.driver-name { font-weight: 700; min-width: 0; word-break: break-word; }
+.driver-name { font-weight: var(--fw-bold); min-width: 0; word-break: break-word; }
 .driver-name small {
     display: block;
     color: var(--text-sub);
-    font-size: 0.72rem;
-    font-weight: 500;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-normal);
     margin-top: 2px;
 }
 .driver-total {
-    font-size: 1.15rem;
-    font-weight: 700;
+    font-size: 1.05rem;
+    font-weight: var(--fw-bold);
     white-space: nowrap;
     color: var(--accent-dark);
 }
@@ -569,14 +667,14 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     display: flex;
     justify-content: space-between;
     gap: 10px;
-    font-size: 0.82rem;
+    font-size: var(--fs-sm);
     color: var(--text-sub);
     padding: 4px 0;
     border-top: 1px dashed var(--border);
     line-height: 1.35;
 }
 .receipt-detail:first-of-type { border-top: 0; }
-.receipt-detail span:last-child { font-weight: 650; white-space: nowrap; }
+.receipt-detail span:last-child { font-weight: var(--fw-medium); white-space: nowrap; }
 .accounting-panel {
     background: var(--bg);
     border: 1px solid var(--border);
@@ -587,11 +685,11 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     margin-top: 10px;
     padding-top: 10px;
     border-top: 1px solid var(--border);
-    font-size: 1rem;
+    font-size: var(--fs-base);
 }
 
 .receipt-footer {
-    text-align: center; padding-top: 14px; margin-top: 4px; font-size: 0.8rem; color: var(--text-sub);
+    text-align: center; padding-top: 14px; margin-top: 4px; font-size: var(--fs-sm); color: var(--text-sub);
     border-top: 1px solid var(--border);
 }
 
@@ -601,28 +699,33 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     .hero-top { align-items: flex-start; }
     .brand-mark { width: 34px; height: 34px; }
     .share-header { align-items: flex-start; }
+    .share-btn-group { gap: 5px; }
+    .btn-share-action { padding: 7px 5px; gap: 4px; }
+    .btn-share-action i { width: 18px; height: 18px; }
+    .share-action-text strong { font-size: 0.72rem; }
+    .result-share-actions { grid-template-columns: 1fr; }
     .receipt-paper { padding: 14px; }
     .receipt-header { flex-direction: column; }
     .receipt-meta { white-space: normal; }
     .money-equation { grid-template-columns: 1fr; }
     .equation-symbol { padding: 0; }
-    .money-value.big { font-size: 1.75rem; }
+    .money-value.big { font-size: 1.6rem; }
 }
 
 /* コピーエリア */
 .copy-area {
-    background: var(--card-bg); color: var(--text-main); padding: 16px; 
+    background: var(--card-bg); color: var(--text-main); padding: 14px; 
     border-radius: var(--radius); margin-top: 20px; border: 1px solid var(--border);
 }
 #copyTextarea { 
     width: 100%; background: var(--bg); border: 1px solid var(--border); 
-    color: var(--text-main); font-family: monospace; min-height: 220px; resize: vertical; 
-    font-size: 0.85rem; outline: none; padding: 10px; border-radius: var(--radius);
+    color: var(--text-main); font-family: var(--font-mono); min-height: 200px; resize: vertical; 
+    font-size: var(--fs-sm); line-height: 1.55; outline: none; padding: 10px; border-radius: var(--radius);
 }
 .btn-copy { 
     background: var(--card-bg); color: var(--text-main); padding: 10px; width: 100%; 
     border: 1px solid var(--border); border-radius: var(--radius); 
-    margin-top: 10px; font-weight: 500; cursor: pointer; 
+    margin-top: 10px; font-size: var(--fs-sm); font-weight: var(--fw-medium); cursor: pointer; 
     display: flex; align-items: center; justify-content: center; gap: 6px; 
     transition: all 0.2s; 
 }
@@ -636,12 +739,15 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     transition: border-color 0.2s;
 }
 .history-item:hover { border-color: var(--text-sub); }
-.history-meta { font-size: 0.75rem; color: var(--text-sub); display: block; margin-bottom: 2px;}
+.history-meta { font-size: var(--fs-xs); color: var(--text-sub); display: block; margin-bottom: 2px;}
 .btn-restore { 
     background: var(--primary-btn); color: var(--primary-btn-text); border: none; 
-    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: 0.75rem; font-weight: 600;
+    padding: 6px 12px; border-radius: 4px; cursor: pointer; font-size: var(--fs-xs); font-weight: var(--fw-medium);
 }
 .btn-restore:hover { opacity: 0.9; }
+.dev-tools {
+    display: none;
+}
 
 /* トースト通知 */
 #toast {
@@ -649,14 +755,14 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     background-color: var(--primary-text); color: var(--bg); 
     text-align: center; border-radius: 4px; padding: 12px 16px; 
     position: fixed; z-index: 100; left: 50%; bottom: 30px;
-    transform: translateX(-50%); font-size: 0.9rem; font-weight: 500; opacity: 0; 
+    transform: translateX(-50%); font-size: var(--fs-md); font-weight: var(--fw-normal); opacity: 0; 
     transition: opacity 0.3s, bottom 0.3s;
     display: flex; align-items: center; justify-content: center; gap: 10px; 
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 #toast.show { visibility: visible; opacity: 1; bottom: 50px; }
 
-/* --- 使い方ガイドモーダル --- */
+/* --- 使い方モーダル --- */
 .modal {
     display: none; position: fixed; z-index: 200; left: 0; top: 0; width: 100%; height: 100%;
     overflow: auto; background-color: rgba(0,0,0,0.6); backdrop-filter: blur(2px);
@@ -674,10 +780,10 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     display: flex; justify-content: space-between; align-items: center;
     background: var(--bg); border-radius: var(--radius) var(--radius) 0 0;
 }
-.modal-title { margin: 0; font-size: 1rem; color: var(--text-main); font-weight: bold; display: flex; align-items: center; gap: 8px; }
+.modal-title { margin: 0; font-size: var(--fs-lg); color: var(--text-main); font-weight: var(--fw-bold); display: flex; align-items: center; gap: 8px; }
 .close-btn { color: var(--text-sub); font-size: 1.2rem; cursor: pointer; line-height: 1; padding: 5px;}
 .close-btn:hover { color: var(--text-main); }
-.modal-body { padding: 20px; overflow-y: auto; font-size: 0.95rem; color: var(--text-main); }
+.modal-body { padding: 18px; overflow-y: auto; font-size: var(--fs-base); color: var(--text-main); }
 .modal-footer {
     position: sticky;
     bottom: 0;
@@ -687,11 +793,11 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     text-align: center;
 }
 
-.guide-section { margin-bottom: 24px; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
+.guide-section { margin-bottom: 18px; border-bottom: 1px solid var(--border); padding-bottom: 14px; }
 .guide-section:last-child { border-bottom: none; margin-bottom: 0; }
-.guide-h3 { font-size: 0.95rem; color: var(--primary-text); margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; font-weight: bold; }
+.guide-h3 { font-size: var(--fs-base); color: var(--primary-text); margin: 0 0 10px 0; display: flex; align-items: center; gap: 8px; font-weight: var(--fw-bold); }
 .guide-h3 i { color: var(--accent); }
-.guide-p { margin: 0 0 10px 0; color: var(--text-sub); line-height: 1.6; }
+.guide-p { margin: 0 0 10px 0; color: var(--text-sub); line-height: 1.6; font-size: var(--fs-sm); }
 .guide-map {
     display: grid;
     grid-template-columns: 1fr auto 1fr auto 1fr;
@@ -831,11 +937,79 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     color: var(--text-main); padding: 2px 6px; border-radius: 4px; 
     font-size: 0.75rem; font-weight: 600; margin-right: 4px; 
 }
+.guide-flow {
+    display: grid;
+    gap: 8px;
+}
+.guide-step {
+    display: grid;
+    grid-template-columns: 34px 1fr;
+    gap: 10px;
+    align-items: start;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+}
+.guide-step-num {
+    width: 34px;
+    height: 34px;
+    border-radius: var(--radius);
+    background: var(--primary-btn);
+    color: var(--primary-btn-text);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+}
+.guide-step strong {
+    display: block;
+    color: var(--primary-text);
+    font-size: var(--fs-md);
+    margin-bottom: 3px;
+    font-weight: var(--fw-bold);
+}
+.guide-step span {
+    display: block;
+    color: var(--text-sub);
+    font-size: var(--fs-sm);
+    line-height: 1.5;
+}
+.guide-mini-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+}
+.guide-mini-actions em {
+    font-style: normal;
+    font-size: var(--fs-xs);
+    font-weight: var(--fw-bold);
+    color: var(--accent-dark);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-soft);
+    border-radius: 4px;
+    padding: 3px 6px;
+}
+.result-share-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+    margin-top: 10px;
+}
+.result-share-actions .btn-copy,
+.result-share-actions .btn {
+    margin-top: 0 !important;
+    min-height: 42px;
+}
 @media (max-width: 460px) {
     .guide-map { grid-template-columns: 1fr; }
     .guide-arrow { text-align: center; transform: rotate(90deg); }
     .guide-screens { grid-template-columns: 1fr; }
     .guide-mini-grid { grid-template-columns: 1fr; }
+    .modal-body { padding: 14px; }
+    .guide-step { grid-template-columns: 30px 1fr; padding: 9px; }
+    .guide-step-num { width: 30px; height: 30px; }
 }
 </style>
 </head>
@@ -844,62 +1018,52 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
 <div id="helpModal" class="modal">
     <div class="modal-content">
         <div class="modal-header">
-            <h3 class="modal-title"><i class='fa-solid fa-book-open'></i> 使い方ガイド</h3>
+            <h3 class="modal-title"><i class='fa-solid fa-book-open'></i> 使い方</h3>
             <span class="close-btn" onclick="closeHelp()">&times;</span>
         </div>
         <div class="modal-body">
             
             <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-route'></i> お金の流れ</h3>
-                <div class="guide-map">
-                    <div class="guide-node"><i class='fa-solid fa-car-side'></i><strong>ドライバー</strong><span>立替を入力</span></div>
-                    <div class="guide-arrow"><i class='fa-solid fa-chevron-right'></i></div>
-                    <div class="guide-node"><i class='fa-solid fa-users'></i><strong>部員</strong><span>1人分を払う</span></div>
-                    <div class="guide-arrow"><i class='fa-solid fa-chevron-right'></i></div>
-                    <div class="guide-node"><i class='fa-solid fa-building-columns'></i><strong>会計</strong><span>集めて渡す</span></div>
-                </div>
-            </div>
-
-            <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-pen-to-square'></i> 入力する場所</h3>
-                <div class="guide-screens">
-                    <div class="guide-screen">
-                        <div class="guide-screen-title"><span><i class='fa-solid fa-car'></i> 車両情報</span></div>
-                        <div class="guide-field">ドライバー名<strong>例：山田</strong></div>
-                        <div class="guide-field-row">
-                            <div class="guide-field">移動距離</div>
-                            <div class="guide-field">燃費</div>
-                            <div class="guide-field">ガソリン価格</div>
+                <h3 class="guide-h3"><i class='fa-solid fa-route'></i> 使うまでの流れ</h3>
+                <div class="guide-flow">
+                    <div class="guide-step">
+                        <div class="guide-step-num">1</div>
+                        <div>
+                            <strong>このページを開く</strong>
+                            <span>開いた時点で、この企画用の部屋が自動で作られます。</span>
                         </div>
-                        <div class="guide-field" style="margin-top:6px;">諸経費<strong>駐車場・レンタカー代など</strong></div>
                     </div>
-                    <div class="guide-screen">
-                        <div class="guide-screen-title"><span><i class='fa-solid fa-gear'></i> 設定</span></div>
-                        <div class="guide-field">参加人数<strong>企画者を含む人数</strong></div>
-                        <div class="guide-field">端数処理<strong>100円単位など</strong></div>
-                        <div class="guide-field">企画者の集金免除<strong>必要な時だけON</strong></div>
+                    <div class="guide-step">
+                        <div class="guide-step-num">2</div>
+                        <div>
+                            <strong>リンクをグループに共有</strong>
+                            <span>LINEのグループに送ります。</span>
+                            <div class="guide-mini-actions"><em>リンクをコピー</em><em>LINEで送信</em></div>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step-num">3</div>
+                        <div>
+                            <strong>ドライバーが入力</strong>
+                            <span>前日か当日に、移動距離・燃費・ガソリン価格・諸経費を入れます。</span>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step-num">4</div>
+                        <div>
+                            <strong>会計が人数を設定</strong>
+                            <span>参加人数、端数処理、企画者免除を確認します。</span>
+                        </div>
+                    </div>
+                    <div class="guide-step">
+                        <div class="guide-step-num">5</div>
+                        <div>
+                            <strong>結果を共有して精算</strong>
+                            <span>1人あたり、会計が用意する額、ドライバーへの支払い額を共有できます。</span>
+                            <div class="guide-mini-actions"><em>結果をコピー</em><em>LINEで共有</em><em>画像保存</em></div>
+                        </div>
                     </div>
                 </div>
-            </div>
-
-            <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-chart-simple'></i> 結果で見る場所</h3>
-                <div class="guide-screens">
-                    <div class="guide-screen">
-                        <div class="guide-result-card"><span>部員に伝える金額</span><strong>1人あたり</strong></div>
-                        <div class="guide-pay-row"><span>会計で確認</span><strong>集金 → 支払い</strong></div>
-                    </div>
-                    <div class="guide-screen">
-                        <div class="guide-screen-title"><span><i class='fa-solid fa-hand-holding-yen'></i> ドライバーへの支払い</span></div>
-                        <div class="guide-pay-row"><span>山田さん</span><strong>¥12,000</strong></div>
-                        <div class="guide-pay-row"><span>佐藤さん</span><strong>¥8,500</strong></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-share-nodes'></i> 共有</h3>
-                <p class="guide-p"><span class="guide-tag">リンク</span><span class="guide-tag">コピー</span><span class="guide-tag">画像保存</span></p>
             </div>
             
             <div class="modal-footer">
@@ -938,17 +1102,23 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
             </div>
         </div>
         <div class="share-btn-group">
-            <button class="btn-share-action" onclick="copyRoomLink()">
-                <i class='fa-regular fa-copy'></i> リンク
+            <button class="btn-share-action share-primary" onclick="copyRoomLink()">
+                <i class='fa-regular fa-copy'></i>
+                <span class="share-action-text">
+                    <strong>リンクをコピー</strong>
+                </span>
             </button>
             <button class="btn-share-action" onclick="shareToLine()">
-                <i class='fa-brands fa-line'></i> LINE
+                <i class='fa-brands fa-line'></i>
+                <span class="share-action-text">
+                    <strong>LINEで送信</strong>
+                </span>
             </button>
             <button class="btn-share-action" onclick="openHelp()">
-                <i class='fa-solid fa-book'></i> ガイド
-            </button>
-            <button class="btn-share-action" onclick="scrollToResult()">
-                <i class='fa-solid fa-receipt'></i> 結果へ
+                <i class='fa-solid fa-book'></i>
+                <span class="share-action-text">
+                    <strong>使い方</strong>
+                </span>
             </button>
         </div>
         <div id="shareWarning" class="share-warning">
@@ -1006,34 +1176,41 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                     <div class="receipt-meta" id="receiptDate">2024.01.01 12:00</div>
                 </div>
 
-                <div class="money-block primary">
-                    <h4><i class='fa-solid fa-users'></i> 部員に伝える</h4>
-                    <div class="money-row">
-                        <span class="money-label">1人あたり</span>
-                        <span class="money-value big" id="resPerPerson">0</span>
-                    </div>
-                    <div class="money-row">
-                        <span class="money-label">集金対象</span>
-                        <span class="money-value"><span id="resPayers">0名</span> × <span id="resRoutePerPerson">0</span></span>
-                    </div>
-                    <div class="money-note" id="resTargetDetail">--</div>
-                </div>
+                <p class="receipt-intro">
+                    <strong>この順番で精算します。</strong>
+                    部員から集める金額を確認し、会計で不足分を足して、最後にドライバーへ渡します。
+                </p>
 
-                <div class="money-block">
-                    <h4><i class='fa-solid fa-building-columns'></i> 会計が用意する</h4>
-                    <div class="money-row">
-                        <span class="money-label" id="resAccountingLabel">会計が追加で出す金額</span>
-                        <span class="money-value big" id="resWithdrawCard">0</span>
+                <div class="money-stack">
+                    <div class="money-block primary">
+                        <h4><span class="step-badge">1</span> 部員から集める</h4>
+                        <div class="money-row">
+                            <span class="money-label">1人あたりの徴収額</span>
+                            <span class="money-value big" id="resPerPerson">0</span>
+                        </div>
+                        <div class="money-row">
+                            <span class="money-label">集金対象</span>
+                            <span class="money-value"><span id="resPayers">0名</span> × <span id="resRoutePerPerson">0</span></span>
+                        </div>
+                        <div class="money-note" id="resTargetDetail">--</div>
                     </div>
-                    <div class="money-row">
-                        <span class="money-label">部費分</span>
-                        <span class="money-value" id="resClubBurdenCard">0</span>
+
+                    <div class="money-block">
+                        <h4><span class="step-badge">2</span> 会計で調整する</h4>
+                        <div class="money-row">
+                            <span class="money-label" id="resAccountingLabel">会計が追加で出す金額</span>
+                            <span class="money-value big" id="resWithdrawCard">0</span>
+                        </div>
+                        <div class="money-row">
+                            <span class="money-label">部費分・支払い端数</span>
+                            <span class="money-value" id="resClubBurdenCard">0</span>
+                        </div>
+                        <div class="money-row">
+                            <span class="money-label">集金端数として会計に入る分</span>
+                            <span class="money-value" id="resSurplusCard">0</span>
+                        </div>
+                        <div class="money-note" id="resWithdrawNote">部費分から集金端数を差し引いた額</div>
                     </div>
-                    <div class="money-row">
-                        <span class="money-label">集金端数として会計に入る分</span>
-                        <span class="money-value" id="resSurplusCard">0</span>
-                    </div>
-                    <div class="money-note" id="resWithdrawNote">部費分から集金端数を差し引いた額</div>
                 </div>
 
                 <div class="money-equation">
@@ -1045,7 +1222,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                 </div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title"><i class='fa-solid fa-hand-holding-yen'></i> ドライバーへの支払い</span>
+                    <span class="receipt-section-title"><span class="step-badge">3</span> ドライバーへ渡す</span>
                     <p class="section-caption">会計係は、この表の金額を各ドライバーへ渡します。</p>
                     <div id="resDriverList" class="driver-list"></div>
                 </div>
@@ -1073,6 +1250,10 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                             <span class="breakdown-label">運転者調整費</span>
                             <span class="breakdown-value" id="resDriverReward">0</span>
                         </div>
+                        <div class="breakdown-row">
+                            <span class="breakdown-label">支払い端数</span>
+                            <span class="breakdown-value" id="resDriverRoundup">0</span>
+                        </div>
                         <div class="breakdown-row total">
                             <span class="breakdown-label" id="resAccountingTotalLabel">会計が追加で出す金額</span>
                             <span class="breakdown-value" id="resAccountingNetDetail">0</span>
@@ -1085,8 +1266,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                 </div>
 
                 <div class="receipt-footer">
-                    お疲れ様でした！<br>
-                    山歩会
+                    山歩会 精算控え
                 </div>
             </div>
         </div>
@@ -1096,12 +1276,15 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                 <i class='fa-solid fa-share-nodes'></i> 結果の共有
             </h3>
             <textarea id="copyTextarea" readonly></textarea>
-            <div style="display: flex; gap: 8px;">
+            <div class="result-share-actions">
                 <button class="btn-copy" onclick="copyToClipboard()">
-                    <i class='fa-solid fa-copy'></i> コピー
+                    <i class='fa-solid fa-copy'></i> 結果をコピー
+                </button>
+                <button class="btn-copy" onclick="shareResultToLine()">
+                    <i class='fa-brands fa-line'></i> LINEで共有
                 </button>
                 <button class="btn" style="background: var(--primary-btn); color: var(--primary-btn-text); font-size:0.9rem; border: none; border-radius: var(--radius); width: 100%; margin-top:10px;" onclick="downloadResultImage()">
-                    <i class='fa-solid fa-download'></i> 精算結果を画像保存
+                    <i class='fa-solid fa-download'></i> 画像保存
                 </button>
             </div>
         </div>
@@ -1122,15 +1305,6 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
             </div>
         </details>
     </div>
-    <div style="margin-top: 40px; text-align: center; border-top: 1px dashed var(--border); padding-top: 20px;">
-        <button class="btn btn-sm" style="background: var(--bg); color: var(--text-sub); border: 1px solid var(--border); width: auto; margin: 0 auto;" onclick="fillTestData()">
-            <i class='fa-solid fa-flask'></i> デバッグ用データを投入
-        </button>
-        <p style="font-size: 0.7rem; color: var(--text-sub); margin-top: 8px;">
-            ※既存の入力は全て上書きされます
-        </p>
-    </div>
-
 </div>
 
 <div id="toast"><i class='fa-solid fa-circle-check'></i> <span>メッセージ</span></div>
@@ -1157,6 +1331,7 @@ window.handleAddExtra = handleAddExtra;
 window.calculate = calculate;
 window.copyRoomLink = copyRoomLink;
 window.shareToLine = shareToLine;
+window.shareResultToLine = shareResultToLine;
 window.copyToClipboard = copyToClipboard;
 window.scrollToResult = scrollToResult;
 window.removeExtra = removeExtra;
@@ -1308,7 +1483,7 @@ function renderForm(data) {
     setValIfDiff('roundingUnit', data.rounding);
 
     const carList = document.getElementById('carList');
-    const remoteCars = data.cars || [];
+    const remoteCars = (data.cars && data.cars.length > 0) ? data.cars : [{ extras: [{}] }];
     const currentCards = carList.getElementsByClassName('car-card');
     
     while(currentCards.length < remoteCars.length) {
@@ -1740,6 +1915,7 @@ function calculate(options = {}) {
     let totalExtrasSplit = 0; 
     let totalExtrasClub = 0; 
     let totalReward = 0;
+    let totalDriverRoundup = 0;
 
     let driverResults = []; 
 
@@ -1773,15 +1949,22 @@ function calculate(options = {}) {
             }
         });
 
-        const reward = 1000; 
+        const reward = 1000;
+        const rawDriverPay = gasCost + driverExtrasTotal + reward;
+        const driverPayRoundUnit = 100;
+        const roundedDriverPay = Math.ceil(rawDriverPay / driverPayRoundUnit) * driverPayRoundUnit;
+        const driverRoundup = roundedDriverPay - rawDriverPay;
         totalGas += gasCost; 
         totalReward += reward;
+        totalDriverRoundup += driverRoundup;
 
         driverResults.push({
             name,
-            totalPay: gasCost + driverExtrasTotal + reward, 
+            totalPay: roundedDriverPay,
+            rawPay: rawDriverPay,
             gasCost,
             reward,
+            driverRoundup,
             hasGasInput,
             extras: exs,
             extrasTotal: driverExtrasTotal
@@ -1799,8 +1982,8 @@ function calculate(options = {}) {
     
     const surplus = totalCollected - totalCollectionTarget;
 
-    const circleNeed = (totalExtrasClub + totalReward) - surplus;
-    const clubBurden = totalExtrasClub + totalReward;
+    const clubBurden = totalExtrasClub + totalReward + totalDriverRoundup;
+    const circleNeed = clubBurden - surplus;
     const totalDriverPay = driverResults.reduce((sum, d) => sum + d.totalPay, 0);
     const yen = (value) => "¥" + value.toLocaleString();
 
@@ -1815,15 +1998,15 @@ function calculate(options = {}) {
     
     document.getElementById('resTargetDetail').textContent = `${payers}名から集めて、合計 ${yen(totalCollected)} を会計へ`;
     document.getElementById('resPayers').textContent = `${payers}名`;
-    document.getElementById('resRoundUnit').textContent = `${roundUnit.toLocaleString()}円単位`;
+    document.getElementById('resRoundUnit').textContent = `徴収${roundUnit.toLocaleString()}円 / 支払い100円`;
     document.getElementById('resSurplusCard').textContent = yen(surplus);
     document.getElementById('resAccountingLabel').textContent = circleNeed >= 0
         ? '会計が追加で出す金額'
         : '会計に残る金額';
     document.getElementById('resWithdrawCard').textContent = yen(Math.abs(circleNeed));
     document.getElementById('resWithdrawNote').textContent = circleNeed >= 0
-        ? `部費分 ${yen(clubBurden)} から、集金端数 ${yen(surplus)} を差し引きます`
-        : `集金端数 ${yen(surplus)} が部費分 ${yen(clubBurden)} を上回ります`;
+        ? `部費分・支払い端数 ${yen(clubBurden)} から、集金端数 ${yen(surplus)} を差し引きます`
+        : `集金端数 ${yen(surplus)} が部費分・支払い端数 ${yen(clubBurden)} を上回ります`;
     document.getElementById('resEquationSign').textContent = circleNeed >= 0 ? '＋' : '－';
     document.getElementById('resEquationMiddleLabel').textContent = circleNeed >= 0 ? '会計が追加で出す' : '会計に残す分';
     document.getElementById('resAccountingNet').textContent = yen(Math.abs(circleNeed));
@@ -1857,6 +2040,7 @@ function calculate(options = {}) {
             <div>
                 ${d.hasGasInput ? `<div class="receipt-detail"><span>ガソリン代</span><span class="color-split">${yen(d.gasCost)}</span></div>` : ''}
                 ${d.reward ? `<div class="receipt-detail"><span>運転者調整費</span><span class="color-circle">${yen(d.reward)}</span></div>` : ''}
+                ${d.driverRoundup ? `<div class="receipt-detail"><span>支払い端数</span><span class="color-circle">${yen(d.driverRoundup)}</span></div>` : ''}
                 ${extrasHtml}
             </div>
         `;
@@ -1867,6 +2051,7 @@ function calculate(options = {}) {
 
     document.getElementById('resClubExtras').textContent = yen(totalExtrasClub);
     document.getElementById('resDriverReward').textContent = yen(totalReward);
+    document.getElementById('resDriverRoundup').textContent = yen(totalDriverRoundup);
     document.getElementById('resSurplusOffset').textContent = yen(surplus);
     document.getElementById('resAccountingTotalLabel').textContent = circleNeed >= 0
         ? '会計が追加で出す金額'
@@ -1892,7 +2077,8 @@ function calculate(options = {}) {
     lineText += circleNeed >= 0
         ? `会計が追加で出す: ${circleNeed.toLocaleString()}円\n`
         : `会計に残る: ${Math.abs(circleNeed).toLocaleString()}円\n`;
-    lineText += `部費分: ${clubBurden.toLocaleString()}円\n`;
+    lineText += `部費分・支払い端数: ${clubBurden.toLocaleString()}円\n`;
+    if (totalDriverRoundup > 0) lineText += `  - うち支払い端数: ${totalDriverRoundup.toLocaleString()}円\n`;
     lineText += `集金端数: ${surplus.toLocaleString()}円\n`;
     lineText += `ドライバーへ渡す合計: ${totalDriverPay.toLocaleString()}円\n`;
     
@@ -1901,6 +2087,7 @@ function calculate(options = {}) {
         lineText += `[${d.name} さん] : ${d.totalPay.toLocaleString()}円\n`;
         if (d.hasGasInput) lineText += `  - ガソリン代: ${d.gasCost.toLocaleString()}円\n`;
         if (d.reward) lineText += `  - 調整費: ${d.reward.toLocaleString()}円\n`;
+        if (d.driverRoundup) lineText += `  - 支払い端数: ${d.driverRoundup.toLocaleString()}円\n`;
         d.extras.forEach(ex => {
             const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
             lineText += `  - ${ex.name} ${mark}: ${ex.amount.toLocaleString()}円\n`;
@@ -1944,8 +2131,17 @@ function shareToLine() {
         showToast("公開URLで開いてからLINE共有してください");
         return;
     }
-    const text = "精算ツールのリンクです。入力をお願いします！";
+    const text = "山歩会の精算入力ページです。ドライバーの方は入力をお願いします。";
     window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text + "\n" + url)}`, '_blank');
+}
+
+function shareResultToLine() {
+    const text = document.getElementById('copyTextarea')?.value?.trim();
+    if (!text) {
+        showToast("精算結果がまだありません");
+        return;
+    }
+    window.open(`https://line.me/R/msg/text/?${encodeURIComponent(text)}`, '_blank');
 }
 
 function copyToClipboard() {
