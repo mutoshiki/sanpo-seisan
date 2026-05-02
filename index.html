@@ -1551,8 +1551,9 @@ function renderForm(data) {
         if(!extrasBox) return;
 
         const remoteExtrasRaw = cData.extras || [];
-        const remoteExtras = remoteExtrasRaw.length > 0
-            ? remoteExtrasRaw
+        const meaningfulRemoteExtras = remoteExtrasRaw.filter(hasMeaningfulExtra);
+        const remoteExtras = meaningfulRemoteExtras.length > 0
+            ? meaningfulRemoteExtras
             : [{ name: "", amount: "", type: "club" }];
         const currentExtras = extrasBox.getElementsByClassName('extra-item');
 
@@ -1620,20 +1621,37 @@ function debounce(func, wait) {
     };
 }
 
+function hasMeaningfulExtra(ex) {
+    return Boolean(String(ex?.name ?? "").trim() || String(ex?.amount ?? "").trim());
+}
+
+function hasMeaningfulCar(car) {
+    return Boolean(
+        String(car?.name ?? "").trim() ||
+        String(car?.dist ?? "").trim() ||
+        String(car?.eco ?? "").trim() ||
+        String(car?.price ?? "").trim() ||
+        (car?.extras || []).some(hasMeaningfulExtra)
+    );
+}
+
 function getFormData() {
     const cards = document.querySelectorAll('.car-card');
-    const carDatas = Array.from(cards).map(card => ({
-        name: card.querySelector('.inp-name').value, 
-        dist: card.querySelector('.inp-dist').value,
-        eco: card.querySelector('.inp-eco').value, 
-        price: card.querySelector('.inp-price').value,
-        extras: Array.from(card.querySelectorAll('.extra-item'))
-            .map(row => ({ 
-                name: row.querySelector('.ex-name').value, 
-                amount: row.querySelector('.ex-amount').value,
-                type: row.querySelector('.ex-type').value 
-            }))
-    }));
+    const carDatas = Array.from(cards)
+        .map(card => ({
+            name: card.querySelector('.inp-name').value, 
+            dist: card.querySelector('.inp-dist').value,
+            eco: card.querySelector('.inp-eco').value, 
+            price: card.querySelector('.inp-price').value,
+            extras: Array.from(card.querySelectorAll('.extra-item'))
+                .map(row => ({ 
+                    name: row.querySelector('.ex-name').value, 
+                    amount: row.querySelector('.ex-amount').value,
+                    type: row.querySelector('.ex-type').value 
+                }))
+                .filter(hasMeaningfulExtra)
+        }))
+        .filter(hasMeaningfulCar);
     return {
         roomName: document.getElementById('roomName').value,
         total: document.getElementById('totalPeople').value,
@@ -1802,7 +1820,7 @@ window.deleteHistory = function(index) {
 
 function handleAddCarBtn() {
     addCarToDOM(null, -1, true);
-    pushDataToFirebase();
+    scheduleLiveCalculation();
 }
 
 function addCarToDOM(data = null, idx = -1, forceOpen = false) {
@@ -1863,7 +1881,7 @@ function removeCar(e, btn){
 function handleAddExtra(btn) {
     const box = btn.previousElementSibling;
     addExtraToDOM(box);
-    pushDataToFirebase();
+    scheduleLiveCalculation();
 }
 
 function addExtraToDOM(container, name="", amount="", type="club") {
@@ -1877,7 +1895,7 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     div.innerHTML = `
         <input type="text" class="ex-name" placeholder="項目" value="${escapeHtml(name)}" oninput="window.pushData()">
         <input type="number" class="ex-amount" placeholder="金額" value="${escapeHtml(amount)}" oninput="window.pushData()">
-        <select class="ex-type ${colorClass}" onchange="this.className='ex-type ' + (this.value==='split'?'split-color':'club-color'); window.pushData()">
+        <select class="ex-type ${colorClass}" onchange="this.className='ex-type ' + (this.value==='split'?'split-color':'club-color'); const row=this.closest('.extra-item'); if(row.querySelector('.ex-name').value.trim() || row.querySelector('.ex-amount').value.trim()) window.pushData()">
             <option value="club" ${isClub}>部費</option>
             <option value="split" ${isSplit}>割勘</option>
         </select>
@@ -1894,14 +1912,15 @@ function calculate(options = {}) {
         showToast: shouldShowToast = true
     } = options;
     const data = getFormData();
+    const cars = data.cars.filter(hasMeaningfulCar);
     const totalPeople = parseInt(data.total);
     const isOrgFree = data.org;
     
     let errorMsgs = [];
     if (!totalPeople || totalPeople <= 0) errorMsgs.push("参加人数を入力してください");
-    if (data.cars.length === 0) errorMsgs.push("車両が1台も登録されていません");
+    if (cars.length === 0) errorMsgs.push("車両が1台も登録されていません");
 
-    data.cars.forEach((c, index) => {
+    cars.forEach((c, index) => {
         const dName = c.name || `車両 ${index + 1}`;
         const dist = parseFloat(c.dist);
         const eco = parseFloat(c.eco);
@@ -1950,7 +1969,7 @@ function calculate(options = {}) {
 
     let driverResults = []; 
 
-    data.cars.forEach((c) => {
+    cars.forEach((c) => {
         const name = c.name || "ドライバー";
         const gasFields = [c.dist, c.eco, c.price].map(v => String(v ?? "").trim());
         const hasGasInput = gasFields.every(Boolean);
@@ -1963,7 +1982,7 @@ function calculate(options = {}) {
         let exs = [];
 
         c.extras.forEach(ex => {
-            const val = parseInt(ex.amount) || 0;
+            const val = Number(ex.amount) || 0;
             const nm = ex.name || "諸経費";
             const tp = ex.type || "club"; 
 
