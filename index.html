@@ -9,30 +9,30 @@
 <style>
 :root {
     /* --- Classic settlement ledger theme --- */
-    --primary: #173b31;
-    --primary-text: #16241f;
-    --primary-btn: #17644f;
+    --primary: #071933;
+    --primary-text: #071933;
+    --primary-btn: #118276;
     --primary-btn-text: #ffffff;
-    --primary-light: #edf2ee;
-    --accent: #218064;
-    --accent-dark: #17644f;
-    --accent-soft: #e0f0ea;
-    --gold: #6f8a45;
+    --primary-light: #e7f2ef;
+    --accent: #118276;
+    --accent-dark: #0d7369;
+    --accent-soft: #dcefea;
+    --gold: #071933;
     --danger: #9f3a2f;
     
-    --bg: #f7faf9;
+    --bg: #eef6f3;
     --card-bg: #ffffff;
     
-    --text-main: #1f2f28;
-    --text-sub: #617267;
-    --text-placeholder: #9aa59e;
+    --text-main: #071933;
+    --text-sub: #5e7088;
+    --text-placeholder: #a7afbd;
     
-    --border: #dde7e2;
+    --border: #d5e2dd;
     --input-bg: #ffffff;
-    --input-border: #c9d6d0;
+    --input-border: #cfded8;
     
-    --radius: 6px;
-    --shadow: 0 1px 2px rgba(20, 47, 38, 0.05), 0 10px 28px rgba(20, 47, 38, 0.045);
+    --radius: 8px;
+    --shadow: 0 1px 0 rgba(7, 25, 51, 0.03), 0 10px 24px rgba(7, 25, 51, 0.05);
     
     --font-head: "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", "Meiryo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     --font-body: "Hiragino Kaku Gothic ProN", "Yu Gothic", "YuGothic", "Meiryo", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
@@ -712,6 +712,41 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     .money-value.big { font-size: 1.6rem; }
 }
 
+/* syawari-maker tone: visual only, no layout changes */
+h1,
+h2,
+.share-title,
+.btn,
+.btn-share-action,
+label,
+.car-header,
+.money-value,
+.driver-name {
+    font-weight: 800;
+}
+.btn-share-action {
+    white-space: nowrap;
+    font-size: 0.82rem;
+}
+.btn-share-action.share-primary {
+    background: var(--primary-btn);
+    border-color: var(--primary-btn);
+    color: var(--primary-btn-text);
+}
+.btn-share-action.share-primary i {
+    color: var(--primary-btn-text);
+}
+.btn-share-action i,
+.share-title i,
+h2 i {
+    color: var(--primary-text);
+}
+.brand-mark,
+.receipt-logo {
+    background: var(--primary-btn);
+    box-shadow: none;
+}
+
 /* コピーエリア */
 .copy-area {
     background: var(--card-bg); color: var(--text-main); padding: 14px; 
@@ -1078,7 +1113,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
         <div class="app-hero">
             <div class="hero-top">
                 <div class="brand-block">
-                    <div class="brand-mark"><i class='fa-solid fa-mountain-sun'></i></div>
+                    <div class="brand-mark"><i class='fa-solid fa-mountain'></i></div>
                     <div>
                         <h1>山歩会 精算ツール</h1>
                     </div>
@@ -1103,7 +1138,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
         </div>
         <div class="share-btn-group">
             <button class="btn-share-action share-primary" onclick="copyRoomLink()">
-                <i class='fa-regular fa-copy'></i>
+                <i class='fa-solid fa-link'></i>
                 <span class="share-action-text">
                     <strong>リンクをコピー</strong>
                 </span>
@@ -1115,7 +1150,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
                 </span>
             </button>
             <button class="btn-share-action" onclick="openHelp()">
-                <i class='fa-solid fa-book'></i>
+                <i class='fa-solid fa-book-open'></i>
                 <span class="share-action-text">
                     <strong>使い方</strong>
                 </span>
@@ -1127,7 +1162,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     </div>
 
     <div class="card">
-        <h2><i class='fa-solid fa-car'></i> 車両情報の登録</h2>
+        <h2><i class='fa-solid fa-car-side'></i> 車両情報の登録</h2>
         <div id="carList"></div>
         <button class="btn btn-outline" onclick="handleAddCarBtn()">
             <i class='fa-solid fa-plus'></i> 車両を追加
@@ -1167,7 +1202,7 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
             <div class="receipt-paper">
                 <div class="receipt-header">
                     <div class="receipt-title-group">
-                        <div class="receipt-logo"><i class='fa-solid fa-mountain-sun'></i></div>
+                        <div class="receipt-logo"><i class='fa-solid fa-mountain'></i></div>
                         <div>
                             <h3 class="receipt-title">精算結果</h3>
                             <div id="receiptRoomName" class="receipt-room"></div>
