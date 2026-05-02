@@ -1551,11 +1551,8 @@ function renderForm(data) {
         if(!extrasBox) return;
 
         const remoteExtrasRaw = cData.extras || [];
-        const meaningfulRemoteExtras = remoteExtrasRaw.filter(ex =>
-            String(ex.name ?? "").trim() || String(ex.amount ?? "").trim()
-        );
-        const remoteExtras = meaningfulRemoteExtras.length > 0
-            ? meaningfulRemoteExtras
+        const remoteExtras = remoteExtrasRaw.length > 0
+            ? remoteExtrasRaw
             : [{ name: "", amount: "", type: "club" }];
         const currentExtras = extrasBox.getElementsByClassName('extra-item');
 
@@ -1636,7 +1633,6 @@ function getFormData() {
                 amount: row.querySelector('.ex-amount').value,
                 type: row.querySelector('.ex-type').value 
             }))
-            .filter(ex => String(ex.name ?? "").trim() || String(ex.amount ?? "").trim())
     }));
     return {
         roomName: document.getElementById('roomName').value,
