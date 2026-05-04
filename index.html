@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -19,6 +20,14 @@
     --accent-soft: #dcefea;
     --gold: #071933;
     --danger: #9f3a2f;
+    --collect: #118276;
+    --collect-soft: #e7f2ef;
+    --accounting: #a76500;
+    --accounting-soft: #fff3da;
+    --pay: #071933;
+    --pay-soft: #eef3f8;
+    --surplus: #2563a8;
+    --surplus-soft: #e8f1fb;
     
     --bg: #eef6f3;
     --card-bg: #ffffff;
@@ -62,6 +71,14 @@
         --accent-soft: rgba(141, 180, 157, 0.18);
         --gold: #c4a66a;
         --danger: #f59c8d;
+        --collect: #8db49d;
+        --collect-soft: rgba(141, 180, 157, 0.18);
+        --accounting: #f0cf82;
+        --accounting-soft: rgba(240, 207, 130, 0.14);
+        --pay: #d7e3f4;
+        --pay-soft: rgba(215, 227, 244, 0.10);
+        --surplus: #93c5fd;
+        --surplus-soft: rgba(147, 197, 253, 0.14);
         
         --bg: #0f172a;            /* 背景：深いスレート */
         --card-bg: #1e293b;       /* カード：一段階明るいスレート */
@@ -177,6 +194,12 @@ h1 i { font-size: 1.2rem; color: var(--accent); }
     gap: 8px;
 }
 .share-title i { color: var(--accent); }
+.share-note {
+    margin: -2px 0 9px;
+    color: var(--text-sub);
+    font-size: var(--fs-xs);
+    line-height: 1.45;
+}
 .share-btn-group {
     display: flex;
     gap: 6px;
@@ -693,8 +716,248 @@ input::placeholder { color: var(--text-placeholder); opacity: 0.8; font-weight: 
     border-top: 1px solid var(--border);
 }
 
+/* --- 入力ミス表示 --- */
+.validation-panel {
+    display: none;
+    margin: 0 0 10px;
+    padding: 12px 13px;
+    border: 1px solid rgba(159, 58, 47, 0.38);
+    border-left: 4px solid var(--danger);
+    border-radius: var(--radius);
+    background: rgba(159, 58, 47, 0.08);
+    color: var(--danger);
+    font-size: var(--fs-sm);
+    line-height: 1.55;
+    box-shadow: var(--shadow);
+}
+.validation-panel.show { display: block; }
+.validation-panel strong {
+    display: block;
+    margin-bottom: 4px;
+    font-weight: 900;
+}
+.validation-panel ul {
+    margin: 6px 0 0;
+    padding-left: 1.2em;
+}
+.validation-panel li { margin: 2px 0; }
+.input-error {
+    border-color: var(--danger) !important;
+    background: rgba(159, 58, 47, 0.06) !important;
+    box-shadow: 0 0 0 2px rgba(159, 58, 47, 0.12) !important;
+}
+.car-card.has-error {
+    border-color: rgba(159, 58, 47, 0.55);
+}
+.car-card.has-error .car-header {
+    color: var(--danger);
+}
+.debug-panel {
+    display: none;
+    margin: 12px 0 24px;
+    padding: 12px;
+    border: 1px dashed var(--accent);
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    box-shadow: var(--shadow);
+}
+.debug-panel.show { display: block; }
+.debug-title {
+    font-size: var(--fs-sm);
+    font-weight: 900;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    color: var(--primary-text);
+}
+.debug-actions {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 8px;
+}
+.debug-actions .btn-copy { margin-top: 0; }
+@media (max-width: 460px) {
+    .debug-actions { grid-template-columns: 1fr; }
+}
+@media (prefers-color-scheme: dark) {
+    .validation-panel {
+        background: rgba(245, 156, 141, 0.12);
+        border-color: rgba(245, 156, 141, 0.48);
+        color: #ffc2b8;
+    }
+    .input-error {
+        background: rgba(245, 156, 141, 0.10) !important;
+        box-shadow: 0 0 0 2px rgba(245, 156, 141, 0.18) !important;
+    }
+    .driver-card,
+    .result-simple-details,
+    .settlement-check,
+    .accounting-panel {
+        background: #172033;
+    }
+    .result-quick-card.driver .result-quick-value,
+    .driver-total,
+    .color-driver {
+        color: var(--pay) !important;
+    }
+    .color-circle { color: var(--accounting) !important; }
+    .color-split { color: var(--collect) !important; }
+}
+
+
+/* --- 精算結果：短く、数字を先に見せる --- */
+.result-quick-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+    margin: 14px 0 12px;
+}
+.result-quick-card {
+    border: 1px solid var(--border);
+    border-left-width: 5px;
+    border-radius: var(--radius);
+    background: var(--input-bg);
+    padding: 12px;
+}
+.result-quick-card.collect {
+    background: var(--collect-soft);
+    border-color: rgba(17, 130, 118, 0.28);
+    border-left-color: var(--collect);
+}
+.result-quick-card.accounting {
+    background: var(--accounting-soft);
+    border-color: rgba(167, 101, 0, 0.28);
+    border-left-color: var(--accounting);
+}
+.result-quick-card.accounting.surplus {
+    background: var(--surplus-soft);
+    border-color: rgba(37, 99, 168, 0.28);
+    border-left-color: var(--surplus);
+}
+.result-quick-card.driver {
+    background: var(--pay-soft);
+    border-color: rgba(7, 25, 51, 0.20);
+    border-left-color: var(--pay);
+}
+.result-quick-label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    color: var(--text-sub);
+}
+.result-quick-card.collect .result-quick-label,
+.result-quick-card.collect .result-quick-value { color: var(--collect); }
+.result-quick-card.accounting .result-quick-label,
+.result-quick-card.accounting .result-quick-value { color: var(--accounting); }
+.result-quick-card.accounting.surplus .result-quick-label,
+.result-quick-card.accounting.surplus .result-quick-value { color: var(--surplus); }
+.result-quick-card.driver .result-quick-label,
+.result-quick-card.driver .result-quick-value { color: var(--pay); }
+.result-quick-value {
+    display: block;
+    margin-top: 4px;
+    font-size: 1.85rem;
+    line-height: 1.1;
+    font-weight: 900;
+    letter-spacing: -0.02em;
+}
+.result-quick-sub {
+    display: block;
+    margin-top: 4px;
+    color: var(--text-sub);
+    font-size: var(--fs-xs);
+}
+.result-flow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 36px;
+    margin: 8px 0 2px;
+    padding: 8px 10px;
+    border-radius: var(--radius);
+    background: var(--bg);
+    color: var(--text-sub);
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    text-align: center;
+}
+.result-simple-details {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg);
+    margin-top: 10px;
+    overflow: hidden;
+}
+.result-simple-details summary {
+    cursor: pointer;
+    list-style: none;
+    padding: 10px 12px;
+    font-size: var(--fs-sm);
+    font-weight: var(--fw-bold);
+    color: var(--primary-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.result-simple-details summary::-webkit-details-marker { display: none; }
+.result-simple-details summary::after {
+    content: "＋";
+    margin-left: auto;
+    color: var(--text-sub);
+}
+.result-simple-details[open] summary::after { content: "−"; }
+.result-simple-details-inner { padding: 0 12px 12px; }
+.receipt-intro.simple {
+    margin: 10px 0 0;
+    padding: 8px 10px;
+    font-size: var(--fs-xs);
+}
+.driver-card.simple {
+    padding: 10px 12px;
+    border-left: 5px solid var(--pay);
+}
+.driver-card.simple .driver-card-header { margin-bottom: 0; }
+.driver-card.simple .driver-total {
+    font-size: 1.25rem;
+    color: var(--pay);
+}
+.driver-card.simple .receipt-detail:first-child { margin-top: 8px; }
+.driver-name .driver-chip {
+    display: inline-block;
+    margin-top: 3px;
+    padding: 2px 6px;
+    border-radius: 999px;
+    background: var(--pay-soft);
+    color: var(--pay);
+    font-size: 0.68rem;
+    font-weight: 800;
+}
+.color-split { color: var(--collect) !important; }
+.color-circle { color: var(--accounting) !important; }
+.color-driver { color: var(--pay) !important; }
+.money-block.primary {
+    background: var(--collect-soft);
+    border-color: rgba(17, 130, 118, 0.28);
+    color: var(--text-main);
+}
+.money-block.primary .step-badge {
+    background: var(--collect);
+    color: #fff;
+}
+.money-block.primary .money-label,
+.money-block.primary .money-note { color: var(--text-sub); }
+.money-block.primary .money-row { border-color: var(--border); }
+.money-block.primary .money-value { color: var(--collect); }
+@media (min-width: 520px) {
+    .result-quick-grid { grid-template-columns: 1.2fr 1fr 1fr; }
+}
+
 @media (max-width: 460px) {
     body { padding: 12px 10px; }
+    .flex-row { flex-direction: column; }
     .app-hero { padding: 12px; }
     .hero-top { align-items: flex-start; }
     .brand-mark { width: 34px; height: 34px; }
@@ -1026,6 +1289,55 @@ h2 i {
     border-radius: 4px;
     padding: 3px 6px;
 }
+.guide-legend {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+}
+.guide-color {
+    border: 1px solid var(--border);
+    border-left-width: 5px;
+    border-radius: var(--radius);
+    background: var(--card-bg);
+    padding: 9px;
+}
+.guide-color.collect { border-left-color: var(--collect); }
+.guide-color.accounting { border-left-color: var(--accounting); }
+.guide-color.driver { border-left-color: var(--pay); }
+.guide-color.danger { border-left-color: var(--danger); }
+.guide-color strong {
+    display: block;
+    color: var(--text-main);
+    font-size: 0.82rem;
+}
+.guide-color span {
+    display: block;
+    color: var(--text-sub);
+    font-size: 0.74rem;
+    line-height: 1.35;
+}
+.guide-result-mini {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 6px;
+}
+.guide-result-mini .mini-card {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--bg);
+    padding: 8px;
+    text-align: center;
+}
+.guide-result-mini .mini-card strong {
+    display: block;
+    font-size: 0.78rem;
+}
+.guide-result-mini .mini-card span {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.72rem;
+    color: var(--text-sub);
+}
 .result-share-actions {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1057,50 +1369,66 @@ h2 i {
             <span class="close-btn" onclick="closeHelp()">&times;</span>
         </div>
         <div class="modal-body">
-            
             <div class="guide-section">
-                <h3 class="guide-h3"><i class='fa-solid fa-route'></i> 使うまでの流れ</h3>
-                <div class="guide-flow">
-                    <div class="guide-step">
-                        <div class="guide-step-num">1</div>
-                        <div>
-                            <strong>このページを開く</strong>
-                            <span>開いた時点で、この企画用の部屋が自動で作られます。</span>
+                <h3 class="guide-h3"><i class='fa-solid fa-route'></i> 流れ</h3>
+                <div class="guide-map">
+                    <div class="guide-node"><i class='fa-solid fa-link'></i><strong>共有</strong><span>URLを送る</span></div>
+                    <div class="guide-arrow"><i class='fa-solid fa-arrow-right'></i></div>
+                    <div class="guide-node"><i class='fa-solid fa-car-side'></i><strong>入力</strong><span>車両・経費</span></div>
+                    <div class="guide-arrow"><i class='fa-solid fa-arrow-right'></i></div>
+                    <div class="guide-node"><i class='fa-solid fa-receipt'></i><strong>精算</strong><span>3つを見る</span></div>
+                </div>
+            </div>
+
+            <div class="guide-section">
+                <h3 class="guide-h3"><i class='fa-solid fa-keyboard'></i> 入力</h3>
+                <div class="guide-screens">
+                    <div class="guide-screen">
+                        <div class="guide-screen-title"><span>ドライバー</span><i class='fa-solid fa-car'></i></div>
+                        <div class="guide-field">距離<strong>km</strong></div>
+                        <div class="guide-field-row">
+                            <div class="guide-field">燃費<strong>km/L</strong></div>
+                            <div class="guide-field">燃料<strong>円/L</strong></div>
+                            <div class="guide-field">経費<strong>任意</strong></div>
                         </div>
                     </div>
-                    <div class="guide-step">
-                        <div class="guide-step-num">2</div>
-                        <div>
-                            <strong>リンクをグループに共有</strong>
-                            <span>LINEのグループに送ります。</span>
-                            <div class="guide-mini-actions"><em>リンクをコピー</em><em>LINEで送信</em></div>
-                        </div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="guide-step-num">3</div>
-                        <div>
-                            <strong>ドライバーが入力</strong>
-                            <span>前日か当日に、移動距離・燃費・ガソリン価格・諸経費を入れます。</span>
-                        </div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="guide-step-num">4</div>
-                        <div>
-                            <strong>会計が人数を設定</strong>
-                            <span>参加人数、端数処理、企画者免除を確認します。</span>
-                        </div>
-                    </div>
-                    <div class="guide-step">
-                        <div class="guide-step-num">5</div>
-                        <div>
-                            <strong>結果を共有して精算</strong>
-                            <span>1人あたり、会計が用意する額、ドライバーへの支払い額を共有できます。</span>
-                            <div class="guide-mini-actions"><em>結果をコピー</em><em>LINEで共有</em><em>画像保存</em></div>
+                    <div class="guide-screen">
+                        <div class="guide-screen-title"><span>会計</span><i class='fa-solid fa-gear'></i></div>
+                        <div class="guide-field">人数<strong>企画者含む</strong></div>
+                        <div class="guide-field-row">
+                            <div class="guide-field">免除<strong>確認</strong></div>
+                            <div class="guide-field">協力代<strong>変更可</strong></div>
+                            <div class="guide-field">端数<strong>100円</strong></div>
                         </div>
                     </div>
                 </div>
             </div>
-            
+
+            <div class="guide-section">
+                <h3 class="guide-h3"><i class='fa-solid fa-palette'></i> 色</h3>
+                <div class="guide-legend">
+                    <div class="guide-color collect"><strong>緑：集める</strong><span>割勘・参加者負担</span></div>
+                    <div class="guide-color accounting"><strong>黄：会計</strong><span>部費・協力代・端数</span></div>
+                    <div class="guide-color driver"><strong>紺：渡す</strong><span>ドライバー支払い</span></div>
+                    <div class="guide-color danger"><strong>赤：確認</strong><span>入力漏れ・ミス</span></div>
+                </div>
+            </div>
+
+            <div class="guide-section">
+                <h3 class="guide-h3"><i class='fa-solid fa-receipt'></i> 結果</h3>
+                <div class="guide-result-mini">
+                    <div class="mini-card"><strong>集める</strong><span>1人あたり</span></div>
+                    <div class="mini-card"><strong>会計</strong><span>用意/残り</span></div>
+                    <div class="mini-card"><strong>渡す</strong><span>合計</span></div>
+                </div>
+                <p class="guide-p" style="margin-top:8px;">詳細は「内訳」を開いて確認します。</p>
+            </div>
+
+            <div class="guide-section">
+                <h3 class="guide-h3"><i class='fa-solid fa-share-nodes'></i> 共有</h3>
+                <div class="guide-mini-actions"><em>結果をコピー</em><em>LINEで共有</em><em>画像保存</em></div>
+            </div>
+
             <div class="modal-footer">
                 <button class="btn btn-primary btn-sm" onclick="closeHelp()">閉じる</button>
             </div>
@@ -1113,7 +1441,7 @@ h2 i {
         <div class="app-hero">
             <div class="hero-top">
                 <div class="brand-block">
-                    <div class="brand-mark"><i class='fa-solid fa-mountain'></i></div>
+                    <div class="brand-mark" onclick="handleDebugTap()" title="山歩会"><i class='fa-solid fa-mountain'></i></div>
                     <div>
                         <h1>山歩会 精算ツール</h1>
                     </div>
@@ -1123,7 +1451,7 @@ h2 i {
                     <span id="syncText">同期中...</span>
                 </div>
             </div>
-            <input type="text" id="roomName" class="room-name-input" placeholder="企画名を入力..." oninput="window.pushData()">
+            <input type="text" id="roomName" class="room-name-input" placeholder="例：御嶽山登山 5/12" oninput="window.pushData()">
         </div>
     </header>
 
@@ -1136,6 +1464,7 @@ h2 i {
                 ID: <span id="dispRoomId">...</span>
             </div>
         </div>
+        <p class="share-note">このリンクを共有すると、同じ精算ページをみんなで編集できます。</p>
         <div class="share-btn-group">
             <button class="btn-share-action share-primary" onclick="copyRoomLink()">
                 <i class='fa-solid fa-link'></i>
@@ -1183,7 +1512,7 @@ h2 i {
         </div>
 
         <div class="input-group">
-            <label>企画の参加人数 (企画者含む)</label>
+            <label>参加人数（企画者を含む）</label>
             <div style="position: relative;">
                 <input type="number" id="totalPeople" placeholder="例: 4" inputmode="numeric" oninput="pushData()" style="padding-left: 36px;">
                 <i class='fa-solid fa-users' style="position: absolute; left: 12px; top: 12px; color: var(--text-sub);"></i>
@@ -1192,10 +1521,20 @@ h2 i {
         
         <label class="checkbox-card">
             <span>企画者は割勘分を支払わない</span>
-            <input type="checkbox" id="organizerFree" onchange="pushData()">
+            <input type="checkbox" id="organizerFree" onchange="pushData()" checked>
             <div class="toggle-switch"></div>
         </label>
+
+        <div class="input-group" style="margin-top:10px;">
+            <label>運転協力代（1台あたり）</label>
+            <div style="position: relative;">
+                <input type="number" id="driverReward" value="1000" placeholder="例: 1000" inputmode="numeric" oninput="pushData()" style="padding-left: 36px;">
+                <i class='fa-solid fa-hand-holding-dollar' style="position: absolute; left: 12px; top: 12px; color: var(--text-sub);"></i>
+            </div>
+        </div>
     </div>
+
+    <div id="validationPanel" class="validation-panel" role="alert" aria-live="polite"></div>
 
    <div id="resultArea">
         <div id="captureTarget" class="receipt-wrapper">
@@ -1211,94 +1550,116 @@ h2 i {
                     <div class="receipt-meta" id="receiptDate">2024.01.01 12:00</div>
                 </div>
 
-                <p class="receipt-intro">
-                    <strong>この順番で精算します。</strong>
-                    部員から集める金額を確認し、会計で不足分を足して、最後にドライバーへ渡します。
-                </p>
 
-                <div class="money-stack">
-                    <div class="money-block primary">
-                        <h4><span class="step-badge">1</span> 部員から集める</h4>
-                        <div class="money-row">
-                            <span class="money-label">1人あたりの徴収額</span>
-                            <span class="money-value big" id="resPerPerson">0</span>
-                        </div>
-                        <div class="money-row">
-                            <span class="money-label">集金対象</span>
-                            <span class="money-value"><span id="resPayers">0名</span> × <span id="resRoutePerPerson">0</span></span>
-                        </div>
-                        <div class="money-note" id="resTargetDetail">--</div>
+                <div class="result-quick-grid">
+                    <div class="result-quick-card collect">
+                        <span class="result-quick-label"><i class='fa-solid fa-user'></i> 集める</span>
+                        <strong class="result-quick-value" id="resQuickPerPerson">¥0</strong>
+                        <span class="result-quick-sub" id="resQuickPayers">1人あたり・0名</span>
                     </div>
-
-                    <div class="money-block">
-                        <h4><span class="step-badge">2</span> 会計で調整する</h4>
-                        <div class="money-row">
-                            <span class="money-label" id="resAccountingLabel">会計が追加で出す金額</span>
-                            <span class="money-value big" id="resWithdrawCard">0</span>
-                        </div>
-                        <div class="money-row">
-                            <span class="money-label">部費分・支払い端数</span>
-                            <span class="money-value" id="resClubBurdenCard">0</span>
-                        </div>
-                        <div class="money-row">
-                            <span class="money-label">集金端数として会計に入る分</span>
-                            <span class="money-value" id="resSurplusCard">0</span>
-                        </div>
-                        <div class="money-note" id="resWithdrawNote">部費分から集金端数を差し引いた額</div>
+                    <div class="result-quick-card accounting" id="resQuickAccountingCard">
+                        <span class="result-quick-label"><i class='fa-solid fa-wallet'></i> 会計</span>
+                        <strong class="result-quick-value" id="resQuickAccountingAmount">¥0</strong>
+                        <span class="result-quick-sub" id="resQuickAccountingSub">用意</span>
+                    </div>
+                    <div class="result-quick-card driver">
+                        <span class="result-quick-label"><i class='fa-solid fa-car-side'></i> 渡す</span>
+                        <strong class="result-quick-value" id="resQuickDriverTotal">¥0</strong>
+                        <span class="result-quick-sub">ドライバー合計</span>
                     </div>
                 </div>
 
-                <div class="money-equation">
-                    <div class="equation-cell"><span>集金総額</span><strong id="resTotalCollected">0</strong></div>
-                    <div class="equation-symbol" id="resEquationSign">＋</div>
-                    <div class="equation-cell"><span id="resEquationMiddleLabel">会計が追加で出す</span><strong id="resAccountingNet">0</strong></div>
-                    <div class="equation-symbol">＝</div>
-                    <div class="equation-cell"><span>ドライバーへ渡す合計</span><strong id="resDriverPayTotal">0</strong></div>
-                </div>
+                <div class="result-flow" id="resQuickFlow" hidden></div>
 
                 <div class="receipt-section">
-                    <span class="receipt-section-title"><span class="step-badge">3</span> ドライバーへ渡す</span>
-                    <p class="section-caption">会計係は、この表の金額を各ドライバーへ渡します。</p>
+                    <span class="receipt-section-title"><i class='fa-solid fa-car-side'></i> 渡す内訳</span>
                     <div id="resDriverList" class="driver-list"></div>
                 </div>
 
-                <div class="receipt-section">
-                    <div class="settlement-check">
-                        <div class="settlement-check-title"><i class='fa-solid fa-list-check'></i> 確認用の内訳</div>
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">部員から集める総額</span>
-                            <span class="breakdown-value" id="resTotalCollectedDetail">0</span>
+                <details class="result-simple-details">
+                    <summary><i class='fa-solid fa-circle-info'></i> 集金・会計の確認</summary>
+                    <div class="result-simple-details-inner">
+                        <div class="money-stack">
+                            <div class="money-block primary">
+                                <h4><span class="step-badge">2</span> 集める</h4>
+                                <div class="money-row">
+                                    <span class="money-label">1人あたり</span>
+                                    <span class="money-value big" id="resPerPerson">0</span>
+                                </div>
+                                <div class="money-row">
+                                    <span class="money-label">人数</span>
+                                    <span class="money-value"><span id="resPayers">0名</span> × <span id="resRoutePerPerson">0</span></span>
+                                </div>
+                                <div class="money-note" id="resTargetDetail">--</div>
+                            </div>
+
+                            <div class="money-block">
+                                <h4><span class="step-badge">3</span> 会計</h4>
+                                <div class="money-row">
+                                    <span class="money-label" id="resAccountingLabel">会計が用意</span>
+                                    <span class="money-value big" id="resWithdrawCard">0</span>
+                                </div>
+                                <div class="money-row">
+                                    <span class="money-label">部費・端数</span>
+                                    <span class="money-value" id="resClubBurdenCard">0</span>
+                                </div>
+                                <div class="money-row">
+                                    <span class="money-label">集金の余り</span>
+                                    <span class="money-value" id="resSurplusCard">0</span>
+                                </div>
+                                <div class="money-note" id="resWithdrawNote">--</div>
+                            </div>
                         </div>
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">割勘の実費</span>
-                            <span class="breakdown-value" id="resTotalTarget">0</span>
-                        </div>
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">会計に入る端数</span>
-                            <span class="breakdown-value" id="resSurplusOffset">0</span>
-                        </div>
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">部費の経費</span>
-                            <span class="breakdown-value" id="resClubExtras">0</span>
-                        </div>
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">運転者調整費</span>
-                            <span class="breakdown-value" id="resDriverReward">0</span>
-                        </div>
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">支払い端数</span>
-                            <span class="breakdown-value" id="resDriverRoundup">0</span>
-                        </div>
-                        <div class="breakdown-row total">
-                            <span class="breakdown-label" id="resAccountingTotalLabel">会計が追加で出す金額</span>
-                            <span class="breakdown-value" id="resAccountingNetDetail">0</span>
-                        </div>
-                        <div class="breakdown-row">
-                            <span class="breakdown-label">端数処理</span>
-                            <span class="breakdown-value" id="resRoundUnit">--</span>
+
+                        <div class="money-equation">
+                            <div class="equation-cell"><span>集金</span><strong id="resTotalCollected">0</strong></div>
+                            <div class="equation-symbol" id="resEquationSign">＋</div>
+                            <div class="equation-cell"><span id="resEquationMiddleLabel">会計</span><strong id="resAccountingNet">0</strong></div>
+                            <div class="equation-symbol">＝</div>
+                            <div class="equation-cell"><span>支払い</span><strong id="resDriverPayTotal">0</strong></div>
                         </div>
                     </div>
-                </div>
+                </details>
+
+                <details class="result-simple-details">
+                    <summary><i class='fa-solid fa-list-check'></i> 細かい内訳</summary>
+                    <div class="result-simple-details-inner">
+                        <div class="settlement-check">
+                            <div class="breakdown-row">
+                                <span class="breakdown-label">集金総額</span>
+                                <span class="breakdown-value" id="resTotalCollectedDetail">0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-label">割勘の実費</span>
+                                <span class="breakdown-value" id="resTotalTarget">0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-label">集金の余り</span>
+                                <span class="breakdown-value" id="resSurplusOffset">0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-label">部費の経費</span>
+                                <span class="breakdown-value" id="resClubExtras">0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-label">運転協力代</span>
+                                <span class="breakdown-value" id="resDriverReward">0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-label">支払い端数</span>
+                                <span class="breakdown-value" id="resDriverRoundup">0</span>
+                            </div>
+                            <div class="breakdown-row total">
+                                <span class="breakdown-label" id="resAccountingTotalLabel">会計が用意</span>
+                                <span class="breakdown-value" id="resAccountingNetDetail">0</span>
+                            </div>
+                            <div class="breakdown-row">
+                                <span class="breakdown-label">端数処理</span>
+                                <span class="breakdown-value" id="resRoundUnit">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </details>
 
                 <div class="receipt-footer">
                     山歩会 精算控え
@@ -1340,6 +1701,15 @@ h2 i {
             </div>
         </details>
     </div>
+
+    <div id="debugPanel" class="debug-panel" aria-live="polite">
+        <div class="debug-title"><i class='fa-solid fa-bug'></i> デバッグモード</div>
+        <div class="debug-actions">
+            <button class="btn-copy" onclick="fillRandomDebugData()"><i class='fa-solid fa-dice'></i> ランダム入力</button>
+            <button class="btn-copy" onclick="fillInvalidDebugData()"><i class='fa-solid fa-triangle-exclamation'></i> 入力漏れテスト</button>
+            <button class="btn-copy" onclick="closeDebugMode()"><i class='fa-solid fa-xmark'></i> 閉じる</button>
+        </div>
+    </div>
 </div>
 
 <div id="toast"><i class='fa-solid fa-circle-check'></i> <span>メッセージ</span></div>
@@ -1370,6 +1740,10 @@ window.shareResultToLine = shareResultToLine;
 window.copyToClipboard = copyToClipboard;
 window.scrollToResult = scrollToResult;
 window.removeExtra = removeExtra;
+window.handleDebugTap = handleDebugTap;
+window.fillRandomDebugData = fillRandomDebugData;
+window.fillInvalidDebugData = fillInvalidDebugData;
+window.closeDebugMode = closeDebugMode;
 
 // --- Help Modal Logic ---
 window.openHelp = function() {
@@ -1448,7 +1822,7 @@ try {
     // URLからルームID取得
     roomId = new URLSearchParams(window.location.search).get("room");
     if (!roomId) {
-        roomId = Math.random().toString(36).substring(2, 6).toUpperCase();
+        roomId = Math.random().toString(36).substring(2, 10).toUpperCase();
         const newUrl = window.location.pathname + "?room=" + roomId;
         window.history.replaceState(null, null, newUrl);
     }
@@ -1514,8 +1888,9 @@ function downloadResultImage() {
 function renderForm(data) {
     setValIfDiff('roomName', data.roomName);
     setValIfDiff('totalPeople', data.total);
-    setCheckIfDiff('organizerFree', data.org);
+    setCheckIfDiff('organizerFree', data.org !== undefined ? data.org : true);
     setValIfDiff('roundingUnit', data.rounding);
+    setValIfDiff('driverReward', data.driverReward !== undefined ? data.driverReward : '1000');
 
     const carList = document.getElementById('carList');
     const remoteCars = (data.cars && data.cars.length > 0) ? data.cars : [{ extras: [{}] }];
@@ -1657,6 +2032,7 @@ function getFormData() {
         total: document.getElementById('totalPeople').value,
         org: document.getElementById('organizerFree').checked,
         rounding: document.getElementById('roundingUnit').value,
+        driverReward: document.getElementById('driverReward')?.value || '1000',
         cars: carDatas,
         updatedAt: Date.now()
     };
@@ -1681,6 +2057,7 @@ function fillTestData() {
     document.getElementById('totalPeople').value = totalPeople;
     document.getElementById('roundingUnit').value = "100";
     document.getElementById('organizerFree').checked = true;
+    document.getElementById('driverReward').value = '1000';
 
     const testData = [
         { 
@@ -1853,9 +2230,9 @@ function addCarToDOM(data = null, idx = -1, forceOpen = false) {
                 </div>
             </div>
             <div class="flex-row">
-                <div class="input-group"><label>移動距離</label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>燃費</label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
-                <div class="input-group"><label>ガソリン価格</label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
+                <div class="input-group"><label>移動距離（km）</label><input type="number" class="inp-dist" placeholder="例: 240" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>燃費（km/L）</label><input type="number" class="inp-eco" placeholder="例: 15" inputmode="decimal" ${onInput}></div>
+                <div class="input-group"><label>ガソリン価格（円/L）</label><input type="number" class="inp-price" placeholder="例: 160" inputmode="numeric" ${onInput}></div>
             </div>
             <div class="extra-section">
                 <label style="margin-bottom:8px; display:block; font-size:0.85rem; font-weight: 600; color: var(--text-sub);">諸経費（駐車場・レンタカー代など）</label>
@@ -1904,6 +2281,62 @@ function addExtraToDOM(container, name="", amount="", type="club") {
     container.appendChild(div);
 }
 
+function getCarEntriesFromDOM() {
+    return Array.from(document.querySelectorAll('.car-card'))
+        .map((card, visibleIndex) => {
+            const extras = Array.from(card.querySelectorAll('.extra-item'))
+                .map(row => ({
+                    name: row.querySelector('.ex-name')?.value ?? "",
+                    amount: row.querySelector('.ex-amount')?.value ?? "",
+                    type: row.querySelector('.ex-type')?.value ?? "club",
+                    row
+                }))
+                .filter(hasMeaningfulExtra);
+
+            return {
+                card,
+                visibleIndex,
+                car: {
+                    name: card.querySelector('.inp-name')?.value ?? "",
+                    dist: card.querySelector('.inp-dist')?.value ?? "",
+                    eco: card.querySelector('.inp-eco')?.value ?? "",
+                    price: card.querySelector('.inp-price')?.value ?? "",
+                    extras
+                }
+            };
+        })
+        .filter(entry => hasMeaningfulCar(entry.car));
+}
+
+function clearValidationState() {
+    document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
+    document.querySelectorAll('.car-card.has-error').forEach(el => el.classList.remove('has-error'));
+    const panel = document.getElementById('validationPanel');
+    if (panel) {
+        panel.classList.remove('show');
+        panel.innerHTML = '';
+    }
+}
+
+function pushValidationError(errorMsgs, message, elements = [], card = null) {
+    errorMsgs.push(message);
+    elements.filter(Boolean).forEach(el => el.classList.add('input-error'));
+    if (card) {
+        card.classList.add('has-error', 'open');
+    }
+}
+
+function showValidationErrors(errorMsgs, options = {}) {
+    const panel = document.getElementById('validationPanel');
+    if (!panel) return;
+    panel.innerHTML = `
+        <strong><i class='fa-solid fa-triangle-exclamation'></i> 入力を確認してください</strong>
+        <ul>${errorMsgs.map(msg => `<li>${escapeHtml(msg)}</li>`).join('')}</ul>
+    `;
+    panel.classList.add('show');
+    if (options.scroll) panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
 function calculate(options = {}) {
     const {
         silent = false,
@@ -1911,53 +2344,84 @@ function calculate(options = {}) {
         saveHistory: shouldSaveHistory = true,
         showToast: shouldShowToast = true
     } = options;
+
+    clearValidationState();
+
     const data = getFormData();
-    const cars = data.cars.filter(hasMeaningfulCar);
-    const totalPeople = parseInt(data.total);
+    const carEntries = getCarEntriesFromDOM();
+    const cars = carEntries.map(entry => entry.car);
+    const totalPeopleRaw = String(data.total ?? '').trim();
+    const totalPeople = parseInt(totalPeopleRaw, 10);
     const isOrgFree = data.org;
+    const hasStarted = Boolean(totalPeopleRaw || cars.length > 0);
+    const totalPeopleEl = document.getElementById('totalPeople');
+    const driverRewardEl = document.getElementById('driverReward');
+    const driverRewardRaw = String(data.driverReward ?? '').trim();
+    const driverRewardUnit = driverRewardRaw === '' ? 0 : Number(driverRewardRaw);
     
     let errorMsgs = [];
-    if (!totalPeople || totalPeople <= 0) errorMsgs.push("参加人数を入力してください");
-    if (cars.length === 0) errorMsgs.push("車両が1台も登録されていません");
+    if (!totalPeopleRaw) {
+        pushValidationError(errorMsgs, "参加人数が未入力です", [totalPeopleEl]);
+    } else if (!Number.isFinite(totalPeople) || totalPeople <= 0) {
+        pushValidationError(errorMsgs, "参加人数は1名以上にしてください", [totalPeopleEl]);
+    }
+    if (cars.length === 0) {
+        pushValidationError(errorMsgs, "車両を1台以上入力してください");
+    }
+    if (driverRewardRaw !== '' && (!Number.isFinite(driverRewardUnit) || driverRewardUnit < 0)) {
+        pushValidationError(errorMsgs, "運転協力代は0円以上にしてください", [driverRewardEl]);
+    }
 
-    cars.forEach((c, index) => {
+    carEntries.forEach((entry, index) => {
+        const c = entry.car;
+        const card = entry.card;
         const dName = c.name || `車両 ${index + 1}`;
+        const distEl = card.querySelector('.inp-dist');
+        const ecoEl = card.querySelector('.inp-eco');
+        const priceEl = card.querySelector('.inp-price');
         const dist = parseFloat(c.dist);
         const eco = parseFloat(c.eco);
         const price = parseFloat(c.price);
         const gasFields = [c.dist, c.eco, c.price].map(v => String(v ?? "").trim());
+        const gasElements = [distEl, ecoEl, priceEl];
         const hasAnyGasInput = gasFields.some(Boolean);
         const hasAllGasInput = gasFields.every(Boolean);
+
         if (hasAnyGasInput && !hasAllGasInput) {
-            errorMsgs.push(`${dName}: ガソリン代を計算する場合は、移動距離・燃費・ガソリン価格をすべて入力してください`);
+            const missing = gasElements.filter((_, i) => !gasFields[i]);
+            pushValidationError(errorMsgs, `${dName}: 距離・燃費・ガソリン価格をそろえてください`, missing, card);
         }
         if (hasAllGasInput) {
             if (!Number.isFinite(dist) || dist <= 0) {
-                errorMsgs.push(`${dName}: 移動距離は0より大きい数値にしてください`);
+                pushValidationError(errorMsgs, `${dName}: 移動距離は0より大きい数値にしてください`, [distEl], card);
             }
             if (!Number.isFinite(eco) || eco <= 0) {
-                errorMsgs.push(`${dName}: 燃費は0より大きい数値にしてください`);
+                pushValidationError(errorMsgs, `${dName}: 燃費は0より大きい数値にしてください`, [ecoEl], card);
             }
             if (!Number.isFinite(price) || price <= 0) {
-                errorMsgs.push(`${dName}: ガソリン価格は0より大きい数値にしてください`);
+                pushValidationError(errorMsgs, `${dName}: ガソリン価格は0より大きい数値にしてください`, [priceEl], card);
             }
         }
         c.extras.forEach((ex, exIndex) => {
             const rawAmount = String(ex.amount ?? "").trim();
             const amount = Number(rawAmount);
+            const amountEl = ex.row?.querySelector('.ex-amount');
             if(rawAmount !== "" && !Number.isFinite(amount)) {
-                errorMsgs.push(`${dName}: 諸経費${exIndex + 1}の金額は数値で入力してください`);
+                pushValidationError(errorMsgs, `${dName}: 諸経費${exIndex + 1}の金額を確認してください`, [amountEl], card);
             }
         });
     });
 
-    if (isOrgFree && totalPeople <= 1) {
-        errorMsgs.push("企画者を免除する場合は、参加人数を2名以上にしてください");
+    if (isOrgFree && Number.isFinite(totalPeople) && totalPeople <= 1) {
+        pushValidationError(errorMsgs, "企画者を免除する場合は、参加人数を2名以上にしてください", [totalPeopleEl]);
     }
 
     if (errorMsgs.length > 0) {
         document.getElementById('resultArea').style.display = 'none';
-        if (!silent) alert("⚠️ エラー:\n・" + errorMsgs.join("\n・"));
+        if (hasStarted || !silent) {
+            showValidationErrors(errorMsgs, { scroll: !silent && scroll });
+        }
+        if (!silent && shouldShowToast) showToast("入力を確認してください");
         return false;
     }
 
@@ -1966,7 +2430,6 @@ function calculate(options = {}) {
     let totalExtrasClub = 0; 
     let totalReward = 0;
     let totalDriverRoundup = 0;
-
     let driverResults = []; 
 
     cars.forEach((c) => {
@@ -1986,7 +2449,6 @@ function calculate(options = {}) {
             const nm = ex.name || "諸経費";
             const tp = ex.type || "club"; 
 
-            // 0以外なら計算対象とする (マイナス対応)
             if(val !== 0) { 
                 driverExtrasTotal += val; 
                 exs.push({name: nm, amount: val, type: tp});
@@ -1999,7 +2461,7 @@ function calculate(options = {}) {
             }
         });
 
-        const reward = 1000;
+        const reward = driverRewardUnit;
         const rawDriverPay = gasCost + driverExtrasTotal + reward;
         const driverPayRoundUnit = 100;
         const roundedDriverPay = Math.ceil(rawDriverPay / driverPayRoundUnit) * driverPayRoundUnit;
@@ -2022,21 +2484,15 @@ function calculate(options = {}) {
     });
 
     const totalCollectionTarget = totalGas + totalExtrasSplit;
-
     const payers = isOrgFree ? (totalPeople - 1) : totalPeople;
-    const roundUnit = parseInt(data.rounding);
-    
+    const roundUnit = parseInt(data.rounding, 10);
     const perPersonPay = payers > 0 ? Math.ceil((totalCollectionTarget / payers) / roundUnit) * roundUnit : 0;
-    
     const totalCollected = perPersonPay * payers;
-    
     const surplus = totalCollected - totalCollectionTarget;
-
     const clubBurden = totalExtrasClub + totalReward + totalDriverRoundup;
     const circleNeed = clubBurden - surplus;
     const totalDriverPay = driverResults.reduce((sum, d) => sum + d.totalPay, 0);
     const yen = (value) => "¥" + value.toLocaleString();
-
 
     document.getElementById('receiptDate').textContent = new Date().toLocaleString('ja-JP', { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' });
     document.getElementById('receiptRoomName').textContent = data.roomName ? data.roomName : "ルーム名未設定";
@@ -2045,67 +2501,72 @@ function calculate(options = {}) {
     document.getElementById('resRoutePerPerson').textContent = yen(perPersonPay);
     document.getElementById('resDriverPayTotal').textContent = yen(totalDriverPay);
     document.getElementById('resClubBurdenCard').textContent = yen(clubBurden);
-    
+
+    document.getElementById('resQuickPerPerson').textContent = yen(perPersonPay);
+    document.getElementById('resQuickPayers').textContent = `1人あたり・${payers}名`;
+    document.getElementById('resQuickAccountingAmount').textContent = yen(Math.abs(circleNeed));
+    document.getElementById('resQuickAccountingSub').textContent = circleNeed >= 0 ? '用意' : '残り';
+    const accountingCard = document.getElementById('resQuickAccountingCard');
+    if (accountingCard) accountingCard.classList.toggle('surplus', circleNeed < 0);
+    document.getElementById('resQuickDriverTotal').textContent = yen(totalDriverPay);
+    const quickFlow = document.getElementById('resQuickFlow');
+    if (quickFlow) {
+        quickFlow.textContent = circleNeed >= 0
+            ? `${yen(totalCollected)} ＋ ${yen(circleNeed)} ＝ ${yen(totalDriverPay)}`
+            : `${yen(totalCollected)} − ${yen(Math.abs(circleNeed))} ＝ ${yen(totalDriverPay)}`;
+    }
+
     document.getElementById('resTargetDetail').textContent = `${payers}名から集めて、合計 ${yen(totalCollected)} を会計へ`;
     document.getElementById('resPayers').textContent = `${payers}名`;
     document.getElementById('resRoundUnit').textContent = `徴収${roundUnit.toLocaleString()}円 / 支払い100円`;
     document.getElementById('resSurplusCard').textContent = yen(surplus);
-    document.getElementById('resAccountingLabel').textContent = circleNeed >= 0
-        ? '会計が追加で出す金額'
-        : '会計に残る金額';
+    document.getElementById('resAccountingLabel').textContent = circleNeed >= 0 ? '会計が用意' : '会計に残る';
     document.getElementById('resWithdrawCard').textContent = yen(Math.abs(circleNeed));
     document.getElementById('resWithdrawNote').textContent = circleNeed >= 0
-        ? `部費分・支払い端数 ${yen(clubBurden)} から、集金端数 ${yen(surplus)} を差し引きます`
-        : `集金端数 ${yen(surplus)} が部費分・支払い端数 ${yen(clubBurden)} を上回ります`;
+        ? `会計負担 ${yen(clubBurden)} − 集金の余り ${yen(surplus)}`
+        : `集金の余り ${yen(surplus)} − 会計負担 ${yen(clubBurden)}`;
     document.getElementById('resEquationSign').textContent = circleNeed >= 0 ? '＋' : '－';
-    document.getElementById('resEquationMiddleLabel').textContent = circleNeed >= 0 ? '会計が追加で出す' : '会計に残す分';
+    document.getElementById('resEquationMiddleLabel').textContent = circleNeed >= 0 ? '会計' : '会計残り';
     document.getElementById('resAccountingNet').textContent = yen(Math.abs(circleNeed));
     document.getElementById('resTotalCollected').textContent = yen(totalCollected);
     document.getElementById('resTotalCollectedDetail').textContent = yen(totalCollected);
     document.getElementById('resTotalTarget').textContent = yen(totalCollectionTarget);
     
-    
-    
     const dList = document.getElementById('resDriverList'); 
     dList.innerHTML = "";
     driverResults.forEach(d => {
         const row = document.createElement('div'); 
-        row.className = 'driver-card';
-        
         let extrasHtml = "";
         if(d.extras.length > 0) {
             d.extras.forEach(ex => {
                 const isSplit = ex.type === 'split';
-                const mark = isSplit ? '[割勘]' : '[部費]';
+                const mark = isSplit ? '割勘' : '部費';
                 const colorClass = isSplit ? 'color-split' : 'color-circle';
-                extrasHtml += `<div class="receipt-detail"><span>${escapeHtml(ex.name)} ${mark}</span><span class="${colorClass}">${yen(ex.amount)}</span></div>`;
+                extrasHtml += `<div class="receipt-detail"><span>${escapeHtml(ex.name)}・${mark}</span><span class="${colorClass}">${yen(ex.amount)}</span></div>`;
             });
         }
 
+        row.className = 'driver-card simple';
         row.innerHTML = `
             <div class="driver-card-header">
-                <span class="driver-name">${escapeHtml(d.name)} さん<small>この金額を会計から渡す</small></span>
+                <span class="driver-name">${escapeHtml(d.name)} さん<span class="driver-chip">渡す</span></span>
                 <span class="driver-total">${yen(d.totalPay)}</span>
             </div>
             <div>
-                ${d.hasGasInput ? `<div class="receipt-detail"><span>ガソリン代</span><span class="color-split">${yen(d.gasCost)}</span></div>` : ''}
-                ${d.reward ? `<div class="receipt-detail"><span>運転者調整費</span><span class="color-circle">${yen(d.reward)}</span></div>` : ''}
-                ${d.driverRoundup ? `<div class="receipt-detail"><span>支払い端数</span><span class="color-circle">${yen(d.driverRoundup)}</span></div>` : ''}
+                ${d.hasGasInput ? `<div class="receipt-detail"><span>ガソリン</span><span class="color-split">${yen(d.gasCost)}</span></div>` : ''}
+                ${d.reward ? `<div class="receipt-detail"><span>運転協力代</span><span class="color-circle">${yen(d.reward)}</span></div>` : ''}
+                ${d.driverRoundup ? `<div class="receipt-detail"><span>端数</span><span class="color-circle">${yen(d.driverRoundup)}</span></div>` : ''}
                 ${extrasHtml}
             </div>
         `;
         dList.appendChild(row);
     });
 
-
-
     document.getElementById('resClubExtras').textContent = yen(totalExtrasClub);
     document.getElementById('resDriverReward').textContent = yen(totalReward);
     document.getElementById('resDriverRoundup').textContent = yen(totalDriverRoundup);
     document.getElementById('resSurplusOffset').textContent = yen(surplus);
-    document.getElementById('resAccountingTotalLabel').textContent = circleNeed >= 0
-        ? '会計が追加で出す金額'
-        : '会計に残る金額';
+    document.getElementById('resAccountingTotalLabel').textContent = circleNeed >= 0 ? '会計が用意' : '会計に残る';
     document.getElementById('resAccountingNetDetail').textContent = yen(Math.abs(circleNeed));
     
     const resultArea = document.getElementById('resultArea');
@@ -2114,47 +2575,118 @@ function calculate(options = {}) {
 
     if (shouldSaveHistory) saveToHistory();
 
-    // 共有用テキストの詳細化
     const roomText = data.roomName ? `【${data.roomName}】\n` : "";
-    let lineText = `【山歩会 精算】\n${roomText}`;
-    lineText += `\n■ 部員向け\n`;
-    lineText += `1人あたり: ${perPersonPay.toLocaleString()}円\n`;
-    lineText += `集金対象: ${payers}名`;
-    if(isOrgFree) lineText += `（企画者は免除）`;
-    lineText += `\n集金総額: ${totalCollected.toLocaleString()}円\n`;
-
-    lineText += `\n■ 会計向け\n`;
+    let lineText = `【山歩会 精算】\n${roomText}\n`;
+    lineText += `集める：1人 ${perPersonPay.toLocaleString()}円（${payers}名）\n`;
     lineText += circleNeed >= 0
-        ? `会計が追加で出す: ${circleNeed.toLocaleString()}円\n`
-        : `会計に残る: ${Math.abs(circleNeed).toLocaleString()}円\n`;
-    lineText += `部費分・支払い端数: ${clubBurden.toLocaleString()}円\n`;
-    if (totalDriverRoundup > 0) lineText += `  - うち支払い端数: ${totalDriverRoundup.toLocaleString()}円\n`;
-    lineText += `集金端数: ${surplus.toLocaleString()}円\n`;
-    lineText += `ドライバーへ渡す合計: ${totalDriverPay.toLocaleString()}円\n`;
-    
-    lineText += `\n■ ドライバーへの支払い\n`;
+        ? `会計：${circleNeed.toLocaleString()}円 用意\n`
+        : `会計：${Math.abs(circleNeed).toLocaleString()}円 残り\n`;
+    lineText += `渡す：${totalDriverPay.toLocaleString()}円\n\n`;
     driverResults.forEach(d => {
-        lineText += `[${d.name} さん] : ${d.totalPay.toLocaleString()}円\n`;
-        if (d.hasGasInput) lineText += `  - ガソリン代: ${d.gasCost.toLocaleString()}円\n`;
-        if (d.reward) lineText += `  - 調整費: ${d.reward.toLocaleString()}円\n`;
-        if (d.driverRoundup) lineText += `  - 支払い端数: ${d.driverRoundup.toLocaleString()}円\n`;
-        d.extras.forEach(ex => {
-            const mark = ex.type === 'split' ? '[割勘]' : '[部費]';
-            lineText += `  - ${ex.name} ${mark}: ${ex.amount.toLocaleString()}円\n`;
-        });
+        lineText += `・${d.name}さん：${d.totalPay.toLocaleString()}円\n`;
     });
     const shareableUrl = getShareableUrl();
     if (shareableUrl) {
-        lineText += `\n▼計算・編集URL\n${shareableUrl}`;
-    } else {
-        lineText += `\n※この画面はローカルファイルで開いているため、編集URLは共有できません。公開URLで開いてから共有してください。`;
+        lineText += `\n編集URL：\n${shareableUrl}`;
     }
 
     document.getElementById('copyTextarea').value = lineText;
 
-    if (shouldShowToast) showToast("✅ 精算を更新しました");
+    if (shouldShowToast) showToast("精算を更新しました");
     return true;
 }
+
+let debugTapCount = 0;
+let debugTapTimer = null;
+
+function handleDebugTap() {
+    debugTapCount += 1;
+    clearTimeout(debugTapTimer);
+    debugTapTimer = setTimeout(() => { debugTapCount = 0; }, 1200);
+    if (debugTapCount >= 5) {
+        debugTapCount = 0;
+        openDebugMode();
+    }
+}
+
+function openDebugMode() {
+    const panel = document.getElementById('debugPanel');
+    if (panel) panel.classList.add('show');
+    showToast("デバッグモードを起動しました");
+}
+
+function closeDebugMode() {
+    const panel = document.getElementById('debugPanel');
+    if (panel) panel.classList.remove('show');
+}
+
+function randomInt(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+function fillRandomDebugData() {
+    const names = ["佐藤", "鈴木", "田中", "高橋", "中村", "小林"];
+    const spots = ["燕岳", "御嶽山", "蓼科山", "木曽駒", "白馬"];
+    const carCount = randomInt(1, 3);
+    const totalPeople = randomInt(Math.max(3, carCount + 1), carCount + 7);
+    const data = {
+        roomName: `${spots[randomInt(0, spots.length - 1)]} テスト`,
+        total: String(totalPeople),
+        org: true,
+        rounding: ["100", "50", "10"][randomInt(0, 2)],
+        driverReward: String([0, 500, 1000, 1500][randomInt(0, 3)]),
+        cars: Array.from({ length: carCount }).map((_, i) => ({
+            name: names[(i + randomInt(0, names.length - 1)) % names.length],
+            dist: String(randomInt(80, 260)),
+            eco: String(randomInt(10, 22)),
+            price: String(randomInt(155, 185)),
+            extras: [
+                { name: "高速代", amount: String(randomInt(900, 5200)), type: "split" },
+                { name: "駐車場", amount: String(randomInt(300, 1600)), type: Math.random() > 0.5 ? "split" : "club" }
+            ]
+        })),
+        updatedAt: Date.now()
+    };
+
+    if (roomRef) {
+        set(roomRef, data).then(() => {
+            renderForm(data);
+            calculate({ silent: false, scroll: true, saveHistory: true, showToast: true });
+        });
+    } else {
+        renderForm(data);
+        calculate({ silent: false, scroll: true, saveHistory: true, showToast: true });
+    }
+}
+
+function fillInvalidDebugData() {
+    const data = {
+        roomName: "入力漏れテスト",
+        total: "1",
+        org: true,
+        rounding: "100",
+        driverReward: "1000",
+        cars: [{
+            name: "テスト車両",
+            dist: "120",
+            eco: "",
+            price: "170",
+            extras: [{ name: "高速代", amount: "1800", type: "split" }]
+        }],
+        updatedAt: Date.now()
+    };
+
+    if (roomRef) {
+        set(roomRef, data).then(() => {
+            renderForm(data);
+            calculate({ silent: false, scroll: true, saveHistory: false, showToast: true });
+        });
+    } else {
+        renderForm(data);
+        calculate({ silent: false, scroll: true, saveHistory: false, showToast: true });
+    }
+}
+
 
 function copyRoomLink() {
     const url = getShareableUrl();
